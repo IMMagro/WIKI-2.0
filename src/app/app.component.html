@@ -99,7 +99,7 @@
           <div class="w-full max-w-2xl group relative"
             [style.opacity]="homeStage === 1 ? 1 : 0"
             [style.transform]="homeStage === 1 ? 'translateY(0)' : 'translateY(30px)'"
-            [style.pointer-events]="homeStage === 1 ? 'auto' : 'none'"
+            [style.pointer-events]="(activeIndex === 0 && homeStage === 1) ? 'auto' : 'none'"
             style="transition: opacity 1s ease 0.2s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.2s">
             <div class="relative rounded-full overflow-hidden backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(55,125,255,0.15)] focus-within:shadow-[0_8px_40px_rgba(55,125,255,0.2)] focus-within:bg-white/80 dark:focus-within:bg-slate-800/80">
               <svg class="absolute left-6 top-1/2 -translate-y-1/2 text-qe-blue transition-transform group-focus-within:scale-110" width="22" height="22" fill="none" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@
             <div *ngFor="let tag of tags; let i = index"
                 [style.opacity]="homeStage === 1 ? 1 : 0"
                 [style.transform]="homeStage === 1 ? 'translateY(0)' : 'translateY(20px)'"
-                [style.pointer-events]="homeStage === 1 ? 'auto' : 'none'"
+                [style.pointer-events]="(activeIndex === 0 && homeStage === 1) ? 'auto' : 'none'"
                 [style.transition]="'opacity 0.8s ease ' + (0.4 + i * 0.1) + 's, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (0.4 + i * 0.1) + 's'">
                 
                 <button
@@ -142,7 +142,7 @@
           <!-- Fase 1: Titolo Centrale -->
           <div class="absolute inset-0 flex items-center justify-center transition-all duration-700"
                [style.opacity]="serviziStage === 'title' ? 1 : 0"
-               [style.pointer-events]="serviziStage === 'title' ? 'auto' : 'none'"
+               [style.pointer-events]="(activeIndex === 2 && serviziStage === 'title') ? 'auto' : 'none'"
                [style.filter]="serviziStage === 'title' ? 'blur(0)' : 'blur(10px)'"
                [style.transform]="serviziStage === 'title' ? 'scale(1) translateY(0)' : 'scale(1.1) translateY(-30px)'">
             <h1 class="text-qe-text dark:text-slate-100 font-extrabold tracking-tight" 
@@ -155,7 +155,7 @@
           <div class="w-full h-full max-w-7xl mx-auto flex flex-col justify-center transition-all duration-1000"
                (wheel)="onWheel($event)"
                [style.opacity]="serviziStage === 'cards' ? 1 : 0"
-               [style.pointer-events]="serviziStage === 'cards' ? 'auto' : 'none'"
+               [style.pointer-events]="(activeIndex === 2 && serviziStage === 'cards') ? 'auto' : 'none'"
                [style.transform]="serviziStage === 'cards' ? 'translateY(0)' : 'translateY(40px)'">
             <h2 class="text-3xl font-bold text-qe-text dark:text-white mb-8 ml-2">Tutti i <span class="text-qe-blue">servizi</span></h2>
             
