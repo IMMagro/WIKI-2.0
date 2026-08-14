@@ -1,0 +1,222 @@
+<div class="h-screen w-full flex bg-qe-bg dark:bg-slate-900 transition-colors duration-500 overflow-hidden font-poppins relative">
+  <!-- Sfondo Aurora -->
+  <div class="pointer-events-none absolute inset-0 opacity-40 dark:opacity-30" style="z-index: 0" [style.transition]="'opacity 2s ease'" [style.opacity]="stage === 1 ? (isDarkMode ? 0.4 : 0.6) : 0.2">
+    <div class="absolute w-[600px] h-[600px] bg-qe-blue/30 rounded-full blur-[100px] top-[-100px] left-[-100px] animate-pulse"></div>
+    <div class="absolute w-[500px] h-[500px] bg-qe-magenta/20 rounded-full blur-[100px] bottom-[-100px] right-[-100px]" style="animation: pulse 8s infinite alternate"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside 
+    class="relative z-20 my-6 mx-4 flex flex-col items-center justify-between bg-white/70 dark:bg-slate-800/70 backdrop-blur-2xl shadow-xl border border-white/50 dark:border-slate-700/50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+    [ngClass]="isSidebarExpanded ? 'w-60 items-stretch px-5 py-6 rounded-[2rem]' : 'w-16 items-center py-5 rounded-[2rem]'"
+  >
+    <!-- Toggle Button -->
+    <button 
+      (click)="toggleSidebar()"
+      class="absolute top-10 -right-3 w-6 h-6 flex items-center justify-center bg-white dark:bg-slate-700 rounded-full shadow-lg border border-gray-100 dark:border-slate-600 text-gray-500 hover:text-qe-blue transition-colors z-30"
+    >
+      <svg *ngIf="isSidebarExpanded" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+      <svg *ngIf="!isSidebarExpanded" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+    </button>
+
+    <!-- Top: Logo -->
+    <div class="flex items-center gap-4 w-full" [ngClass]="isSidebarExpanded ? 'justify-start' : 'justify-center'">
+      <div class="flex-shrink-0 bg-qe-text dark:bg-slate-900 rounded-full flex items-center justify-center shadow-md transition-all duration-300"
+           [ngClass]="isSidebarExpanded ? 'w-10 h-10' : 'w-8 h-8'">
+        <span class="text-white font-bold transition-all duration-300" [ngClass]="isSidebarExpanded ? 'text-lg' : 'text-sm'">QE</span>
+      </div>
+      <span *ngIf="isSidebarExpanded" class="font-bold text-xl text-qe-text dark:text-slate-100 whitespace-nowrap overflow-hidden transition-all duration-300">Wiki App</span>
+    </div>
+
+    <!-- Center: Nav Items -->
+    <nav class="flex flex-col gap-2 w-full mt-12 flex-1 overflow-hidden">
+      <button *ngFor="let item of menuItems" 
+        class="flex items-center gap-4 px-3 py-3 rounded-2xl transition-all duration-300 group relative"
+        [ngClass]="item.active ? 'bg-qe-blue text-white shadow-lg shadow-qe-blue/30' : 'text-qe-textSecondary dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50 hover:text-qe-text dark:hover:text-slate-200'"
+      >
+        <!-- Icons -->
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="flex-shrink-0" [ngClass]="!isSidebarExpanded ? 'mx-auto' : ''">
+          <path *ngIf="item.icon === 'grid'" stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          <path *ngIf="item.icon === 'document-text'" stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <path *ngIf="item.icon === 'cash'" stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path *ngIf="item.icon === 'user-group'" stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path *ngIf="item.icon === 'chart-bar'" stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          <path *ngIf="item.icon === 'cog'" stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        </svg>
+
+        <span *ngIf="isSidebarExpanded" class="font-medium whitespace-nowrap transition-opacity duration-300 opacity-100">{{ item.label }}</span>
+      </button>
+    </nav>
+
+    <!-- Bottom: Secondary & Theme Toggle -->
+    <div class="flex flex-col gap-2 w-full mt-auto pt-8 border-t border-gray-100 dark:border-slate-700/50">
+      <button class="flex items-center gap-4 px-3 py-3 rounded-2xl text-qe-textSecondary dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50 hover:text-qe-text dark:hover:text-slate-200 transition-all duration-300">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="flex-shrink-0" [ngClass]="!isSidebarExpanded ? 'mx-auto' : ''">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span *ngIf="isSidebarExpanded" class="font-medium whitespace-nowrap">Assistenza</span>
+      </button>
+      <button class="flex items-center gap-4 px-3 py-3 rounded-2xl text-qe-textSecondary dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50 hover:text-qe-text dark:hover:text-slate-200 transition-all duration-300 mb-4">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="flex-shrink-0" [ngClass]="!isSidebarExpanded ? 'mx-auto' : ''">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span *ngIf="isSidebarExpanded" class="font-medium whitespace-nowrap">Esci</span>
+      </button>
+
+      <!-- Bottom Section: Settings & Theme -->
+      <div class="mt-auto pt-6 border-t border-gray-100 dark:border-slate-800 w-full">
+        <button (click)="toggleTheme($event)" class="w-full h-12 flex items-center rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors overflow-hidden outline-none" [ngClass]="isSidebarExpanded ? 'px-3 gap-3 justify-start' : 'px-0 justify-center'">
+          
+          <!-- Eclipse Button -->
+          <div class="w-10 h-10 shrink-0 relative rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center transition-all duration-500 shadow-inner text-amber-500 dark:text-blue-300" [ngClass]="!isSidebarExpanded ? 'mx-auto' : ''">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <mask id="moon-mask">
+                <rect x="0" y="0" width="24" height="24" fill="white" />
+                <circle cx="10" cy="4" r="8" fill="black" class="transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" [attr.cx]="isDarkMode ? '10' : '24'" [attr.cy]="isDarkMode ? '4' : '-8'" />
+              </mask>
+              <circle cx="12" cy="12" r="8" mask="url(#moon-mask)" fill="currentColor" class="transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" [attr.r]="isDarkMode ? '8' : '5'" />
+              <g class="transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" [style.opacity]="isDarkMode ? 0 : 1" [style.transform]="isDarkMode ? 'rotate(90deg)' : 'rotate(0)'" style="transform-origin: center">
+                <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+              </g>
+            </svg>
+          </div>
+          
+          <!-- Text Label -->
+          <span *ngIf="isSidebarExpanded" class="font-medium text-sm whitespace-nowrap transition-opacity duration-300 opacity-100 text-qe-textSecondary dark:text-slate-400">
+            {{ isDarkMode ? 'Scuro' : 'Chiaro' }}
+          </span>
+        </button>
+      </div>
+    </div>
+</aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="flex-1 flex flex-col relative overflow-hidden z-10">
+    <header class="relative overflow-hidden flex-1 flex flex-col h-full" style="z-index: 1">
+      <!-- Top nav bar -->
+      <div class="relative flex items-center justify-end px-8 py-6" style="animation: fadeInPage 1s ease forwards">
+        
+        <!-- Backdrop per chiudere il menu cliccando fuori -->
+        <div *ngIf="isContactOpen" class="fixed inset-0 z-40" (click)="isContactOpen = false"></div>
+
+        <div class="relative z-50">
+          <button (click)="isContactOpen = !isContactOpen" class="flex items-center gap-1.5 text-sm font-semibold text-qe-textSecondary dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue transition-colors outline-none focus:outline-none bg-transparent">
+            <span style="color: #377DFF; font-weight: 700">Hai bisogno?</span>
+            <span>Contattaci</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="transition-transform duration-300" [style.transform]="isContactOpen ? 'rotate(180deg)' : 'rotate(0)'">
+              <path d="M19 9l-7 7-7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          
+          <!-- Popover Card (Glassmorphism) -->
+          <div [ngClass]="isContactOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'"
+               class="absolute right-0 top-full mt-4 w-[340px] bg-white/85 dark:bg-slate-800/85 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-[2rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+            
+            <!-- Intestazione -->
+            <div class="p-6 pb-4 border-b border-gray-100/80 dark:border-slate-700/60 relative">
+               <button (click)="isContactOpen = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+               </button>
+               <h3 class="font-extrabold text-qe-text dark:text-slate-100 text-lg text-center mt-1">Quaderno Elettronico</h3>
+               <p class="text-xs font-medium text-qe-textSecondary dark:text-slate-400 text-center mt-1">Scegli come metterti in contatto.</p>
+            </div>
+
+            <!-- Supporto Tecnico -->
+            <div class="p-5 border-b border-gray-100/80 dark:border-slate-700/60 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
+               <div class="flex items-center gap-4">
+                 <div class="w-12 h-12 rounded-2xl bg-qe-blue/10 dark:bg-qe-blue/20 text-qe-blue flex items-center justify-center shrink-0 shadow-sm border border-qe-blue/10 transition-transform group-hover:scale-105">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                 </div>
+                 <div>
+                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-[15px]">Supporto Tecnico</h4>
+                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1.5">Lun-Ven, 8:30 - 18:00</p>
+                   <a href="tel:0559850486" class="block text-xs font-extrabold text-qe-blue hover:underline mb-0.5">055 9850486</a>
+                   <a href="mailto:assistenza@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-qe-blue transition-colors">
+                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                     assistenza&#64;quadernoelettronico.it
+                   </a>
+                 </div>
+               </div>
+            </div>
+
+            <!-- Ufficio Commerciale -->
+            <div class="p-5 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
+               <div class="flex items-center gap-4">
+                 <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-sm border border-purple-100 dark:border-purple-800/50 transition-transform group-hover:scale-105">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                 </div>
+                 <div>
+                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-[15px]">Ufficio Commerciale</h4>
+                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1.5">Preventivi e licenze</p>
+                   <a href="tel:055982476" class="block text-xs font-extrabold text-purple-600 dark:text-purple-400 hover:underline mb-0.5">055 982476</a>
+                   <a href="mailto:commerciale@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-purple-500 transition-colors">
+                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                     commerciale&#64;quadernoelettronico.it
+                   </a>
+                 </div>
+               </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero -->
+      <div class="relative flex-1 flex flex-col items-center justify-center pb-20 px-4">
+        
+        <!-- Titolo -->
+        <h1
+          class="text-qe-text dark:text-slate-100 text-center font-extrabold mb-8 tracking-tight"
+          [style.opacity]="titleVisible ? 1 : 0"
+          [style.transform]="stage === 0 ? 'translateY(80px)' : 'translateY(0)'"
+          style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: opacity 1.5s ease, transform 1s cubic-bezier(0.25, 1, 0.5, 1)"
+        >
+          Assistenza Clienti
+        </h1>
+
+        <!-- Search bar (Glassmorphism) -->
+        <div 
+          class="w-full max-w-2xl group relative"
+          [style.opacity]="stage === 1 ? 1 : 0"
+          [style.transform]="stage === 1 ? 'translateY(0)' : 'translateY(30px)'"
+          [style.pointer-events]="stage === 1 ? 'auto' : 'none'"
+          style="transition: opacity 1s ease 0.2s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.2s"
+        >
+          <div class="relative rounded-full overflow-hidden backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(55,125,255,0.15)] focus-within:shadow-[0_8px_40px_rgba(55,125,255,0.2)] focus-within:bg-white/80 dark:focus-within:bg-slate-800/80">
+            <svg class="absolute left-6 top-1/2 -translate-y-1/2 text-qe-blue transition-transform group-focus-within:scale-110" width="22" height="22" fill="none" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.5" />
+              <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+            <input type="text" placeholder="Cerca guide, funzioni, faq..." [(ngModel)]="query" class="w-full pl-14 pr-6 py-5 rounded-full text-qe-text dark:text-slate-100 text-lg outline-none bg-transparent placeholder-gray-400 dark:placeholder-slate-500 font-medium" />
+          </div>
+        </div>
+
+        <!-- Ricerche frequenti -->
+        <div class="flex flex-wrap justify-center gap-3 mt-8">
+          <button
+            *ngFor="let tag of tags; let i = index"
+            class="px-5 py-2.5 rounded-full text-sm font-semibold text-qe-textSecondary dark:text-slate-300 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm hover:scale-105 hover:text-qe-blue dark:hover:text-qe-blue hover:shadow-md hover:border-qe-blue/30 dark:hover:border-qe-blue/50 transition-all duration-300 active:scale-95"
+            [style.opacity]="stage === 1 ? 1 : 0"
+            [style.transform]="stage === 1 ? 'translateY(0)' : 'translateY(20px)'"
+            [style.pointer-events]="stage === 1 ? 'auto' : 'none'"
+            [style.transition]="'opacity 0.8s ease ' + (0.4 + i * 0.1) + 's, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (0.4 + i * 0.1) + 's'"
+          >
+            {{ tag }}
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Footer -->
+    <footer class="bg-transparent border-t border-gray-100/50 dark:border-slate-800/50 px-6 py-4 backdrop-blur-sm relative z-10" style="animation: fadeInPage 1s ease forwards">
+      <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-qe-textSecondary dark:text-slate-500">
+        <p>&copy; 2026 <strong class="text-qe-text dark:text-slate-400">Quaderno Elettronico</strong> &bull; Assistenza Clienti</p>
+        <div class="flex items-center gap-4">
+          <a href="#" class="hover:text-qe-blue transition-colors">Privacy</a>
+          <a href="#" class="hover:text-qe-blue transition-colors">Termini</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>

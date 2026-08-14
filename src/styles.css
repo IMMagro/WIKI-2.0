@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background-color: theme('colors.qe.bg');
+  color: theme('colors.qe.text');
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes borderSpin {
+  to { --border-angle: 360deg; }
+}
+
+.search-input-wrapper {
+  position: relative;
+  border-radius: 9999px;
+  padding: 2px;
+  background: #e5e7eb;
+}
+
+.search-input-wrapper:focus-within {
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0deg,
+    transparent 320deg,
+    #377DFF 345deg,
+    #7cb9ff 355deg,
+    #377DFF 360deg
+  );
+  animation: borderSpin 4s linear infinite;
+}
+
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes glowDrift {
+  0%   { transform: translate(-50%, -50%) scale(1);        }
+  25%  { transform: translate(-52%, -53%) scale(1.06);     }
+  50%  { transform: translate(-48%, -47%) scale(0.96);     }
+  75%  { transform: translate(-51%, -50%) scale(1.04);     }
+  100% { transform: translate(-50%, -50%) scale(1);        }
+}
+
+/* View Transitions Base */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+/* --- ANIMAZIONE CAMBIO TEMA (Spicchio Lento) --- */
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) {
+  animation: sweepCorner 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  z-index: 9999;
+}
+.dark::view-transition-old(root) { animation: none; }
+.dark::view-transition-new(root) {
+  animation: sweepCorner 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  z-index: 9999;
+}
+
+@keyframes sweepCorner {
+  from { clip-path: circle(0% at var(--click-x, 5%) var(--click-y, 95%)); }
+  to { clip-path: circle(150% at var(--click-x, 5%) var(--click-y, 95%)); }
+}
+
+/* --- TOGGLE CONCEPTS --- */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
