@@ -68,3 +68,5 @@
 
 ## When instructions conflict
 The nearest `AGENTS.md` wins. Explicit user prompts override files.
+
+CRITICAL RULE: Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to Git.
