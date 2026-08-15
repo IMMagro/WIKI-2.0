@@ -28,10 +28,11 @@ export class AppComponent implements OnInit {
   ];
 
   menuItems = [
-    { icon: 'grid', label: 'QeHome', active: true },
-    { icon: 'document-text', label: 'Manuali', active: false },
-    { icon: 'cash', label: 'Servizi', active: false },
-    { icon: 'chart-bar', label: 'Documenti', active: false },
+    { icon: 'home', label: 'QeHome', active: true },
+    { icon: 'book-open', label: 'Manuali', active: false },
+    { icon: 'briefcase', label: 'Servizi', active: false },
+    { icon: 'folder', label: 'Documenti', active: false },
+    { icon: 'newspaper', label: 'News', active: false },
     { icon: 'cog', label: 'Impostazioni', active: false },
   ];
 
