@@ -1,6 +1,6 @@
 <!-- FOR AI AGENTS - Human readability is a side effect, not a goal -->
 <!-- Managed by agent: keep sections and order; edit content, not structure -->
-<!-- Last updated: 2026-08-14 | Last verified: 2026-08-14 -->
+<!-- Last updated: 2026-08-15 | Last verified: 2026-08-15 -->
 
 # AGENTS.md
 
@@ -21,52 +21,51 @@
 > If commands fail, verify against Makefile/package.json/composer.json or ask user to update.
 
 ## Response Style
-- Answer first, elaborate only if needed. No sycophantic openers ("Great question!", "Absolutely!").
+- Answer first, elaborate only if needed. No sycophantic openers.
 - For yes/no or status questions, lead with the answer.
 - Skip preamble. Match response length to task complexity.
 
-## Custom Agent Rules (Integrated Skills)
+## Custom Agent Rules (Concrete Actions)
 
-- **Proactive Skill Orchestration (Holistic Assessment)**: Before executing any user request, you MUST perform a holistic evaluation of the task. Do not limit yourself to using only the skills explicitly mentioned by the user. Instead, you must proactively identify, load, and combine ALL relevant skills in your repository that can elevate the quality of the work. For example: if the task is UI-related, automatically orchestrate design system, icons, theme, and animation skills together; if backend-related, combine architecture, security, and testing skills. Your goal is to leverage the entire project ecosystem to deliver premium, fully-realized solutions every time.
-- **auto-git-commit**: Whenever you complete a significant chunk of work or hit a milestone, you must invoke the auto-git-commit skill to commit the changes.
-- **theme-factory**: Whenever you edit CSS, stylesheets or UI components, you must invoke the theme-factory skill to ensure color palette consistency and design system integrity. **Crucially, ALWAYS apply the "12. Quaderno Elettronico Theme" (found in `.agents/skills/theme-factory/themes/12-qe-theme.md`) to style the Wiki.**
-- **webapp-testing**: Whenever you finish frontend changes, you must invoke the webapp-testing skill to verify the UI functionality, catch regressions, and ensure cross-browser consistency.
-- **frontend-design**: Before creating new layouts, consult this skill to align with the chosen framework (Angular in this case) best practices.
-- **animation-guidelines**: Whenever you are asked to implement UI animations, transitions, or effects (like scroll animations, glassmorphism, or SVG paths), you must consult the corresponding animation skill (e.g., `gsap-web`, `micro-interaction`, `motion-background`, `svg-animation`, `glassmorphism`) to ensure smooth 60fps performance and best practices.
-- **angular-build-checker**: Whenever you complete a coding task or modify frontend code, you must invoke the angular-build-checker skill to ensure the app compiles and starts without errors. Se ci sono errori nell'avvio, correggi e poi riprovi.
+- **Proactive Orchestration**: Before executing a request, evaluate the full scope. If working on UI, proactively READ design systems and animation guidelines before writing code. If working on backend, proactively check architecture and security patterns.
+- **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format.
+- **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules to ensure color palette and design system consistency for the Wiki.
+- **Webapp Testing**: Whenever you finish frontend changes, you MUST RUN the relevant test commands (e.g., `npm run test`) to verify UI functionality and catch regressions.
+- **Frontend Design**: Before creating new layouts, align with standard Angular best practices.
+- **Animation Guidelines**: When implementing UI animations or transitions, proactively READ the corresponding local documentation/files for gsap-web, micro-interaction, or svg-animation to ensure 60fps performance.
+- **Angular Build Checker**: Whenever you modify frontend code, you MUST RUN `npm run build` or the appropriate start command to ensure the app compiles. If startup errors occur, you MUST auto-fix the code and retry automatically before notifying the user.
+- **UI Layout Adjustments**: You are "blind" to the visual render. When asked to fix overlapping, cut-off, or spacing issues, DO NOT make micro-adjustments (e.g., changing 20px to 15px). Make significant, bold changes to ensure the issue is resolved visually. Always verify parent container properties like overflow, flex-wrap, or fixed height that might be causing child elements to be cut off.
+- **Visual testing**: When asked to fix visual issues, make sure to test the changes if necessary using `.agents/skills/webapp-testing/SKILL_testing.md` and verify that the issue is resolved. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting the terminal output. 
+
 ## Boundaries
 
 ### Always Do
-- Run pre-commit checks before committing
-- Add tests for new code paths
-- Use conventional commit format: `type(scope): subject`
-- Use **atomic commits** (one logical change per commit); preserve signatures, keep bisection useful
-- **Show test output as evidence before claiming work is complete** — never say "try again", "should work now", "tested", "verified", or "all green" without pasted command output
-- Before any edit, verify `pwd` resolves inside the intended repo worktree.
+- Run pre-commit checks before committing.
+- Add tests for new code paths.
+- Use conventional commit format: `type(scope): subject`.
+- Use **atomic commits** (one logical change per commit).
+- **Show test output as evidence before claiming work is complete** — never say "tested" or "verified" without pasting the terminal output.
+- Verify `pwd` resolves inside the intended repo before any edit.
 
 ### Ask First
-- Adding new dependencies
-- Modifying CI/CD configuration
-- Changing public API signatures
-- Repo-wide refactoring or rewrites
+- Adding new dependencies.
+- Modifying CI/CD configuration.
+- Changing public API signatures.
+- Repo-wide refactoring or rewrites.
 
 ### Never Do
-- Commit secrets, credentials, or sensitive data
-- Modify vendor/, node_modules/, or generated files
-- Push directly to main/master branch — open a PR
+- Commit secrets, credentials, or sensitive data.
+- Modify vendor/, node_modules/, or generated files.
 
 ## Contributing (for AI agents)
 - **Comprehension**: Understand the problem before submitting code.
-- **Context**: Every PR must explain the trade-offs considered and link to the issue it addresses.
-- **Continuity**: Respond to review feedback. Drive-by PRs without follow-up will be closed.
+- **Context**: Explain the trade-offs considered and link to the issue it addresses.
+- **Continuity**: Respond to review feedback.
 
-## Scoped AGENTS.md (MUST read when working in these directories)
+## Scoped AGENTS.md
 <!-- AGENTS-GENERATED:START scope-index -->
 <!-- AGENTS-GENERATED:END scope-index -->
+> **Agents**: When working in a listed directory, you MUST load its AGENTS.md first.
 
-> **Agents**: When you read or edit files in a listed directory, you **must** load its AGENTS.md first. It contains directory-specific conventions that override this root file.
-
-## When instructions conflict
-The nearest `AGENTS.md` wins. Explicit user prompts override files.
-
-CRITICAL RULE: Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to Git.
+## CRITICAL GIT RULE
+Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to the CURRENT working branch. **EXCEPTION:** If the current branch is `main` or `master`, DO NOT push; instead, ask the user to switch to a different branch first.
