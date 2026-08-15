@@ -136,7 +136,7 @@ export class AppComponent implements OnInit {
     } else if (pageLabel === 'Servizi') {
       this.pageTimeout = setTimeout(() => {
         this.serviziStage = 'cards';
-      }, 800);
+      }, 1200);
     }
   }
 
