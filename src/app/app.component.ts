@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
 
   activeIndex = 0;
   homeStage = 0;
-  serviziStage: 'title' | 'cards' = 'title';
+  serviziStage: 'title-black' | 'title-blue' | 'moving' | 'cards' = 'title-black';
   currentServicePage = 0;
   isChangingPage = false;
   animatingDirection = 0;
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
       if (prevLabel === 'QeHome') {
         this.homeStage = 0;
       } else if (prevLabel === 'Servizi') {
-        this.serviziStage = 'title';
+        this.serviziStage = 'title-black';
         this.currentServicePage = 0;
         this.animatingDirection = 0;
       }
@@ -117,6 +117,7 @@ export class AppComponent implements OnInit {
 
     // Reset for new entrance
     if (selectedItem.label === 'Servizi') {
+      this.serviziStage = 'title-black';
       this.animatingDirection = 0;
     }
 
@@ -134,9 +135,24 @@ export class AppComponent implements OnInit {
         this.homeStage = 1;
       }, 800);
     } else if (pageLabel === 'Servizi') {
+      // Step 1: Color it blue after 800ms
       this.pageTimeout = setTimeout(() => {
-        this.serviziStage = 'cards';
-      }, 1200);
+        if (this.activeIndex !== 2) return;
+        this.serviziStage = 'title-blue';
+        
+        // Step 2: Move to top left after 500ms
+        setTimeout(() => {
+          if (this.activeIndex !== 2) return;
+          this.serviziStage = 'moving';
+          
+          // Step 3: Shift right and show "Tutti i" after move completes
+          setTimeout(() => {
+            if (this.activeIndex !== 2) return;
+            this.serviziStage = 'cards';
+          }, 800);
+          
+        }, 500);
+      }, 800);
     }
   }
 
