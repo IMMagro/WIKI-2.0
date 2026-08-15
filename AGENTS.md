@@ -68,4 +68,4 @@
 > **Agents**: When working in a listed directory, you MUST load its AGENTS.md first.
 
 ## CRITICAL GIT RULE
-Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to the CURRENT working branch. **EXCEPTION:** If the current branch is `main` or `master`, DO NOT push; instead, ask the user to switch to a different branch first.
+Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to the CURRENT working branch. You should use the `main` branch as the primary branch, and it is permitted to push directly to `main` unless the user specifies otherwise.
