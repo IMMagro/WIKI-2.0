@@ -54,6 +54,14 @@ export class AppComponent implements OnInit {
   currentServicePage = 0;
   isChangingPage = false;
   animatingDirection = 0;
+  animationVariant = 1;
+
+  testVariant(v: number) {
+    this.animationVariant = v;
+    this.serviziStage = 'title-black';
+    this.triggerPageAnimation('Servizi');
+  }
+
   private pageTimeout: any;
 
   services = [
@@ -171,19 +179,41 @@ export class AppComponent implements OnInit {
             const sx = first.width / last.width;
             const sy = first.height / last.height;
             
-            el.animate([
-              { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-              { transformOrigin: 'top left', transform: 'none' }
-            ], {
-              duration: 800,
-              easing: 'cubic-bezier(0.34,1.56,0.64,1)'
-            });
+            let keyframes: Keyframe[] = [];
+            let options: KeyframeAnimationOptions = { duration: 800, easing: 'cubic-bezier(0.34,1.56,0.64,1)' };
+
+            if (this.animationVariant === 1) {
+              // Variant 1: Classic Smooth FLIP
+              keyframes = [
+                { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+                { transformOrigin: 'top left', transform: 'none' }
+              ];
+            } else if (this.animationVariant === 2) {
+              // Variant 2: Cinematic Zoom & Fade
+              keyframes = [
+                { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 1, filter: 'blur(0px)' },
+                { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx*3}, ${sy*3})`, opacity: 0, filter: 'blur(10px)', offset: 0.4 },
+                { transformOrigin: 'top left', transform: `translate(0, 50px) scale(0.5)`, opacity: 0, filter: 'blur(5px)', offset: 0.41 },
+                { transformOrigin: 'top left', transform: 'none', opacity: 1, filter: 'blur(0px)' }
+              ];
+              options = { duration: 1200, easing: 'ease-in-out' };
+            } else {
+              // Variant 3: Arc Drop & Bounce
+              keyframes = [
+                { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+                { transformOrigin: 'top left', transform: `translate(${dx/2}px, ${dy - 100}px) scale(${sx*1.2}, ${sy*1.2}) rotate(-5deg)` },
+                { transformOrigin: 'top left', transform: 'none' }
+              ];
+              options = { duration: 1000, easing: 'cubic-bezier(0.34,1.56,0.64,1)' };
+            }
+            
+            el.animate(keyframes, options);
             
             // Step 3: Shift right and show "Tutti i" after move completes
             setTimeout(() => {
               if (this.activeIndex !== 2) return;
               this.serviziStage = 'cards';
-            }, 800);
+            }, Number(options.duration));
             
           }, 0);
         }, 500);
