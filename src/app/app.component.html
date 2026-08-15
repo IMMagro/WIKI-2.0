@@ -142,12 +142,10 @@
           <div class="w-full h-full max-w-7xl mx-auto relative flex flex-col justify-start">
             
             <!-- Animated Title (Always Present) -->
-            <div class="absolute z-20 flex items-center transition-all duration-[800ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-left pointer-events-none"
-                 [ngStyle]="{
-                   'top': (serviziStage === 'title-black' || serviziStage === 'title-blue') ? '45%' : '0px',
-                   'left': (serviziStage === 'title-black' || serviziStage === 'title-blue') ? '50%' : '8px',
-                   'transform': (serviziStage === 'title-black' || serviziStage === 'title-blue') ? 'translate(-50%, -50%) scale(2.2)' : 'translate(0, 0) scale(1)'
-                 }">
+            <div #serviziTitle class="absolute z-20 flex items-center origin-left pointer-events-none"
+                 [ngClass]="(serviziStage === 'title-black' || serviziStage === 'title-blue') 
+                            ? 'top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[2.2]' 
+                            : 'top-0 left-2 translate-x-0 translate-y-0 scale-100'">
               <h2 class="text-3xl font-bold flex items-center m-0 tracking-tight" style="text-shadow: 0 4px 30px rgba(0,0,0,0.1);">
                 <span class="text-qe-text dark:text-white transition-all duration-[800ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden whitespace-nowrap" 
                       [ngStyle]="{

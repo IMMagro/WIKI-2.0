@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
+  @ViewChild('serviziTitle') serviziTitle!: ElementRef;
   query = '';
   stage = 0;
   titleVisible = false;
@@ -140,17 +141,51 @@ export class AppComponent implements OnInit {
         if (this.activeIndex !== 2) return;
         this.serviziStage = 'title-blue';
         
-        // Step 2: Move to top left after 500ms
+        // Step 2: Move to top left after 500ms using JS FLIP for 60fps
         setTimeout(() => {
           if (this.activeIndex !== 2) return;
+          
+          // First (measure)
+          const el = this.serviziTitle?.nativeElement;
+          if (!el) {
+            this.serviziStage = 'moving';
+            setTimeout(() => { if (this.activeIndex === 2) this.serviziStage = 'cards'; }, 800);
+            return;
+          }
+          
+          const first = el.getBoundingClientRect();
+          
+          // Mutate (change layout class)
           this.serviziStage = 'moving';
           
-          // Step 3: Shift right and show "Tutti i" after move completes
+          // Wait for Angular to update the DOM
           setTimeout(() => {
             if (this.activeIndex !== 2) return;
-            this.serviziStage = 'cards';
-          }, 800);
-          
+            
+            // Last (measure new layout)
+            const last = el.getBoundingClientRect();
+            
+            // Invert & Play
+            const dx = first.left - last.left;
+            const dy = first.top - last.top;
+            const sx = first.width / last.width;
+            const sy = first.height / last.height;
+            
+            el.animate([
+              { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
+              { transformOrigin: 'top left', transform: 'none' }
+            ], {
+              duration: 800,
+              easing: 'cubic-bezier(0.34,1.56,0.64,1)'
+            });
+            
+            // Step 3: Shift right and show "Tutti i" after move completes
+            setTimeout(() => {
+              if (this.activeIndex !== 2) return;
+              this.serviziStage = 'cards';
+            }, 800);
+            
+          }, 0);
         }, 500);
       }, 800);
     }
