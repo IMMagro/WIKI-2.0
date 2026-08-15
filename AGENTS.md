@@ -28,7 +28,7 @@
 ## Custom Agent Rules (Concrete Actions)
 
 - **Proactive Orchestration**: Before executing a request, evaluate the full scope. If working on UI, proactively READ design systems and animation guidelines before writing code. If working on backend, proactively check architecture and security patterns.
-- **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format.
+- **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format, you can also use `.agents/skills/auto-gitcommit/skill_gitcommit.md` as a reference skill to generate a git commit message.
 - **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules to ensure color palette and design system consistency for the Wiki.
 - **Webapp Testing**: Whenever you finish frontend changes, you MUST RUN the relevant test commands (e.g., `npm run test`) to verify UI functionality and catch regressions.
 - **Frontend Design**: Before creating new layouts, align with standard Angular best practices.
