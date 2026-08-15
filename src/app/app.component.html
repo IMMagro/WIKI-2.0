@@ -134,7 +134,7 @@
         </div>
 
         <!-- View 2: Servizi -->
-        <div class="absolute inset-0 flex flex-col pt-32 pb-10 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-8 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              [style.opacity]="activeIndex === 2 ? 1 : 0"
              [style.pointer-events]="activeIndex === 2 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 2 ? 'translateY(0)' : (2 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
@@ -152,37 +152,39 @@
           </div>
 
           <!-- Fase 2: Griglia Servizi (Carosello 4 card) -->
-          <div class="w-full h-full max-w-7xl mx-auto flex flex-col justify-center transition-all duration-1000"
+          <div class="w-full h-full max-w-7xl mx-auto flex flex-col justify-start transition-all duration-1000"
                (wheel)="onWheel($event)"
                [style.opacity]="serviziStage === 'cards' ? 1 : 0"
                [style.pointer-events]="(activeIndex === 2 && serviziStage === 'cards') ? 'auto' : 'none'"
                [style.transform]="serviziStage === 'cards' ? 'translateY(0)' : 'translateY(40px)'">
-            <h2 class="text-3xl font-bold text-qe-text dark:text-white mb-8 ml-2">Tutti i <span class="text-qe-blue">servizi</span></h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <h2 class="text-3xl font-bold text-qe-text dark:text-white mb-4 xl:mb-6 ml-2 shrink-0">Tutti i <span class="text-qe-blue">servizi</span></h2>
+            
+            <div class="flex-1 min-h-0 w-full pb-2">
+              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 grid-rows-2 gap-4 xl:gap-6 h-full">
               <a *ngFor="let service of (services | slice:(currentServicePage * 8):((currentServicePage + 1) * 8)); let i = index" 
                  [href]="service.link" target="_blank"
-                 class="group relative flex flex-col bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:-translate-y-2 hover:scale-[1.02] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                 class="group relative flex flex-col bg-white dark:bg-slate-800 rounded-2xl xl:rounded-3xl p-4 xl:p-6 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:-translate-y-2 hover:scale-[1.02] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden min-h-0"
                  [style.animation]="getCardAnimation(i)"
                  style="opacity: 0; will-change: transform, opacity;">
                  
                 <!-- GPU-accelerated Hover Shadow -->
-                <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[0_20px_40px_-10px_rgba(55,125,255,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"></div>
+                <div class="absolute inset-0 rounded-2xl xl:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[0_20px_40px_-10px_rgba(55,125,255,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"></div>
 
                 <!-- Subtle Background Gradient that deepens on hover -->
-                <div class="absolute inset-0 bg-gradient-to-br opacity-[0.03] dark:opacity-[0.05] rounded-3xl transition-opacity duration-500 group-hover:opacity-[0.12]"
+                <div class="absolute inset-0 bg-gradient-to-br opacity-[0.03] dark:opacity-[0.05] rounded-2xl xl:rounded-3xl transition-opacity duration-500 group-hover:opacity-[0.12]"
                      [ngClass]="service.color || 'from-slate-200 to-slate-100'"></div>
 
-                <div class="relative z-10 flex flex-col h-full items-center text-center">
+                <div class="relative z-10 flex flex-col h-full items-center text-center justify-center">
                   <!-- Icon Container -->
-                  <div class="w-20 h-20 mb-5 flex items-center justify-center bg-slate-50 dark:bg-slate-700/30 rounded-2xl p-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md">
+                  <div class="w-14 h-14 xl:w-20 xl:h-20 mb-3 xl:mb-5 shrink-0 flex items-center justify-center bg-slate-50 dark:bg-slate-700/30 rounded-2xl p-3 xl:p-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md">
                     <img [src]="service.image" [alt]="service.title" class="w-full h-full object-contain filter dark:brightness-110 transition-transform duration-500 group-hover:rotate-3" />
                   </div>
                   <!-- Testi -->
-                  <h3 class="text-[17px] font-bold text-slate-800 dark:text-slate-100 mb-3 leading-tight group-hover:text-qe-blue dark:group-hover:text-qe-blue transition-colors duration-300">
+                  <h3 class="text-[15px] xl:text-[17px] font-bold text-slate-800 dark:text-slate-100 mb-2 xl:mb-3 leading-tight group-hover:text-qe-blue dark:group-hover:text-qe-blue transition-colors duration-300">
                     {{ service.title }}
                   </h3>
-                  <p class="text-[13.5px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium transition-colors duration-300 group-hover:text-slate-600 dark:group-hover:text-slate-300 line-clamp-4">
+                  <p class="text-[12px] xl:text-[13.5px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium transition-colors duration-300 group-hover:text-slate-600 dark:group-hover:text-slate-300 line-clamp-3 xl:line-clamp-4 overflow-hidden">
                     {{ service.description }}
                   </p>
                 </div>
@@ -190,7 +192,7 @@
             </div>
 
             <!-- Mouse Scroll Indicator -->
-            <div class="mt-6 mb-2 flex flex-row items-center justify-center gap-2.5 text-slate-400 dark:text-slate-500 group cursor-pointer"
+            <div class="mt-auto shrink-0 flex flex-row items-center justify-center gap-2.5 text-slate-400 dark:text-slate-500 group cursor-pointer pb-2"
                  (click)="nextServicePage()">
               <!-- Mouse Icon -->
               <div class="w-[16px] h-[26px] rounded-full border-[1.5px] border-slate-300 dark:border-slate-600 flex justify-center pt-[3px] group-hover:border-qe-blue dark:group-hover:border-qe-blue transition-colors duration-300">
@@ -199,6 +201,7 @@
               <span class="text-[10px] font-bold uppercase tracking-wider group-hover:text-qe-blue transition-colors duration-300">
                 Ulteriori servizi
               </span>
+            </div>
             </div>
           </div>
         </div>
