@@ -3,6 +3,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -56,27 +64,39 @@ body {
   100% { transform: translate(-50%, -50%) scale(1);        }
 }
 
-/* View Transitions Base */
+/* --- ANIMAZIONE CAMBIO TEMA (Transizione JS Dinamica) --- */
+::view-transition-group(root),
+::view-transition-image-pair(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
-/* --- ANIMAZIONE CAMBIO TEMA (Spicchio Lento) --- */
-::view-transition-old(root) { animation: none; }
-::view-transition-new(root) {
-  animation: sweepCorner 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  z-index: 9999;
-}
-.dark::view-transition-old(root) { animation: none; }
-.dark::view-transition-new(root) {
-  animation: sweepCorner 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  z-index: 9999;
-}
 
-@keyframes sweepCorner {
-  from { clip-path: circle(0% at var(--click-x, 5%) var(--click-y, 95%)); }
-  to { clip-path: circle(150% at var(--click-x, 5%) var(--click-y, 95%)); }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 9999; }
+
+/* --- CARD ENTRANCE & EXIT ANIMATIONS --- */
+
+@keyframes fadeLeftOut {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-60px); }
+}
+@keyframes fadeRightOut {
+  0% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(60px); }
+}
+@keyframes fadeRightIn {
+  0% { opacity: 0; transform: translateX(60px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeLeftIn {
+  0% { opacity: 0; transform: translateX(-60px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeUpCard {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* --- TOGGLE CONCEPTS --- */
