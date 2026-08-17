@@ -21,9 +21,7 @@ export class AppComponent implements OnInit {
   isAdminAuthenticated = false;
 
   backgroundImages = [
-    'assets/images/office-1.jpg',
-    'assets/images/office-2.jpg',
-    'assets/images/office-3.jpg'
+    'https://lh3.googleusercontent.com/p/AHRPTWkqbCnoaGxkVXBvsq6Z4TYSc3WFMPt3JFsakXiPUqpaume69N06lb9P_smVHHNIWMenaHfhyrOc6Fp23rHNfmsScYQGC9flDhWAVtKgz2uWPZag_thg9ns71ZB3cP1Ls8b4FBeU=w1920-h1080-k-no'
   ];
   currentBgIndex = 0;
   private bgInterval: any;
