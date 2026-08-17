@@ -56,6 +56,27 @@ body {
   to   { opacity: 1; transform: translateY(0);   }
 }
 
+/* Effetto scintilla sul nome del programma attivo */
+@keyframes shimmerSweep {
+  0% { background-position: 200% center; }
+  100% { background-position: -50% center; }
+}
+.shimmer-active {
+  background-image: linear-gradient(
+    120deg,
+    currentColor 0%,
+    currentColor 35%,
+    var(--shimmer-color, #377DFF) 50%,
+    currentColor 65%,
+    currentColor 100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmerSweep 2.5s ease-in-out 0.3s forwards;
+}
+
 @keyframes glowDrift {
   0%   { transform: translate(-50%, -50%) scale(1);        }
   25%  { transform: translate(-52%, -53%) scale(1.06);     }
@@ -129,4 +150,17 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(148, 163, 184, 0.6);
+}
+
+/* Subtitle Fade In */
+@keyframes simpleFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animate-simple-fade-in {
+  animation: simpleFadeIn 0.8s ease-in-out 0.3s forwards;
 }
