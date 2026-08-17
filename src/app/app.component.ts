@@ -20,11 +20,24 @@ export class AppComponent implements OnInit {
   isAdminRoute = false;
   isAdminAuthenticated = false;
 
+  backgroundImages = [
+    'assets/images/office-1.jpg',
+    'assets/images/office-2.jpg',
+    'assets/images/office-3.jpg'
+  ];
+  currentBgIndex = 0;
+  private bgInterval: any;
+
   constructor(private eRef: ElementRef) {}
 
-
+  startBackgroundRotation() {
+    this.bgInterval = setInterval(() => {
+      this.currentBgIndex = (this.currentBgIndex + 1) % this.backgroundImages.length;
+    }, 6000); // Ruota ogni 6 secondi
+  }
 
   exitAdmin() {
+    if (this.bgInterval) clearInterval(this.bgInterval);
     this.isAdminRoute = false;
     window.history.pushState({}, '', '/');
   }
@@ -452,6 +465,7 @@ export class AppComponent implements OnInit {
     
     if (path === '/admin' || hash.includes('/admin')) {
       this.isAdminRoute = true;
+      this.startBackgroundRotation();
     }
 
     this.triggerPageAnimation('QeHome');
