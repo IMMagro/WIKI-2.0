@@ -7,6 +7,110 @@
     <div class="absolute w-[500px] h-[500px] bg-qe-magenta/20 rounded-full blur-[100px] bottom-[-100px] right-[-100px]" style="animation: pulse 8s infinite alternate"></div>
   </div>
 
+  <!-- ADMIN LOGIN OVERLAY -->
+  <div *ngIf="isAdminRoute && !isAdminAuthenticated" class="fixed inset-0 z-50 transition-all duration-700 font-sans">
+    
+    <!-- THEME: DEEP SPACE (Dark Mode Glassmorphism) -->
+    <div class="absolute inset-0 flex items-center justify-center bg-[#0F172A]/90 backdrop-blur-3xl transition-opacity duration-500 overflow-hidden">
+      
+      <!-- Chiudi Modale -->
+      <button (click)="exitAdmin()" class="absolute top-8 right-8 z-[60] w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors border border-white/10 backdrop-blur-md">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <!-- Background Orbs -->
+      <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F80086]/30 rounded-full filter blur-[100px] opacity-80 mix-blend-screen animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#377DFF]/30 rounded-full filter blur-[100px] opacity-80 mix-blend-screen animate-pulse" style="animation-delay: 2s;"></div>
+        
+        <!-- Large reflective surface/planet at bottom -->
+        <div class="absolute -bottom-64 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-t from-[#F80086]/20 to-transparent rounded-[100%] filter blur-xl opacity-60"></div>
+      </div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row items-center gap-6 max-w-5xl w-full p-4 justify-center">
+        
+        <!-- LEFT COLUMN: Login + Pill -->
+        <div class="flex flex-col gap-4 w-full max-w-sm">
+          
+          <!-- Login Card -->
+          <div class="w-full p-8 bg-[#1E293B]/40 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] rounded-[2.5rem] backdrop-blur-2xl text-[#F8FAFD]" style="animation: fadeUpCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+            <div class="flex justify-between items-center mb-8">
+              <span class="text-xs font-bold tracking-widest text-[#94A3B8] uppercase">Quaderno</span>
+              <span class="text-xs font-bold tracking-widest text-[#F8FAFD] uppercase cursor-pointer hover:opacity-80">Sign up</span>
+            </div>
+            <h2 class="text-4xl font-light tracking-tight mb-8 text-white">Log in</h2>
+            <div class="w-full space-y-4">
+              <div class="relative flex items-center bg-[#0F172A]/50 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] border border-white/5 backdrop-blur-md">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none"><span class="text-[#94A3B8] font-bold">&#64;</span></div>
+                <input type="email" placeholder="e-mail address" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              </div>
+              <div class="relative flex items-center bg-[#0F172A]/50 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] border border-white/5 backdrop-blur-md pr-2">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none">
+                  <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                </div>
+                <input type="password" placeholder="password" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+                <button class="px-4 py-1.5 bg-[#1E293B] rounded-full text-xs font-bold text-[#94A3B8] shadow-sm hover:text-white transition-colors flex-shrink-0">I forgot</button>
+              </div>
+            </div>
+            <div class="mt-8 flex items-center justify-between">
+              <div class="flex flex-col gap-1">
+                <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Accesso riservato al personale. In caso di problemi contatta l'amministratore.</p>
+                <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Please authenticate!</span>
+              </div>
+              <button (click)="loginAdmin()" class="w-12 h-12 bg-white text-[#0F172A] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95 transition-transform flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Dark Pill Info -->
+          <div class="w-full px-8 py-6 bg-[#0F172A] border border-white/5 rounded-[2rem] flex items-end justify-between shadow-xl" style="animation: fadeUpCard 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+            <div>
+              <h3 class="text-white text-xl font-medium tracking-tight">Wiki 2.0</h3>
+              <p class="text-[#94A3B8] text-sm mt-1">Dashboard Management</p>
+            </div>
+            <span class="text-[#F8FAFD] text-xs font-semibold uppercase tracking-wider">Discover</span>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Tall Card -->
+        <div class="hidden md:flex w-full max-w-[320px] h-[520px] bg-white/5 border border-white/10 shadow-2xl rounded-[2.5rem] relative overflow-hidden backdrop-blur-lg" style="animation: fadeUpCard 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+          <!-- Inner split background: left side is frosted white -->
+          <div class="absolute inset-y-0 left-0 w-[45%] bg-white/80 backdrop-blur-xl z-10 border-r border-white/20"></div>
+          
+          <!-- Large Pink Circle bleeding behind the glass -->
+          <div class="absolute top-1/2 right-4 -translate-y-1/2 w-48 h-48 bg-gradient-to-br from-[#F80086] to-[#FF4D9E] rounded-full shadow-[0_0_40px_rgba(248,0,134,0.4)] z-0"></div>
+
+          <!-- Content overlay -->
+          <div class="absolute inset-0 z-20 flex flex-col justify-between p-8">
+            <div>
+              <h1 class="text-5xl font-light text-[#0F172A] leading-tight mt-4">Aug<br><span class="text-[#94A3B8]">2026</span></h1>
+              <div class="absolute top-12 right-6 text-right">
+                <p class="text-[10px] text-white/80 uppercase tracking-widest font-semibold">Minimalism style</p>
+                <p class="text-[10px] text-white/60">Typography</p>
+              </div>
+            </div>
+            
+            <div class="mt-auto mb-16 text-[#0F172A] max-w-[40%]">
+              <p class="text-[10px] font-bold mb-1">Server Status</p>
+              <p class="text-[10px] text-slate-500 leading-tight">All systems operational</p>
+              <p class="text-[10px] text-slate-500 mt-2 font-semibold">Quaderno</p>
+            </div>
+
+            <div class="absolute bottom-8 right-6 w-20 h-8 bg-[#0F172A] rounded-full flex items-center justify-between px-1 shadow-lg cursor-pointer hover:bg-black transition-colors">
+              <span class="text-[8px] text-white font-bold ml-2">Click Here</span>
+              <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- Main Content Wrapper (Static padding, non si muove più) -->
   <div class="absolute inset-0 z-10 flex flex-col">
     
@@ -177,8 +281,7 @@
                     <span class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-bottom-left inline-block"
                           [ngStyle]="{
                             'opacity': serviziStage === 'title-black' ? '0' : '1',
-                            'transform': serviziStage === 'title-black' ? 'scale(1.3) translateY(-5%)' : 'scale(1) translateY(0)',
-                            'margin-right': serviziStage === 'title-black' ? '0.15em' : '0'
+                            'transform': serviziStage === 'title-black' ? 'scale(1.3) translateY(-5%)' : 'scale(1) translateY(0)'
                           }">s</span>
                   </span>
                   <span>ervizi</span>
@@ -237,12 +340,178 @@
           </div>
         </div>
 
-        <!-- View 3: Documenti -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center pb-20 px-4 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <!-- View 3: Documenti (3D Carousel) -->
+        <div class="absolute inset-0 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              [style.opacity]="activeIndex === 3 ? 1 : 0"
              [style.pointer-events]="activeIndex === 3 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 3 ? 'translateY(0)' : (3 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
-          <h1 class="text-qe-text dark:text-slate-100 text-center font-extrabold tracking-tight" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.05);">Documenti</h1>
+          
+          <div class="absolute z-20 flex flex-col gap-4 transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+               [ngClass]="docEntranceStage === 'center' 
+                  ? 'top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 items-center' 
+                  : 'top-12 left-[15%] translate-x-0 translate-y-0 scale-100 items-start'">
+            <div class="flex flex-col transition-all duration-700" [ngClass]="docEntranceStage === 'center' ? 'items-center text-center' : 'items-start text-left'">
+              <h1 class="text-qe-text dark:text-slate-100 font-extrabold tracking-tight text-5xl mb-2 flex" style="perspective: 600px;">
+                <span *ngFor="let letter of docTitleLetters; let i = index"
+                      class="inline-block"
+                      [style.animation]="activeIndex === 3 ? 'rollingLetter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (i * 0.04) + 's forwards' : 'none'"
+                      style="opacity: 0; transform-origin: 50% 50% -30px;">
+                  <span *ngIf="letter === ' '">&nbsp;</span>
+                  <span *ngIf="letter !== ' '">{{ letter }}</span>
+                </span>
+              </h1>
+              <p class="text-slate-500 dark:text-slate-400 font-medium text-lg transition-opacity duration-500"
+                 [ngClass]="docEntranceStage === 'content' ? 'relative' : 'absolute opacity-0 pointer-events-none'"
+                 [style.animation]="docEntranceStage === 'content' ? 'fadeUpCard 0.8s ease-out forwards' : 'none'"
+                 style="opacity: 0;">Scorri con la rotellina per navigare l'archivio</p>
+            </div>
+            
+            <!-- Barra di ricerca documenti (Expandable) -->
+            <div class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center shadow-sm backdrop-blur-md"
+                 [ngClass]="{
+                    'absolute opacity-0 pointer-events-none': docEntranceStage !== 'content',
+                    'relative mt-2': docEntranceStage === 'content',
+                    'opacity-0 pointer-events-none': isReadingMode,
+                    'opacity-100': !isReadingMode && docEntranceStage === 'content',
+                    'w-72 h-12 rounded-2xl bg-white/70 dark:bg-slate-800/70 border border-slate-200/50 dark:border-slate-700/50': isSearchExpanded,
+                    'w-12 h-12 rounded-full bg-white/40 dark:bg-slate-800/40 border border-transparent cursor-pointer hover:bg-white/60 dark:hover:bg-slate-800/60': !isSearchExpanded
+                 }"
+                 (click)="!isSearchExpanded ? toggleSearch() : null">
+                 
+              <div class="absolute left-0 w-12 h-12 flex items-center justify-center pointer-events-none">
+                <svg class="w-5 h-5 transition-colors duration-300" 
+                     [ngClass]="isSearchExpanded ? 'text-qe-blue' : 'text-slate-500 dark:text-slate-400'" 
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+              
+              <input id="docSearchInput" type="text" [(ngModel)]="documentSearchQuery" (input)="onDocumentSearch()" (blur)="closeSearch()"
+                     placeholder="Cerca un manuale..." 
+                     class="w-full h-full pl-11 pr-4 bg-transparent outline-none border-none text-slate-700 dark:text-slate-200 placeholder-slate-400 transition-all duration-300"
+                     [ngClass]="isSearchExpanded ? 'opacity-100 placeholder:font-medium' : 'opacity-0 pointer-events-none'">
+            </div>
+          </div>
+
+          <div class="flex-1 relative w-full h-full overflow-hidden transition-opacity duration-[1200ms] ease-out" 
+               style="perspective: 2000px;"
+               [style.opacity]="docEntranceStage === 'content' ? '1' : '0'"
+               [style.pointer-events]="docEntranceStage === 'content' ? 'auto' : 'none'">
+            
+            <!-- La "Leader Line" (Filo Laser) & Pallino -->
+            <!-- Il wrapper si ferma esattamente prima del popup a sinistra -->
+            <div class="absolute top-1/2 left-[calc(22%+500px)] h-[2px] -translate-y-1/2 pointer-events-none z-10 flex items-center transition-all duration-500"
+                 [ngClass]="{'opacity-0': isReadingMode}"
+                 [style.right]="(hoveredDocIndex === docActiveIndex && docPopupStage >= 1) ? 'calc(38% + 24px)' : '38%'">
+              
+              <!-- Linea orizzontale (esce da destra verso sinistra) -->
+              <div class="h-full bg-[#377DFF] origin-right shadow-[0_0_4px_rgba(55,125,255,0.8)]"
+                   style="transition: transform 300ms ease-out; width: 100%;"
+                   [style.transform]="docPopupStage >= 1 ? 'scaleX(1)' : 'scaleX(0)'"></div>
+              
+              <!-- Pallino in movimento -->
+              <!-- Si muove da right: 0 a right: 100% rispetto al wrapper -->
+              <div class="absolute top-1/2 -mt-1.5 w-3 h-3 bg-[#377DFF] rounded-full shadow-[0_0_8px_#377DFF]"
+                   style="transition: right 300ms ease-out, opacity 150ms ease-out; transform: translateX(50%);"
+                   [style.right]="docPopupStage >= 1 ? '100%' : '0%'"
+                   [style.opacity]="docPopupStage >= 1 ? '1' : '0'">
+              </div>
+            </div>
+
+            <!-- Il cilindro 3D (Tamburo) -->
+            <!-- Spostato a destra (right: 30%) -->
+            <div class="absolute top-1/2 right-[30%] -translate-y-1/2 translate-x-1/2 w-[380px] h-[160px] transition-opacity duration-500"
+                 style="transform-style: preserve-3d;"
+                 [ngClass]="{'opacity-0 pointer-events-none': isReadingMode}">
+              <!-- Le singole diapositive/card -->
+              <div *ngFor="let doc of documents; let i = index"
+                   class="absolute inset-0"
+                   style="transition: opacity 200ms ease-out;"
+                   [style.transform]="getDocTransform(i)"
+                   [ngStyle]="getDocStyles(i)"
+                   (mouseenter)="hoveredDocIndex = i"
+                   (mouseleave)="hoveredDocIndex = null">
+                
+                <div class="w-full h-full bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-[2rem] border border-white/60 dark:border-slate-700/50 shadow-2xl flex items-center p-6 cursor-pointer hover:bg-white dark:hover:bg-slate-800 hover:-translate-x-6 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] group">
+                  <div class="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 mr-5 transition-transform duration-300 group-hover:scale-110"
+                       [ngClass]="{'bg-red-100 text-red-500 dark:bg-red-900/30 dark:text-red-400': doc.type === 'PDF',
+                                   'bg-blue-100 text-blue-500 dark:bg-blue-900/30 dark:text-blue-400': doc.type === 'DOCX',
+                                   'bg-green-100 text-green-500 dark:bg-green-900/30 dark:text-green-400': doc.type === 'XLSX',
+                                   'bg-gray-100 text-gray-500 dark:bg-gray-800/50 dark:text-gray-400': doc.type === 'TXT'}">
+                    <svg *ngIf="doc.type === 'PDF'" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                    <svg *ngIf="doc.type === 'DOCX'" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <svg *ngIf="doc.type === 'XLSX'" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    <svg *ngIf="doc.type === 'TXT'" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                  </div>
+                  
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-xl font-bold text-qe-text dark:text-white truncate"
+                        [ngClass]="{'text-qe-blue dark:text-qe-blue': i === docActiveIndex}">{{doc.title}}</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">{{doc.date}} • {{doc.size}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Il Popup laterale -->
+            <div class="absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20"
+                 [ngClass]="{
+                   'opacity-100': (docPopupStage === 2 && activeIndex === 3) || isReadingMode,
+                   'opacity-0 pointer-events-none': docPopupStage !== 2 && !isReadingMode,
+                   'left-1/2 -translate-x-1/2 w-[800px] h-[85vh]': isReadingMode,
+                   'left-[22%] w-[480px] h-auto': !isReadingMode
+                 }">
+              <div class="bg-white/85 dark:bg-slate-800/85 backdrop-blur-3xl rounded-[2.5rem] border border-white/60 dark:border-slate-700/50 p-10 shadow-[0_30px_60px_-15px_rgba(55,125,255,0.15)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] h-full flex flex-col relative overflow-hidden">
+                
+                <!-- Close Button (Absolute Top Right) -->
+                <button *ngIf="isReadingMode" (click)="toggleReadingMode()" class="absolute top-6 right-6 w-12 h-12 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-full flex items-center justify-center transition-colors shadow-sm">
+                  <svg class="w-6 h-6 text-slate-500 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                <div class="mb-6 flex items-center justify-between shrink-0 pr-12">
+                  <span class="px-4 py-1.5 bg-qe-blue/10 text-qe-blue rounded-full text-xs font-extrabold uppercase tracking-wider">{{ documents[docActiveIndex].type }}</span>
+                  <span class="text-xs font-bold text-slate-400">{{ documents[docActiveIndex].date }}</span>
+                </div>
+                
+                <h2 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-4 leading-tight shrink-0">{{ documents[docActiveIndex].title }}</h2>
+                
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto pr-4 custom-scrollbar" [ngClass]="{'mb-10': !isReadingMode}">
+                  <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-lg" [ngClass]="{'mb-8': isReadingMode}">{{ documents[docActiveIndex].desc }}</p>
+                  
+                  <!-- Dummy Text for Reading Mode -->
+                  <div *ngIf="isReadingMode" class="text-slate-600 dark:text-slate-300 space-y-6 pb-8">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">1. Introduzione</h3>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                    <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?</p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">2. Requisiti di Sistema</h3>
+                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
+                    <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+                    <h3 class="text-xl font-bold text-slate-800 dark:text-white mt-8 mb-4">3. Configurazione Iniziale</h3>
+                    <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-4 shrink-0 mt-6" *ngIf="!isReadingMode">
+                  <button (click)="toggleReadingMode()" class="flex-1 bg-qe-blue text-white rounded-2xl py-4 font-bold text-lg hover:bg-blue-600 hover:-translate-y-1 transition-all shadow-lg shadow-qe-blue/30 active:scale-95 flex items-center justify-center gap-2">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    Visiona manuale
+                  </button>
+                  <button class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-700/50 flex items-center justify-center text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-slate-700 dark:hover:text-white transition-all hover:-translate-y-1 shadow-md active:scale-95 shrink-0" title="Scarica ({{ documents[docActiveIndex].size }})">
+                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- View 4: News -->

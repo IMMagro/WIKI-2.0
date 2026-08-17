@@ -64,7 +64,7 @@ body {
   100% { transform: translate(-50%, -50%) scale(1);        }
 }
 
-/* --- ANIMAZIONE CAMBIO TEMA (Transizione JS Dinamica) --- */
+/* --- ANIMAZIONE CAMBIO TEMA --- */
 ::view-transition-group(root),
 ::view-transition-image-pair(root),
 ::view-transition-old(root),
@@ -99,10 +99,34 @@ body {
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* --- TITLE ROLLING ANIMATION --- */
+@keyframes rollingLetter {
+  0% { opacity: 0; transform: rotateX(-90deg) translateY(-20px); }
+  100% { opacity: 1; transform: rotateX(0deg) translateY(0); }
+}
+
 /* --- TOGGLE CONCEPTS --- */
 .preserve-3d {
   transform-style: preserve-3d;
 }
 .backface-hidden {
   backface-visibility: hidden;
+}
+
+/* --- CUSTOM SCROLLBAR PER READING MODE --- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.4);
+  border-radius: 20px;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.2);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.6);
 }

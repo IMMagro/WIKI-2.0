@@ -17,8 +17,22 @@ export class AppComponent implements OnInit {
   isDarkMode = false;
   isSidebarExpanded = false;
   isContactOpen = false;
+  isAdminRoute = false;
+  isAdminAuthenticated = false;
 
   constructor(private eRef: ElementRef) {}
+
+
+
+  exitAdmin() {
+    this.isAdminRoute = false;
+    window.history.pushState({}, '', '/');
+  }
+
+  loginAdmin() {
+    // For now, simulate a successful login
+    this.isAdminAuthenticated = true;
+  }
 
   tags = [
     'Cambio credenziali 730',
@@ -95,6 +109,76 @@ export class AppComponent implements OnInit {
     { title: "Idoctors", description: "Sincronizza l'agenda di Quaderno Elettronico con il portale di visibilità Idoctors e gestisci tutto in un unico gestionale in modo facile e veloce.", image: "https://www.quadernoelettronico.it/librerie/qe/img/add-on/idoctors.svg", link: "https://www.quadernoelettronico.it/servizi/idoctors", color: "from-sky-500 to-blue-500" }
   ];
 
+  // --- DOCUMENTI 3D CAROUSEL ---
+  documents = [
+    { title: 'Manuale Utente 2026', type: 'PDF', size: '2.4 MB', date: '10 Ago 2026', desc: 'Guida completa all\'utilizzo del software gestionale.' },
+    { title: 'Modulo Privacy', type: 'DOCX', size: '1.1 MB', date: '05 Ago 2026', desc: 'Informativa sul trattamento dei dati personali (GDPR).' },
+    { title: 'Listino Prezzi', type: 'XLSX', size: '0.8 MB', date: '01 Ago 2026', desc: 'Prezzario ufficiale per le prestazioni odontoiatriche.' },
+    { title: 'Certificazione CE', type: 'PDF', size: '4.5 MB', date: '15 Lug 2026', desc: 'Dichiarazione di conformità del dispositivo medico.' },
+    { title: 'Manuale Integrazione TS', type: 'PDF', size: '3.2 MB', date: '10 Lug 2026', desc: 'Specifiche tecniche per l\'invio al Sistema TS.' },
+    { title: 'Consenso Informato', type: 'DOCX', size: '0.5 MB', date: '05 Lug 2026', desc: 'Modello standard per il consenso alle cure.' },
+    { title: 'Brochure Servizi', type: 'PDF', size: '5.1 MB', date: '01 Lug 2026', desc: 'Presentazione dei servizi aggiuntivi e add-on.' },
+    { title: 'Guida Fatturazione', type: 'PDF', size: '2.9 MB', date: '20 Giu 2026', desc: 'Gestione della fatturazione elettronica.' },
+    { title: 'Note di Rilascio v5.2', type: 'TXT', size: '0.1 MB', date: '15 Giu 2026', desc: 'Changelog completo dell\'ultimo aggiornamento.' },
+    { title: 'Template Referto', type: 'DOCX', size: '0.6 MB', date: '10 Giu 2026', desc: 'Modello per la refertazione medica.' },
+    { title: 'Report Statistiche', type: 'XLSX', size: '1.4 MB', date: '01 Giu 2026', desc: 'Esempio di report esportabile dalla dashboard.' },
+    { title: 'Manuale Backup', type: 'PDF', size: '1.8 MB', date: '25 Mag 2026', desc: 'Istruzioni per il salvataggio in cloud.' }
+  ];
+
+  docAngleStep = 30; // 360 / 12 items
+  docRadius = 400; // Radius of the cylinder
+  docTargetRotation = 0;
+  docCurrentRotation = 0;
+  docActiveIndex = 0;
+  docAnimationId: number | null = null;
+  hoveredDocIndex: number | null = null;
+  isReadingMode: boolean = false;
+  
+  documentSearchQuery: string = '';
+  isSearchExpanded: boolean = false;
+  docTitleLetters = 'Documenti'.split('');
+  docEntranceStage: 'center' | 'moving' | 'content' = 'center';
+
+  toggleSearch() {
+    this.isSearchExpanded = true;
+    // Timeout needed to allow the input to render before focusing
+    setTimeout(() => {
+      const input = document.getElementById('docSearchInput');
+      if (input) input.focus();
+    }, 100);
+  }
+
+  closeSearch() {
+    if (!this.documentSearchQuery.trim()) {
+      this.isSearchExpanded = false;
+    }
+  }
+
+  onDocumentSearch() {
+    if (!this.documentSearchQuery.trim()) return;
+    
+    const query = this.documentSearchQuery.toLowerCase();
+    const matchIndex = this.documents.findIndex(d => 
+      d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query)
+    );
+
+    if (matchIndex !== -1 && matchIndex !== this.docActiveIndex) {
+      // Calcoliamo lo scostamento circolare più breve
+      const diff = matchIndex - this.docActiveIndex;
+      let rotationsToMove = diff;
+      
+      // Se è più veloce girare dall'altra parte
+      if (Math.abs(diff) > this.documents.length / 2) {
+        rotationsToMove = diff > 0 ? diff - this.documents.length : diff + this.documents.length;
+      }
+      
+      this.docTargetRotation -= rotationsToMove * this.docAngleStep;
+      this.updateDocActiveIndex();
+      this.startDocAnimation();
+    }
+  }
+  // -----------------------------
+
   selectMenuItem(selectedItem: any) {
     if (selectedItem.active) return; // Prevent resetting if clicking the same item
 
@@ -113,13 +197,25 @@ export class AppComponent implements OnInit {
         this.serviziStage = 'title-black';
         this.currentServicePage = 0;
         this.animatingDirection = 0;
+      } else if (prevLabel === 'Documenti') {
+        this.docEntranceStage = 'center';
       }
     }, 700);
 
     // Reset for new entrance
-    if (selectedItem.label === 'Servizi') {
+    if (selectedItem.label === 'QeHome') {
+      this.homeStage = 0;
+    } else if (selectedItem.label === 'Servizi') {
       this.serviziStage = 'title-black';
       this.animatingDirection = 0;
+    } else if (selectedItem.label === 'Documenti') {
+      this.docEntranceStage = 'center';
+      setTimeout(() => {
+        this.docEntranceStage = 'moving';
+        setTimeout(() => {
+          this.docEntranceStage = 'content';
+        }, 800);
+      }, 1200);
     }
 
     this.triggerPageAnimation(selectedItem.label);
@@ -248,6 +344,19 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:wheel', ['$event'])
   onWheel(event: WheelEvent) {
+    if (this.activeIndex === 3) {
+      if (this.isReadingMode) {
+        // If reading, allow native scroll inside the expanded popup
+        return;
+      }
+      event.preventDefault();
+      // Increase/decrease target rotation based on scroll direction
+      this.docTargetRotation += event.deltaY > 0 ? -this.docAngleStep : this.docAngleStep;
+      this.updateDocActiveIndex();
+      this.startDocAnimation();
+      return;
+    }
+
     // Only handle scroll when we're viewing cards (Fase 2)
     if (this.activeIndex !== 2 || this.serviziStage !== 'cards') return;
     
@@ -271,7 +380,80 @@ export class AppComponent implements OnInit {
     }
   }
 
+  updateDocActiveIndex() {
+    let rotations = Math.round(this.docTargetRotation / this.docAngleStep);
+    let idx = (-rotations) % this.documents.length;
+    if (idx < 0) idx += this.documents.length;
+    this.docActiveIndex = idx;
+  }
+
+  docPopupStage = 2; // 0: hidden, 1: drawing line, 2: popup visible
+  private docPopupTimeout: any = null;
+
+  startDocAnimation() {
+    // Hide popup and line when wheel starts moving
+    this.docPopupStage = 0;
+    if (this.docPopupTimeout) {
+      clearTimeout(this.docPopupTimeout);
+    }
+
+    if (!this.docAnimationId) {
+      const animate = () => {
+        const diff = this.docTargetRotation - this.docCurrentRotation;
+        if (Math.abs(diff) < 0.1) {
+          this.docCurrentRotation = this.docTargetRotation;
+          this.docAnimationId = null;
+          
+          // When rotation finishes, trigger the line drawing
+          this.docPopupStage = 1;
+          this.docPopupTimeout = setTimeout(() => {
+            // After 300ms (line drawing duration), show the popup
+            this.docPopupStage = 2;
+          }, 400);
+
+        } else {
+          this.docCurrentRotation += diff * 0.12; // Smooth lerp
+          this.docAnimationId = requestAnimationFrame(animate);
+        }
+      };
+      this.docAnimationId = requestAnimationFrame(animate);
+    }
+  }
+
+  getDocTransform(i: number): string {
+    const angle = i * this.docAngleStep + this.docCurrentRotation;
+    return `rotateX(${angle}deg) translateZ(${this.docRadius}px)`;
+  }
+
+  toggleReadingMode() {
+    this.isReadingMode = !this.isReadingMode;
+  }
+
+  getDocStyles(index: number) {
+    // Calculate the shortest distance on the cylinder
+    let distance = Math.abs(index - this.docActiveIndex);
+    if (distance > this.documents.length / 2) {
+      distance = this.documents.length - distance;
+    }
+    
+    if (distance === 0) {
+      return { 'opacity': '1', 'filter': 'none' };
+    } else if (distance === 1) {
+      return { 'opacity': '0.6', 'filter': 'blur(2px)' };
+    } else {
+      return { 'opacity': '0.15', 'filter': 'blur(5px)' };
+    }
+  }
+
+
   ngOnInit() {
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    
+    if (path === '/admin' || hash.includes('/admin')) {
+      this.isAdminRoute = true;
+    }
+
     this.triggerPageAnimation('QeHome');
     // Check initial theme preference
     if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
