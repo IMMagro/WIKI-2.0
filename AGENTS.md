@@ -36,6 +36,10 @@
 - **Angular Build Checker**: Whenever you modify frontend code, you MUST RUN `npm run build` or the appropriate start command to ensure the app compiles. If startup errors occur, you MUST auto-fix the code and retry automatically before notifying the user.
 - **UI Layout Adjustments**: You are "blind" to the visual render. When asked to fix overlapping, cut-off, or spacing issues, DO NOT make micro-adjustments (e.g., changing 20px to 15px). Make significant, bold changes to ensure the issue is resolved visually. Always verify parent container properties like overflow, flex-wrap, or fixed height that might be causing child elements to be cut off.
 - **Visual testing**: When asked to fix visual issues, make sure to test the changes if necessary using `.agents/skills/webapp-testing/SKILL_testing.md` and verify that the issue is resolved. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting the terminal output. 
+- **ui-ux-pro-max**: Whenever designing, building, reviewing, or fixing UI/UX interfaces, you must proactively invoke the `ui-ux-pro-max` skill to leverage its local UX guidelines and palettes.
+- **ui-styling**: When styling components or implementing layouts, you must invoke the `ui-styling` skill to ensure accessible patterns and Tailwind best practices.
+- **design-system**: Whenever you create or modify UI components, you must consult the `design-system` skill to maintain token architecture and typography scales.
+- **brand**: Whenever you create or update marketing assets, messaging, or branded content, you must use the `brand` skill to ensure brand compliance and consistent voice.
 
 ## Boundaries
 
