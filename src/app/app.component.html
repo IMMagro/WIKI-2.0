@@ -378,12 +378,12 @@
             </div>
             
             <!-- Barra di ricerca documenti (Expandable) -->
-            <div class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center shadow-sm backdrop-blur-md"
+            <div *ngIf="docEntranceStage === 'content'"
+                 class="relative mt-2 flex items-center shadow-sm backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                 style="animation: fadeUpCard 0.8s ease-out forwards;"
                  [ngClass]="{
-                    'absolute opacity-0 pointer-events-none': docEntranceStage !== 'content',
-                    'relative mt-2': docEntranceStage === 'content',
                     'opacity-0 pointer-events-none': isReadingMode,
-                    'opacity-100': !isReadingMode && docEntranceStage === 'content',
+                    'opacity-100': !isReadingMode,
                     'w-72 h-12 rounded-2xl bg-white/70 dark:bg-slate-800/70 border border-slate-200/50 dark:border-slate-700/50': isSearchExpanded,
                     'w-12 h-12 rounded-full bg-white/40 dark:bg-slate-800/40 border border-transparent cursor-pointer hover:bg-white/60 dark:hover:bg-slate-800/60': !isSearchExpanded
                  }"
