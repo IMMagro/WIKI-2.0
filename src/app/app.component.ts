@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   isAdminAuthenticated = false;
 
   backgroundImages = [
-    '/assets/images/quaderno-bg-wide.jpg'
+    '/assets/images/quaderno-bg-left-logo.jpg'
   ];
   currentBgIndex = 0;
   private bgInterval: any;
