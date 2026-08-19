@@ -32,7 +32,7 @@
 - **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules to ensure color palette and design system consistency for the Wiki.
 - **Webapp Testing**: Whenever you finish frontend changes, you MUST RUN the relevant test commands (e.g., `npm run test`) to verify UI functionality and catch regressions.
 - **Frontend Design**: Before creating new layouts, align with standard Angular best practices.
-- **Animation Guidelines**: When implementing UI animations or transitions, proactively READ the corresponding local documentation/files for gsap-web, micro-interaction, or svg-animation to ensure 60fps performance.
+- **Animation Guidelines**: When implementing UI animations or transitions, proactively READ the corresponding local documentation/files in the .agents/skills/animation/ folder (e.g. gsap-web, micro-interaction, or svg-animation) to ensure 60fps performance.
 - **Angular Build Checker**: Whenever you modify frontend code, you MUST RUN `npm run build` or the appropriate start command to ensure the app compiles. If startup errors occur, you MUST auto-fix the code and retry automatically before notifying the user.
 - **UI Layout Adjustments**: You are "blind" to the visual render. When asked to fix overlapping, cut-off, or spacing issues, DO NOT make micro-adjustments (e.g., changing 20px to 15px). Make significant, bold changes to ensure the issue is resolved visually. Always verify parent container properties like overflow, flex-wrap, or fixed height that might be causing child elements to be cut off.
 - **Visual testing**: When asked to fix visual issues, make sure to test the changes if necessary using `.agents/skills/webapp-testing/SKILL_testing.md` and verify that the issue is resolved. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting the terminal output. 
@@ -40,6 +40,10 @@
 - **ui-styling**: When styling components or implementing layouts, you must invoke the `ui-styling` skill to ensure accessible patterns and Tailwind best practices.
 - **design-system**: Whenever you create or modify UI components, you must consult the `design-system` skill to maintain token architecture and typography scales.
 - **brand**: Whenever you create or update marketing assets, messaging, or branded content, you must use the `brand` skill to ensure brand compliance and consistent voice.
+- **ui-tester**: Whenever you modify Angular templates or want to verify UI interactions (buttons, modals, links), you must use the `.agents/skills/ui-tester/SKILL.md` skill to run visual and logical checks.
+- **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), you must use the `.agents/skills/api-generator/SKILL.md` skill to ensure it follows standard C# JSON-handling patterns.
+- **mock-data-cleaner**: Whenever you need to prepare the frontend for real HTTP integration, use the `.agents/skills/mock-data-cleaner/SKILL.md` skill to strip out hardcoded mock data cleanly.
+- **manual-generator**: Whenever you need to create, format, or write a manual (wiki guide) for the user, you MUST proactively use the `.agents/skills/manual-generator/SKILL.md` skill to ensure the output respects the required MDX structure, HTML formatting, and UI tags.
 
 ## Boundaries
 
