@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Rilascio QE 2.4.0", "category": "Release", "date": "15 Agosto 2026", "status": "Pubblicato", "views": 1250 },
+  { "id": 2, "title": "Manutenzione Server DB", "category": "Avviso", "date": "10 Agosto 2026", "status": "Programmato", "views": 450 },
+  { "id": 3, "title": "Nuove funzionalità TS", "category": "Feature", "date": "5 Agosto 2026", "status": "Bozza", "views": 0 },
+  { "id": 4, "title": "Aggiornamento sicurezza", "category": "Security", "date": "1 Agosto 2026", "status": "Pubblicato", "views": 3200 }
+]

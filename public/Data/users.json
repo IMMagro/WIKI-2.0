@@ -1,0 +1,8 @@
+[
+  {
+    "email": "admin",
+    "passwordHash": "pbkdf2$sha256$100000$2grxYOCkkrv717sri7Akeg==$fRbVr5JryB4BAUGx0fLn3/smljq0E9POp9CXsN/EwQA=",
+    "role": "admin",
+    "name": "Amministratore"
+  }
+]
