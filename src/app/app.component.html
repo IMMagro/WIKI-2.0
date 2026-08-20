@@ -139,7 +139,7 @@
     <!-- SIDEBAR -->
     <aside class="relative z-10 w-[280px] h-full flex flex-col p-6 bg-white/60 backdrop-blur-3xl border-r border-white/80 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
       <!-- Logo -->
-      <div class="flex items-center gap-3 mb-10 pl-2">
+      <div class="flex items-center gap-3 mb-10 pl-2 cursor-pointer transition-transform hover:scale-105" (click)="exitAdmin()">
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#377DFF] to-[#F80086] flex items-center justify-center font-bold text-white shadow-[0_4px_10px_rgba(55,125,255,0.3)]">QE</div>
         <span class="font-bold text-lg tracking-wide text-[#1E2022]">Quaderno Admin</span>
       </div>
@@ -187,7 +187,10 @@
 
       <!-- Bottom Settings -->
       <div class="mt-auto border-t border-[#E2E8F0] pt-4">
-        <a href="javascript:void(0)" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#77838F] hover:bg-[#F8FAFD] hover:text-[#1E2022] transition-all font-medium">
+        <a href="javascript:void(0)" 
+           (click)="activeAdminTab = 'settings'"
+           [ngClass]="activeAdminTab === 'settings' ? 'bg-[#F0F5FF] text-[#377DFF] font-semibold' : 'text-[#77838F] hover:bg-[#F8FAFD] hover:text-[#1E2022] font-medium'"
+           class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           Impostazioni
         </a>
@@ -941,6 +944,32 @@
           </button>
         </div>
       </ng-container>
+      <!-- SETTINGS TAB -->
+      <ng-container *ngIf="activeAdminTab === 'settings'">
+        <header class="flex justify-between items-center mb-10">
+          <div>
+            <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Impostazioni <span class="font-bold text-[#377DFF]">Piattaforma</span></h1>
+            <p class="text-[#77838F] mt-1 font-medium">Gestisci le preferenze globali e l'interfaccia utente.</p>
+          </div>
+        </header>
+
+        <div class="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 max-w-4xl">
+          <h2 class="text-xl font-bold text-[#1E2022] mb-6">Aspetto e Animazioni</h2>
+          
+          <div class="flex items-center justify-between p-6 bg-[#F8FAFD] rounded-2xl border border-[#E2E8F0] hover:border-[#377DFF]/30 transition-colors">
+            <div class="pr-8">
+              <h3 class="font-bold text-[#1E2022] text-lg">Animazioni di Transizione Menù</h3>
+              <p class="text-sm text-[#77838F] mt-2 leading-relaxed">Attiva le animazioni di ingresso (scorrimento e fade) quando l'utente naviga tra le sezioni principali (Home, FAQ, Manuali).</p>
+            </div>
+            
+            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+              <input type="checkbox" [(ngModel)]="globalAnimationsEnabled" class="sr-only peer">
+              <div class="w-14 h-7 bg-[#E2E8F0] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#377DFF] shadow-inner"></div>
+            </label>
+          </div>
+        </div>
+      </ng-container>
+      
     </main>
   </div>
 
@@ -1124,7 +1153,8 @@
           </div>
         </div>
         <!-- View 1: Manuali -->
-        <div class="absolute inset-0 overflow-y-auto scrollbar-hide flex flex-col py-8 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-8 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+             [ngClass]="selectedFaq ? 'overflow-hidden' : 'overflow-y-auto scrollbar-hide'"
              [style.opacity]="activeIndex === 1 ? 1 : 0"
              [style.pointer-events]="activeIndex === 1 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 1 ? 'translateY(0)' : (1 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
@@ -1162,7 +1192,9 @@
             <div class="flex items-end justify-between mb-8">
               <!-- Intestazione -->
               <div>
-                <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-100 flex items-center"
+                <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] flex items-center"
+                    [class.transition-none]="!globalAnimationsEnabled"
+                    [class.delay-100]="globalAnimationsEnabled"
                     [style.opacity]="activeIndex === 1 ? 1 : 0"
                     [style.transform]="activeIndex === 1 ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.95)'">
                   Esplora 
@@ -1172,7 +1204,9 @@
                     <span class="transition-transform duration-300 ease-out hover:-translate-y-1.5 cursor-default">Q</span>
                   </span>
                 </h1>
-                <p class="text-slate-500 dark:text-slate-400 max-w-2xl text-lg m-0 transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] delay-300"
+                <p class="text-slate-500 dark:text-slate-400 max-w-2xl text-lg m-0 transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                   [class.transition-none]="!globalAnimationsEnabled"
+                   [class.delay-300]="globalAnimationsEnabled"
                    [style.opacity]="activeIndex === 1 ? 1 : 0"
                    [style.transform]="activeIndex === 1 ? 'translateY(0)' : 'translateY(20px)'">
                   Trova le risposte alle domande più frequenti e le guide rapide.
@@ -1208,6 +1242,50 @@
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11l-7 4-7-4m14-4l-7 4-7-4m14 8l-7 4-7-4" /></svg>
                   </button>
                 </div>
+
+                <!-- Statistiche Popover Container -->
+                <div class="relative">
+                  <button (click)="isFaqStatsModalOpen = !isFaqStatsModalOpen" class="flex items-center justify-center p-2 rounded-xl bg-white/70 dark:bg-slate-800/70 backdrop-blur-md shadow-sm border border-slate-200 dark:border-slate-700 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-qe-blue transition-all" [ngClass]="isFaqStatsModalOpen ? 'bg-qe-blue/10 text-qe-blue ring-1 ring-qe-blue/30' : ''" title="Statistiche Lettura">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                  </button>
+
+                  <!-- Popover Minimale -->
+                  <div *ngIf="isFaqStatsModalOpen" class="absolute top-0 left-full ml-4 z-[110] bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-700 w-56 overflow-hidden animate-[scaleUp_0.2s_ease-out] origin-top-left">
+                    <div class="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex justify-between items-center">
+                      <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Progressi Lettura</h3>
+                      <button (click)="isFaqStatsModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                      </button>
+                    </div>
+                    <div class="p-4 flex flex-col items-center">
+                      <!-- Pie Chart Piccolo -->
+                      <div class="w-24 h-24 rounded-full mb-4 shadow-inner relative flex items-center justify-center transition-all duration-700" 
+                           [style.background]="getPieGradient()">
+                        <div class="w-16 h-16 rounded-full bg-white dark:bg-slate-800 flex flex-col items-center justify-center shadow-sm">
+                          <span class="text-lg font-black text-slate-800 dark:text-white leading-none">{{getReadPercentage() | number:'1.0-0'}}%</span>
+                        </div>
+                      </div>
+                      
+                      <!-- Legend Compatta -->
+                      <div class="w-full space-y-2">
+                        <div class="flex items-center justify-between text-xs p-2 rounded-lg bg-green-50 dark:bg-green-900/20">
+                          <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-[#10B981]"></div>
+                            <span class="font-bold text-green-800 dark:text-green-300">Lette</span>
+                          </div>
+                          <span class="font-black text-green-700 dark:text-green-400">{{getReadCount()}}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+                          <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+                            <span class="font-bold text-slate-600 dark:text-slate-400">Da Leggere</span>
+                          </div>
+                          <span class="font-black text-slate-500 dark:text-slate-300">{{getUnreadCount()}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1233,7 +1311,12 @@
                   <div class="absolute inset-0 bg-gradient-to-br opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500" [ngClass]="m.color"></div>
                   
                   <div>
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mb-4">{{m.category}}</span>
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{{m.category}}</span>
+                      <span *ngIf="isFaqRead(m.id)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800/50">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> LETTO
+                      </span>
+                    </div>
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2 leading-tight group-hover:text-qe-blue transition-colors">{{m.title}}</h3>
                     <p class="text-slate-500 dark:text-slate-400 line-clamp-3 text-sm">{{m.desc}}</p>
                   </div>
@@ -1259,6 +1342,9 @@
                     </div>
                   </div>
                   <div class="flex items-center gap-4">
+                    <span *ngIf="isFaqRead(m.id)" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800/50 flex items-center gap-1">
+                      <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> LETTO
+                    </span>
                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">{{m.category}}</span>
                     <button class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 group-hover:bg-qe-blue group-hover:text-white transition-all shadow-sm">
                       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -1286,7 +1372,10 @@
                     <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-3">{{m.desc}}</p>
                   </div>
                   <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex justify-between items-center" style="transform: translateZ(20px); transition: transform 0.3s ease-out;">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">{{m.category}}</span>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-400">{{m.category}}</span>
+                      <span *ngIf="isFaqRead(m.id)" class="text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></span>
+                    </div>
                     <span class="text-sm font-semibold text-qe-blue">Apri</span>
                   </div>
                 </div>
@@ -1308,7 +1397,12 @@
                   <div class="absolute inset-0 bg-gradient-to-br opacity-[0.05] group-hover:opacity-[0.1] transition-opacity duration-500" [ngClass]="m.color"></div>
                   
                   <div class="relative z-10">
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-white/60 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 mb-4 backdrop-blur-sm border border-white/50 dark:border-slate-700/50">{{m.category}}</span>
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-white/60 dark:bg-slate-900/40 text-slate-700 dark:text-slate-200 backdrop-blur-sm border border-white/50 dark:border-slate-700/50">{{m.category}}</span>
+                      <span *ngIf="isFaqRead(m.id)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-green-500/20 text-green-700 dark:text-green-300 backdrop-blur-sm border border-green-500/30">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> LETTO
+                      </span>
+                    </div>
                     <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2 leading-tight group-hover:text-qe-blue transition-colors">{{m.title}}</h3>
                     <p class="text-slate-600 dark:text-slate-300 line-clamp-3 text-sm font-medium">{{m.desc}}</p>
                   </div>
@@ -1339,7 +1433,12 @@
                   <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style="background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%);"></div>
                   
                   <div class="relative z-10">
-                    <span class="inline-block px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest bg-white/20 dark:bg-black/20 text-slate-800 dark:text-white mb-4 backdrop-blur-md shadow-sm">{{m.category}}</span>
+                    <div class="flex items-center gap-2 mb-4">
+                      <span class="inline-block px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest bg-white/20 dark:bg-black/20 text-slate-800 dark:text-white backdrop-blur-md shadow-sm">{{m.category}}</span>
+                      <span *ngIf="isFaqRead(m.id)" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-green-500/30 text-green-900 dark:text-green-200 backdrop-blur-md border border-green-500/30 shadow-sm">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg> LETTO
+                      </span>
+                    </div>
                     <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-2 leading-tight drop-shadow-md">{{m.title}}</h3>
                     <p class="text-slate-700 dark:text-slate-200 line-clamp-3 text-sm font-semibold drop-shadow-sm">{{m.desc}}</p>
                   </div>
@@ -1353,66 +1452,7 @@
               </div>
             </div>
 
-            <!-- READING VIEW MODALS -->
-            <div *ngIf="selectedFaq" class="fixed inset-0 z-[100] flex animate-[fadeIn_0.3s_ease-out]"
-                 [ngClass]="{
-                   'items-center justify-center bg-black/40 backdrop-blur-xl p-4 md:p-10': readingDesignVariant === 'A',
-                   'items-end justify-center bg-black/20': readingDesignVariant === 'B',
-                   'items-stretch justify-end bg-black/40 backdrop-blur-sm': readingDesignVariant === 'C'
-                 }">
-              
-              <!-- Sfondo cliccabile per chiudere -->
-              <div class="absolute inset-0 z-0" (click)="closeFaq()"></div>
 
-              <!-- CONTENITORE PRINCIPALE (Le 3 Varianti) -->
-              <div class="relative z-10 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden border border-white/50 dark:border-slate-700/50"
-                   [ngClass]="{
-                     'max-w-4xl rounded-[2rem] h-[85vh] animate-[scaleUp_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]': readingDesignVariant === 'A',
-                     'max-w-5xl rounded-t-[2.5rem] h-[92vh] animate-[slideUp_0.4s_ease-out]': readingDesignVariant === 'B',
-                     'max-w-2xl h-full animate-[slideLeft_0.4s_ease-out] border-l border-slate-100 dark:border-slate-800 shadow-[-20px_0_40px_rgba(0,0,0,0.1)]': readingDesignVariant === 'C'
-                   }">
-                
-                <!-- HEADER LETTURA -->
-                <div class="flex-shrink-0 flex items-center justify-between p-6 md:px-10 md:py-8 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-20">
-                  <div class="flex items-center gap-4">
-                    <button (click)="closeFaq()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-qe-blue hover:text-white transition-colors">
-                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                    </button>
-                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-white shadow-sm" [ngClass]="selectedFaq.color">{{selectedFaq.category}}</span>
-                  </div>
-                </div>
-
-                <!-- CORPO LETTURA -->
-                <div class="flex-1 overflow-y-auto p-6 md:p-10 scroll-smooth">
-                  <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">{{selectedFaq.title}}</h1>
-                  
-                  <div class="prose prose-lg dark:prose-invert prose-slate max-w-none">
-                    <p class="text-xl text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-10">{{selectedFaq.desc}}</p>
-                    
-                    <h3>1. Panoramica del servizio</h3>
-                    <p>Questo manuale spiega nel dettaglio tutte le funzionalità previste dal modulo. Assicurati di avere i permessi da amministratore per accedere a queste sezioni.</p>
-                    
-                    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-qe-blue p-6 rounded-r-2xl my-8">
-                      <h4 class="text-qe-blue font-bold flex items-center gap-2 mt-0 mb-2">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Nota bene
-                      </h4>
-                      <p class="text-blue-800 dark:text-blue-200 m-0">In caso di errori di sincronizzazione, verificare prima la connessione al server centrale cliccando su "Test Connessione" nelle Impostazioni.</p>
-                    </div>
-
-                    <h3>2. Procedura Passo-Passo</h3>
-                    <ol>
-                      <li>Accedi alla dashboard principale con le tue credenziali.</li>
-                      <li>Nel menu laterale, seleziona la voce desiderata (es. {{selectedFaq.category}}).</li>
-                      <li>Clicca sul pulsante in alto a destra "Nuovo Inserimento".</li>
-                      <li>Compila i campi obbligatori contrassegnati con l'asterisco.</li>
-                    </ol>
-
-                    <p>Per ulteriori chiarimenti o problematiche bloccanti, contattare l'assistenza tecnica fornendo il codice di errore mostrato a schermo.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -1432,6 +1472,7 @@
                             : 'top-0 left-2 translate-x-0 translate-y-0 scale-100'">
               <h2 class="text-3xl font-bold flex items-center m-0 tracking-tight" style="text-shadow: 0 4px 30px rgba(0,0,0,0.1);">
                 <span class="text-qe-text dark:text-white transition-all duration-[1500ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden whitespace-nowrap" 
+                      [class.transition-none]="!globalAnimationsEnabled"
                       [ngStyle]="{
                         'opacity': serviziStage === 'cards' ? '1' : '0',
                         'max-width': serviziStage === 'cards' ? '150px' : '0px',
@@ -1532,22 +1573,23 @@
               <h1 class="text-qe-text dark:text-slate-100 font-extrabold tracking-tight text-5xl mb-2 flex" style="perspective: 600px;">
                 <span *ngFor="let letter of docTitleLetters; let i = index"
                       class="inline-block"
-                      [style.animation]="activeIndex === 3 ? 'rollingLetter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (i * 0.04) + 's forwards' : 'none'"
-                      style="opacity: 0; transform-origin: 50% 50% -30px;">
+                      [style.animation]="activeIndex === 3 ? ((globalAnimationsEnabled ? 'rollingLetter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (i * 0.04) + 's forwards' : 'none')) : 'none'"
+                      [style.opacity]="globalAnimationsEnabled ? 0 : 1" 
+                      style="transform-origin: 50% 50% -30px;">
                   <span *ngIf="letter === ' '">&nbsp;</span>
                   <span *ngIf="letter !== ' '">{{ letter }}</span>
                 </span>
               </h1>
               <p class="text-slate-500 dark:text-slate-400 font-medium text-lg transition-opacity duration-500"
                  [ngClass]="docEntranceStage === 'content' ? 'relative' : 'absolute opacity-0 pointer-events-none'"
-                 [style.animation]="docEntranceStage === 'content' ? 'fadeUpCard 0.8s ease-out forwards' : 'none'"
-                 style="opacity: 0;">Scorri con la rotellina per navigare l'archivio</p>
+                 [style.animation]="docEntranceStage === 'content' ? (globalAnimationsEnabled ? 'fadeUpCard 0.8s ease-out forwards' : 'none') : 'none'"
+                 [style.opacity]="globalAnimationsEnabled ? 0 : 1">Scorri con la rotellina per navigare l'archivio</p>
             </div>
             
             <!-- Barra di ricerca documenti (Expandable) -->
             <div *ngIf="docEntranceStage === 'content'"
                  class="relative mt-2 flex items-center shadow-sm backdrop-blur-md transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-                 style="animation: fadeUpCard 0.8s ease-out forwards;"
+                 [style.animation]="globalAnimationsEnabled ? 'fadeUpCard 0.8s ease-out forwards' : 'none'"
                  [ngClass]="{
                     'opacity-0 pointer-events-none': isReadingMode,
                     'opacity-100': !isReadingMode,
@@ -1770,10 +1812,13 @@
               </span>
             </h1>
             
-            <!-- ANIMATED SUBTITLE -->
-            <div *ngIf="newsStage === 'cards'" class="perspective-1000 mt-3">
-              <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide animate-simple-fade-in" style="opacity: 0;">
-                Gli ultimi aggiornamenti sui prodotti Quaderno Elettronico
+            <!-- Sottotitolo (Appare dopo) -->
+            <div class="mt-4 flex items-center gap-3" *ngIf="newsStage === 'cards'">
+              <div class="w-10 h-0.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide animate-simple-fade-in"
+                 [class.animate-none]="!globalAnimationsEnabled"
+                 [style.opacity]="!globalAnimationsEnabled && newsStage === 'cards' ? 1 : 0">
+                RESTIAMO IN CONTATTO CON IL NOSTRO MONDO
               </p>
             </div>
           </div>
@@ -1883,15 +1928,6 @@
 
         </div>
 
-        <!-- View 5: Impostazioni -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center pb-20 px-4 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
-             [style.opacity]="activeIndex === 5 ? 1 : 0"
-             [style.pointer-events]="activeIndex === 5 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 5 ? 'translateY(0)' : (5 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
-          <h1 class="text-qe-text dark:text-slate-100 text-center font-extrabold tracking-tight" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.05);">Impostazioni</h1>
-
-        </div>
-
       </div>
     </header>
 
@@ -1964,8 +2000,13 @@
            </nav>
       </div>
 
-      <!-- Footer Theme Toggle -->
-      <div class="w-24 flex justify-center py-2">
+      <!-- Footer Theme & Admin Toggle -->
+      <div class="w-24 flex flex-col justify-center items-center py-4 gap-4 z-10 relative">
+         <button *ngIf="isLocalhost" (click)="goToAdmin()" title="Accedi come Admin (Solo Localhost)"
+                 class="w-12 h-12 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                 [ngClass]="isSidebarExpanded ? 'bg-indigo-50 dark:bg-indigo-900/30 shadow-[10px_0_40px_rgba(0,0,0,0.08)] rounded-full text-indigo-600 dark:text-indigo-400 hover:scale-110' : 'bg-transparent text-slate-400 hover:text-indigo-500 hover:bg-white/30 dark:hover:bg-slate-800 rounded-2xl'">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+         </button>
          <button (click)="toggleTheme($event)" 
                  class="w-12 h-12 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
                  [ngClass]="isSidebarExpanded ? 'bg-white dark:bg-slate-900 shadow-[10px_0_40px_rgba(0,0,0,0.08)] dark:shadow-[10px_0_40px_rgba(0,0,0,0.4)] rounded-full text-slate-700 dark:text-slate-200 hover:scale-110' : 'bg-transparent text-slate-500 hover:text-qe-blue hover:bg-white/30 dark:hover:bg-slate-800 rounded-2xl'">
@@ -1974,6 +2015,83 @@
          </button>
       </div>
   </aside>
+
+  <!-- READING VIEW MODALS -->
+  <div *ngIf="selectedFaq" class="fixed inset-0 z-[100] animate-[fadeIn_0.3s_ease-out]"
+        [ngClass]="{
+          'bg-slate-900/20 dark:bg-black/40 backdrop-blur-md': readingDesignVariant === 'A' || readingDesignVariant === 'B',
+          'bg-black/40 backdrop-blur-sm': readingDesignVariant === 'C',
+          'bg-white dark:bg-slate-950': readingDesignVariant === 'D'
+        }">
+    
+    <!-- Sfondo cliccabile per chiudere -->
+    <div class="absolute inset-0 z-0" (click)="closeFaq()"></div>
+
+    <!-- CONTENITORE PRINCIPALE (Le 4 Varianti) -->
+    <div class="absolute z-10 w-full flex flex-col overflow-hidden"
+          [ngClass]="{
+            'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-4xl rounded-[2rem] h-[85vh] bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-white/60 dark:border-slate-700/50 animate-[scaleUp_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]': readingDesignVariant === 'A',
+            'bottom-0 left-1/2 -translate-x-1/2 max-w-5xl rounded-t-[2.5rem] h-[92vh] bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/60 dark:border-slate-700/50 animate-[slideUp_0.4s_ease-out]': readingDesignVariant === 'B',
+            'top-0 right-0 max-w-2xl h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl border-l border-slate-100 dark:border-slate-800 animate-[slideLeft_0.4s_ease-out]': readingDesignVariant === 'C',
+            'inset-0 h-full w-full bg-white dark:bg-slate-950 animate-[fadeIn_0.3s_ease-out]': readingDesignVariant === 'D'
+          }">
+      
+      <!-- HEADER LETTURA -->
+      <div class="flex-shrink-0 flex items-center justify-between p-6 md:px-10 md:py-8 border-b sticky top-0 z-20"
+           [ngClass]="{
+             'border-white/40 dark:border-slate-700/40 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-t-[2rem]': readingDesignVariant === 'A',
+             'border-white/40 dark:border-slate-700/40 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-t-[2.5rem]': readingDesignVariant === 'B',
+             'border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md': readingDesignVariant === 'C',
+             'border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-950 max-w-5xl mx-auto w-full border-b-0 pt-10': readingDesignVariant === 'D'
+           }">
+        <div class="flex items-center gap-4">
+          <button (click)="closeFaq()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-qe-blue hover:text-white transition-colors shadow-sm">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          </button>
+          <span class="px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest text-white shadow-sm bg-gradient-to-br" [ngClass]="selectedFaq.color">{{selectedFaq.category}}</span>
+        </div>
+        
+        <!-- Pulsante visibile solo quando aperto dalla Home -->
+        <button *ngIf="activeIndex === 0" (click)="goToAllFaqs()" class="text-sm font-bold text-qe-blue hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-xl">
+          Tutte le FAQ
+          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <!-- CORPO LETTURA -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 scroll-smooth"
+           [ngClass]="{'max-w-5xl mx-auto w-full pt-4 pb-20': readingDesignVariant === 'D'}">
+        <!-- Testo più piccolo (da 5xl a 3xl) -->
+        <h1 class="font-extrabold text-slate-900 dark:text-white mb-6 leading-tight tracking-tight"
+            [ngClass]="readingDesignVariant === 'D' ? 'text-5xl md:text-6xl text-center mb-12' : 'text-3xl md:text-4xl'">{{selectedFaq.title}}</h1>
+        
+        <div class="prose prose-lg dark:prose-invert prose-slate max-w-none">
+          <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-10">{{selectedFaq.desc}}</p>
+          
+          <h3>1. Panoramica del servizio</h3>
+          <p>Questo manuale spiega nel dettaglio tutte le funzionalità previste dal modulo. Assicurati di avere i permessi da amministratore per accedere a queste sezioni.</p>
+          
+          <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-qe-blue p-6 rounded-r-2xl my-8">
+            <h4 class="text-qe-blue font-bold flex items-center gap-2 mt-0 mb-2">
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Nota bene
+            </h4>
+            <p class="text-blue-800 dark:text-blue-200 m-0">In caso di errori di sincronizzazione, verificare prima la connessione al server centrale cliccando su "Test Connessione" nelle Impostazioni.</p>
+          </div>
+
+          <h3>2. Procedura Passo-Passo</h3>
+          <ol>
+            <li>Accedi alla dashboard principale con le tue credenziali.</li>
+            <li>Nel menu laterale, seleziona la voce desiderata (es. {{selectedFaq.category}}).</li>
+            <li>Clicca sul pulsante in alto a destra "Nuovo Inserimento".</li>
+            <li>Compila i campi obbligatori contrassegnati con l'asterisco.</li>
+          </ol>
+
+          <p>Per ulteriori chiarimenti o problematiche bloccanti, contattare l'assistenza tecnica fornendo il codice di errore mostrato a schermo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Modale Caricamento Manuale -->
   <div *ngIf="isUploadModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center">
@@ -2041,8 +2159,11 @@
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
         </button>
       </div>
-
     </div>
   </div>
 
+
 </div>
+
+
+

@@ -22,7 +22,17 @@ export class AppComponent implements OnInit {
   isContactOpen = false;
   isAdminRoute = false;
   isAdminAuthenticated = false;
-  activeAdminTab: 'dashboard' | 'manuals' | 'news' | 'server' | 'users' = 'dashboard';
+  activeAdminTab: 'dashboard' | 'manuals' | 'news' | 'server' | 'users' | 'settings' = 'dashboard';
+  private _globalAnimationsEnabled: boolean = localStorage.getItem('globalAnimationsEnabled') ? JSON.parse(localStorage.getItem('globalAnimationsEnabled')!) : false;
+
+  get globalAnimationsEnabled(): boolean {
+    return this._globalAnimationsEnabled;
+  }
+
+  set globalAnimationsEnabled(value: boolean) {
+    this._globalAnimationsEnabled = value;
+    localStorage.setItem('globalAnimationsEnabled', JSON.stringify(value));
+  }
   manualsDesignVariant: 'A' | 'B' | 'C' | 'D' | 'E' = 'A';
   selectedManualStats: any = null;
   isStatsPanelOpen = false;
@@ -103,6 +113,19 @@ export class AppComponent implements OnInit {
 
   constructor(private eRef: ElementRef, private cdr: ChangeDetectorRef, private http: HttpClient) {}
 
+  readFaqs: Set<number> = new Set<number>();
+
+  markFaqAsRead(id: number) {
+    if (id && !this.readFaqs.has(id)) {
+      this.readFaqs.add(id);
+      localStorage.setItem('qe_read_faqs', JSON.stringify(Array.from(this.readFaqs)));
+    }
+  }
+
+  isFaqRead(id: number): boolean {
+    return this.readFaqs.has(id);
+  }
+
   // --- ADMIN MOCK DATA CLEANUP ---
   // TODO: Popolare tramite chiamate HTTP al backend
   adminNews: any[] = [];
@@ -118,14 +141,64 @@ export class AppComponent implements OnInit {
     }, 6000); // Ruota ogni 6 secondi
   }
 
-  exitAdmin() {
-    this.isAdminRoute = false;
+  stopBackgroundRotation() {
     if (this.bgInterval) {
       clearInterval(this.bgInterval);
+      this.bgInterval = null;
     }
-    // Remove hash if present
+  }
+
+  // Uscita dalla modalità admin
+  exitAdmin() {
+    this.isAdminRoute = false;
+    this.stopBackgroundRotation();
+    // Pulisce l'url
     if (window.location.hash.includes('/admin')) {
       window.history.pushState('', document.title, window.location.pathname + window.location.search);
+    }
+  }
+
+  isLocalhost = window.location.hostname === 'localhost';
+
+  goToAdmin() {
+    this.isAdminRoute = true;
+    this.startBackgroundRotation();
+    if (this.isLocalhost) {
+      // Accesso diretto e dati mock per localhost per evitare loop 404
+      this.isAdminAuthenticated = true;
+      this.adminDashboardStats = {
+        onlineUsers: 42,
+        mapNodes: [],
+        weeklyAccess: [],
+        trendlineData: '',
+        storageUsage: { manualsPct: 45, mediaPct: 35, totalPct: 80 },
+        searchStats: { total: 15, suffix: 'k', trend: 12, topKeywords: ['Fatturazione', 'TS', 'Agenda'] }
+      };
+      this.adminServerStats = {
+        cpu: 32, ramTotal: 16, ramUsed: 8.5, storageTotal: 2, storageUsed: 800,
+        uptimeDays: 45, uptimeTime: '12:30:45'
+      };
+      this.adminServerServices = [
+        { name: 'Database Engine', status: 'online', memory: '450MB' },
+        { name: 'API Server', status: 'online', memory: '1.2GB' },
+        { name: 'Background Jobs', status: 'warning', memory: '850MB' }
+      ];
+      this.adminServerLogs = [
+        '[INFO] Servizio avviato correttamente.',
+        '[WARN] Utilizzo memoria oltre la soglia (85%).'
+      ];
+      this.adminNews = [
+        { title: 'Aggiornamento Sistema TS 2.0 completato', date: 'Oggi', category: 'Sistema' }
+      ];
+      this.adminNotifications = [
+        { message: 'Nuovo backup generato con successo', time: '10 min fa' }
+      ];
+    } else {
+      const savedToken = sessionStorage.getItem('adminToken');
+      if (savedToken) {
+        this.isAdminAuthenticated = true;
+        this.loadAdminData();
+      }
     }
   }
 
@@ -182,8 +255,7 @@ export class AppComponent implements OnInit {
     { icon: 'book-open', label: 'FAQ', active: false },
     { icon: 'briefcase', label: 'Servizi', active: false },
     { icon: 'folder', label: 'Manuali', active: false },
-    { icon: 'newspaper', label: 'News', active: false },
-    { icon: 'cog', label: 'Impostazioni', active: false },
+    { icon: 'newspaper', label: 'News', active: false }
   ];
 
   toggleSidebar() {
@@ -251,27 +323,33 @@ export class AppComponent implements OnInit {
     this.homeSearchQuery = '';
     this.isHomeSearchOpen = false;
     
+    // Apre la FAQ in modalità sidepage (Variante C) e rimane nella home
+    this.readingDesignVariant = 'C';
+    this.selectedFaq = faq;
+    if (faq && faq.id) this.markFaqAsRead(faq.id);
+    document.body.style.overflow = 'hidden';
+  }
+
+  goToAllFaqs() {
+    this.closeFaq();
+    
     // Switch to manuali view
     this.menuItems.forEach((m, idx) => m.active = (idx === 1)); // Set FAQ tab active
     this.activeIndex = 1;
     
-    // Play transition animation
-    this.manualiStage = 'center';
-    setTimeout(() => {
-      this.manualiStage = 'content';
-    }, 2800);
-
-    // Open the manual itself
-    this.openFaq(faq);
+    // Salta l'animazione e vai direttamente al contenuto per un'apertura immediata
+    this.manualiStage = 'content';
   }
 
   // -- FAQ SEARCH --
   faqSearchQuery: string = '';
   selectedFaq: any = null;
-  readingDesignVariant: 'A' | 'B' | 'C' = 'A';
+  readingDesignVariant: 'A' | 'B' | 'C' | 'D' = 'A';
 
   openFaq(faq: any) {
+    this.readingDesignVariant = 'D'; // Quando si apre dalla pagina FAQ, usa la nuova modale full screen (Variante D)
     this.selectedFaq = faq;
+    if (faq && faq.id) this.markFaqAsRead(faq.id);
     document.body.style.overflow = 'hidden'; // Blocca lo scroll di sfondo
   }
 
@@ -279,6 +357,29 @@ export class AppComponent implements OnInit {
     this.selectedFaq = null;
     document.body.style.overflow = 'auto'; // Ripristina lo scroll
   }
+
+  // -- FAQ STATS --
+  isFaqStatsModalOpen = false;
+
+  getReadCount(): number {
+    return this.publicManuals ? this.publicManuals.filter(d => this.isFaqRead(d.id)).length : 0;
+  }
+
+  getUnreadCount(): number {
+    return this.publicManuals ? this.publicManuals.length - this.getReadCount() : 0;
+  }
+
+  getReadPercentage(): number {
+    if (!this.publicManuals || this.publicManuals.length === 0) return 0;
+    return (this.getReadCount() / this.publicManuals.length) * 100;
+  }
+
+  getPieGradient(): string {
+    const p = this.getReadPercentage();
+    const bg = this.isDarkMode ? '#334155' : '#E2E8F0'; // slate-700 or slate-200
+    return `conic-gradient(#10B981 ${p}%, ${bg} ${p}%)`;
+  }
+
 
   get filteredFAQ() {
     if (!this.faqSearchQuery || this.faqSearchQuery.trim() === '') {
@@ -599,21 +700,29 @@ export class AppComponent implements OnInit {
     if (selectedItem.label === 'QeHome') {
       this.homeStage = 0;
     } else if (selectedItem.label === 'FAQ') {
-      this.manualiStage = 'center';
-      setTimeout(() => {
+      if (!this.globalAnimationsEnabled) {
         this.manualiStage = 'content';
-      }, 2800);
+      } else {
+        this.manualiStage = 'center';
+        setTimeout(() => {
+          this.manualiStage = 'content';
+        }, 1200);
+      }
     } else if (selectedItem.label === 'Servizi') {
       this.serviziStage = 'title-black';
       this.animatingDirection = 0;
     } else if (selectedItem.label === 'Manuali') {
-      this.docEntranceStage = 'center';
-      setTimeout(() => {
-        this.docEntranceStage = 'moving';
+      if (!this.globalAnimationsEnabled) {
+        this.docEntranceStage = 'content';
+      } else {
+        this.docEntranceStage = 'center';
         setTimeout(() => {
-          this.docEntranceStage = 'content';
-        }, 800);
-      }, 1200);
+          this.docEntranceStage = 'moving';
+          setTimeout(() => {
+            this.docEntranceStage = 'content';
+          }, 800);
+        }, 1200);
+      }
     } else if (selectedItem.label === 'News') {
       this.newsStage = 'title-black';
       this.newsBaseColor = null;
@@ -639,6 +748,11 @@ export class AppComponent implements OnInit {
         this.homeStage = 1;
       }, 800);
     } else if (pageLabel === 'Servizi') {
+      if (!this.globalAnimationsEnabled) {
+        this.serviziStage = 'cards';
+        return;
+      }
+      
       // Step 1: Color it blue after 800ms
       this.pageTimeout = setTimeout(() => {
         if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
@@ -693,6 +807,13 @@ export class AppComponent implements OnInit {
         }, 500);
       }, 800);
     } else if (pageLabel === 'News') {
+      if (!this.globalAnimationsEnabled) {
+        this.newsStage = 'cards';
+        this.newsBaseColor = this.newsOverlayColor;
+        this.newsFillPosition = '100% 0%';
+        return;
+      }
+
       // Step 1: Liquid fill blue after 800ms
       this.pageTimeout = setTimeout(() => {
         if (this.activeIndex !== 4 || this.animationId !== currentAnimId) return;
@@ -919,6 +1040,17 @@ export class AppComponent implements OnInit {
     this.loadDocuments();
     this.loadServices();
     this.loadTags();
+    
+    // Inizializza FAQs lette da localStorage
+    const storedReads = localStorage.getItem('qe_read_faqs');
+    if (storedReads) {
+      try {
+        const parsed = JSON.parse(storedReads);
+        if (Array.isArray(parsed)) {
+          this.readFaqs = new Set<number>(parsed);
+        }
+      } catch (e) {}
+    }
     
     const path = window.location.pathname;
     const hash = window.location.hash;
