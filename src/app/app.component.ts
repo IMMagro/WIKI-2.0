@@ -2,14 +2,19 @@ import { Component, OnInit, HostListener, ElementRef, ViewChild, ChangeDetectorR
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GuideComponent } from './components/guide/guide.component';
+import { GuideAdminComponent } from './components/guide/guide-admin.component';
+import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
+import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
+  activeFaqCategory: string = 'General';
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
   @ViewChild('notificationDropdown') notificationDropdown!: ElementRef;
   @ViewChild('homeSearchContainer') homeSearchContainer!: ElementRef;
@@ -422,6 +427,30 @@ export class AppComponent implements OnInit {
 
   services: any[] = [];
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_services.ashx)
+
+  loadNews() {
+    this.http.get<any[]>('/api/news.ashx').subscribe({
+      next: (data) => {
+        this.allNews = data || [];
+        const generalNews = this.allNews.filter(n => n.category === 'Generale');
+        if (generalNews.length > 0) {
+          this.latestGeneralNews = generalNews[0];
+          this.showGeneralNewsPopup = true;
+        }
+        this.updateProgramNews();
+      },
+      error: (err) => console.error('Errore caricamento news:', err)
+    });
+  }
+
+  updateProgramNews() {
+    const activeProgram = this.programs[this.activeProgramIndex].name;
+    this.newsItems = this.allNews.filter(n => n.category === activeProgram);
+    if (this.newsItems.length === 0) {
+      this.newsItems = [{ title: 'Nessuna news', date: '', description: 'Non ci sono comunicazioni per questo programma.' }];
+    }
+    this.activeNewsItemIndex = 0;
+  }
 
   loadServices() {
     this.http.get<any[]>('/api/get_services.ashx').subscribe({
@@ -908,12 +937,11 @@ export class AppComponent implements OnInit {
   isNewsAnimating: boolean = false;
   newsAnimState: 'stable' | 'leaving-up' | 'leaving-down' | 'entering-up' | 'entering-down' = 'stable';
   
-  newsItems = [
-    { title: "Note di Rilascio e Novità", date: "15 Agosto 2026", description: "Questo è un testo di prova posizionato nello spazio vuoto. In quest'area verranno caricati dinamicamente gli articoli, i dettagli degli ultimi aggiornamenti e le comunicazioni." },
-    { title: "Integrazione Fascicolo Sanitario 2.0", date: "10 Agosto 2026", description: "La nuova versione introduce un supporto completo e automatico al FSE 2.0, migliorando drasticamente i tempi di invio dei referti e la validazione dei dati sanitari inviati." },
-    { title: "Nuovo Modulo Statistiche Avanzate", date: "5 Agosto 2026", description: "Abbiamo introdotto una dashboard interattiva migliorata che permette di filtrare i dati storici del fatturato con algoritmi predittivi per i prossimi trimestri." },
-    { title: "Aggiornamento Sicurezza e Privacy", date: "1 Agosto 2026", description: "Migliorati i protocolli di crittografia per i dati sensibili. Aggiunto supporto nativo per l'autenticazione a due fattori obbligatoria per gli amministratori di sistema." }
-  ];
+  allNews: any[] = [];
+  latestGeneralNews: any = null;
+  showGeneralNewsPopup: boolean = false;
+  
+  newsItems: any[] = [];
 
   getNewsContentClass() {
     switch(this.newsAnimState) {
@@ -1051,6 +1079,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
+    this.loadNews();
     this.loadDocuments();
     this.loadServices();
     this.loadTags();
@@ -1145,5 +1174,9 @@ export class AppComponent implements OnInit {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
+  }
+
+  goToCategoryFromFaq() {
+    this.activeFaqCategory = 'General';
   }
 }

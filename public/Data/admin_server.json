@@ -1,24 +1,3 @@
 {
-  "stats": {
-    "cpu": 32,
-    "ramTotal": 32,
-    "ramUsed": 18.5,
-    "storageTotal": 2,
-    "storageUsed": 850,
-    "uptimeDays": 145,
-    "uptimeTime": "12:34:56"
-  },
-  "services": [
-    { "name": "IIS Web Server", "description": "Gestione richieste HTTP per la Wiki e API", "status": "online", "statusText": "In Esecuzione" },
-    { "name": "SQL Server Engine", "description": "Database principale per le autenticazioni", "status": "online", "statusText": "In Esecuzione" },
-    { "name": "Servizio di Backup", "description": "Backup incrementale notturno", "status": "warning", "statusText": "Errore Parziale" },
-    { "name": "Servizio di Indicizzazione", "description": "Motore di ricerca full-text per i manuali", "status": "offline", "statusText": "Arrestato" }
-  ],
-  "logs": [
-    { "time": "11:23:45", "type": "INFO", "message": "Avvio backup incrementale database master..." },
-    { "time": "11:25:10", "type": "WARN", "message": "Spazio su disco D: inferiore al 15%" },
-    { "time": "11:28:02", "type": "SUCCESS", "message": "Backup completato con successo (Dim: 4.2GB)" },
-    { "time": "11:30:15", "type": "ERROR", "message": "Fallita connessione al nodo di replica Roma-02" },
-    { "time": "11:35:00", "type": "INFO", "message": "Riavvio automatico servizio di indicizzazione in corso..." }
-  ]
+  "logs": []
 }

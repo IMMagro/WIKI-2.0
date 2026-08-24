@@ -1,0 +1,6 @@
+[
+  { "name": "IIS Web Server", "service": "W3SVC", "description": "Gestione richieste HTTP per la Wiki e le API" },
+  { "name": "Windows Process Activation", "service": "WAS", "description": "Attivazione degli application pool IIS" },
+  { "name": "SQL Server Engine", "service": "MSSQLSERVER", "description": "Database principale" },
+  { "name": "Servizio di Backup", "service": "SQLWriter", "description": "Writer VSS per i backup SQL" }
+]

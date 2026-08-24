@@ -1,0 +1,162 @@
+<div class="gwrap">
+  <div #stage class="gv fwd">
+
+    <!-- ===== VIEW: Categorie ===== -->
+    <ng-container *ngIf="view === 'cats'">
+      <div class="eyebrow">Base di conoscenza</div>
+      <h1 class="page">Guide</h1>
+      <p class="lede">Scegli l'argomento. Ogni guida spiega il tema e raccoglie le procedure passo&#8209;passo in forma di domande, con immagini e video.</p>
+
+      <button class="hero" (click)="openJourney()">
+        <div class="hi"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['compass']"></path></svg></div>
+        <div class="ht">
+          <div class="hk">Nuovo qui?</div>
+          <h2>Muovere i primi passi</h2>
+          <p>Un percorso guidato tra le categorie, le guide e le FAQ essenziali per iniziare.</p>
+        </div>
+        <span class="hc">Inizia &rarr;</span>
+      </button>
+
+      <div class="grid3">
+        <button class="card" [class.mg]="c.accent === 'magenta'" *ngFor="let c of categories; let i = index"
+                [style.animationDelay]="(i * 40) + 'ms'" (click)="openCat(c.id)">
+          <div class="ci"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons[c.icon]"></path></svg></div>
+          <h3>{{ c.name }}</h3>
+          <p>{{ c.desc }}</p>
+          <div class="cf">
+            <span>{{ c.manuals.length }} guide &middot; {{ faqTotal(c) }} FAQ</span>
+            <span class="chev"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
+          </div>
+        </button>
+      </div>
+
+      <div class="note"><b>Percorso guidato:</b> Categoria &rarr; Guida (panoramica dell'argomento) &rarr; Domanda (FAQ con procedura a step).</div>
+    </ng-container>
+
+    <!-- ===== VIEW: Primi passi ===== -->
+    <ng-container *ngIf="view === 'journey'">
+      <button class="backbtn" (click)="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> Tutte le guide</button>
+      <div class="eyebrow">Percorso guidato</div>
+      <h1 class="page">Muovere i primi passi</h1>
+      <p class="lede">{{ journey.intro }}</p>
+      <div class="journey">
+        <button class="jstep" *ngFor="let s of journey.steps; let i = index" [style.animationDelay]="(i * 55) + 'ms'" (click)="openRef(s)">
+          <span class="jnum">{{ i + 1 }}</span>
+          <div class="jbody">
+            <h3>{{ s.title }}</h3>
+            <p>{{ s.text }}</p>
+            <span class="refchip" [ngClass]="refMeta(s.ref).cls">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons[refMeta(s.ref).icon]"></path></svg>
+              {{ refMeta(s.ref).label }}
+            </span>
+          </div>
+          <span class="jgo"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ===== VIEW: Guide di una categoria ===== -->
+    <ng-container *ngIf="view === 'guides' && curCat as c">
+      <button class="backbtn" (click)="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> Tutte le categorie</button>
+      <div class="eyebrow">Categoria</div>
+      <h1 class="page">{{ c.name }}</h1>
+      <p class="lede">{{ c.desc }}</p>
+      <div class="grid3">
+        <button class="card" *ngFor="let m of c.manuals; let i = index" [style.animationDelay]="(i * 45) + 'ms'" (click)="openGuide(m.id)">
+          <div class="cardtop">
+            <h3>{{ m.title }}</h3>
+            <span class="pill" [ngClass]="m.status === 'pub' ? 'pub' : 'draft'">{{ m.status === 'pub' ? 'Pubbl.' : 'Bozza' }}</span>
+          </div>
+          <p>{{ m.desc }}</p>
+          <div class="cf">
+            <span>{{ m.faqs.length }} FAQ &middot; agg. {{ m.updated }}</span>
+            <span class="chev"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
+          </div>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ===== VIEW: Lettura guida ===== -->
+    <ng-container *ngIf="view === 'read' && curGuide as g">
+      <button class="backbtn" (click)="openCat(selCat!, 'back')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> {{ curCat?.name }}</button>
+      <div class="eyebrow">{{ curCat?.name }} &middot; Guida</div>
+      <h1 class="page sm">{{ g.title }}</h1>
+
+      <div class="reader">
+        <!-- Articolo -->
+        <article class="article">
+          <!-- Panoramica -->
+          <ng-container *ngIf="selFaq === -1">
+            <div class="kick">
+              <span class="qtag man">Guida</span>
+              <span class="pill" [ngClass]="g.status === 'pub' ? 'pub' : 'draft'">{{ g.status === 'pub' ? 'Pubblicato' : 'Bozza' }}</span>
+              <span class="updated auto">Aggiornato {{ g.updated }}</span>
+            </div>
+            <h2 class="artTitle">{{ g.title }}</h2>
+            <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
+            <div class="faqhead">Domande frequenti <span class="ln"></span></div>
+            <button class="faqrow" *ngFor="let f of g.faqs; let i = index" [style.animationDelay]="(i * 40) + 'ms'" (click)="openFaq(i)">
+              <span class="qn">{{ i + 1 }}</span>
+              <b>{{ f.q }}</b>
+              <span class="rd" *ngIf="f.read">Letta</span>
+              <span class="chev"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
+            </button>
+          </ng-container>
+
+          <!-- FAQ aperta -->
+          <ng-container *ngIf="curFaq as f">
+            <div class="kick">
+              <span class="qtag">Domanda</span>
+              <span class="updated" *ngFor="let t of f.tags">#{{ t }}</span>
+              <span class="updated auto">Aggiornato {{ f.updated }}</span>
+            </div>
+            <h2 class="artTitle">{{ f.q }}</h2>
+            <div class="steps">
+              <div class="step" *ngFor="let s of f.steps; let i = index">
+                <div class="num">{{ i + 1 }}</div>
+                <div class="body">
+                  <p [innerHTML]="s.t"></p>
+                  <div class="media img" *ngIf="s.img"><span class="cap">&#128247; Screenshot procedura</span></div>
+                  <div class="media video" *ngIf="s.video">
+                    <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
+                    <span class="cap">&#9654; Video &middot; 0:42</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="navfaq">
+              <button (click)="openFaq(selFaq - 1)">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg>
+                <span class="lb"><span>{{ selFaq === 0 ? 'Torna a' : 'Precedente' }}</span><b>{{ selFaq === 0 ? 'Panoramica' : g.faqs[selFaq - 1].q }}</b></span>
+              </button>
+              <button [disabled]="selFaq === g.faqs.length - 1" (click)="openFaq(selFaq + 1)">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg>
+                <span class="lb"><span>Successiva</span><b>{{ selFaq < g.faqs.length - 1 ? g.faqs[selFaq + 1].q : '&mdash;' }}</b></span>
+              </button>
+            </div>
+          </ng-container>
+        </article>
+
+        <!-- Indice a destra -->
+        <aside class="toc">
+          <h4>Contenuto guida</h4>
+          <button [class.on]="selFaq === -1" (click)="openFaq(-1)"><span class="dot"></span><span>Panoramica</span></button>
+          <div class="dv">Domande</div>
+          <button *ngFor="let f of g.faqs; let i = index" [class.on]="selFaq === i" [class.rd]="f.read" (click)="openFaq(i)">
+            <span class="dot"></span><span>{{ f.q }}</span>
+          </button>
+        </aside>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+
+<!-- ===== Popup servizio consigliato ===== -->
+<div class="svc" [class.show]="svcVisible" role="dialog" aria-label="Servizio consigliato" *ngIf="svcData as s">
+  <button class="x" (click)="hideSvc()" aria-label="Chiudi"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['close']"></path></svg></button>
+  <div class="st"><div class="si"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['bulb']"></path></svg></div><div class="lb">Servizio consigliato</div></div>
+  <h4>{{ s.name }}</h4>
+  <p>{{ s.desc }}</p>
+  <a class="cta">Scopri il servizio &rarr;</a>
+</div>

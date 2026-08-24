@@ -1,0 +1,181 @@
+<header class="flex justify-between items-center mb-10">
+  <div>
+    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">News e Feed</span></h1>
+    <p class="text-[#77838F] mt-1 font-medium">Pubblica e gestisci aggiornamenti, avvisi e novità per gli utenti.</p>
+  </div>
+  <div class="flex items-center gap-4">
+    <button (click)="openNewModal()" class="flex items-center gap-2 bg-[#377DFF] hover:bg-[#2563EB] text-white px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-medium">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+      Nuova News
+    </button>
+  </div>
+</header>
+
+<!-- Search and Filters -->
+<div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 flex flex-wrap gap-4 items-center">
+  <div class="relative flex-1 min-w-[250px]">
+    <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#77838F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <input type="text" placeholder="Cerca news per titolo o contenuto..." 
+           class="w-full pl-11 pr-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] placeholder:text-[#A0ABC0]">
+  </div>
+  
+  <div class="hidden md:flex gap-4">
+    <select class="px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] min-w-[160px]">
+      <option value="">Tutte le Categorie</option>
+      <option value="sistema">Sistema</option>
+      <option value="commerciale">Commerciale</option>
+      <option value="tecnico">Tecnico</option>
+    </select>
+    
+    <select class="px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] min-w-[160px]">
+      <option value="">Tutti gli Stati</option>
+      <option value="pubblicato">Pubblicato</option>
+      <option value="bozza">Bozza</option>
+    </select>
+  </div>
+
+  <div class="h-10 w-px bg-[#E2E8F0] hidden md:block"></div>
+
+  <button class="flex items-center gap-2 px-4 py-2.5 bg-[#F8FAFD] border border-[#E2E8F0] text-[#1E2022] hover:bg-white hover:border-[#377DFF] hover:text-[#377DFF] rounded-xl transition-all font-medium group">
+    <svg class="w-5 h-5 text-[#77838F] group-hover:text-[#377DFF] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+    </svg>
+    Configura Filtri
+  </button>
+</div>
+
+<!-- Data Table -->
+<div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-[#F8FAFD] border-b border-[#E2E8F0]">
+          <th class="py-4 px-6 font-semibold text-[#1E2022] text-sm tracking-wide">TITOLO E ESTRATTO</th>
+          <th class="py-4 px-6 font-semibold text-[#1E2022] text-sm tracking-wide">CATEGORIA</th>
+          <th class="py-4 px-6 font-semibold text-[#1E2022] text-sm tracking-wide">DATA</th>
+          <th class="py-4 px-6 font-semibold text-[#1E2022] text-sm tracking-wide">AUTORE</th>
+          <th class="py-4 px-6 font-semibold text-[#1E2022] text-sm tracking-wide text-right">AZIONI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Empty State (No Data) -->
+        <tr *ngIf="adminNews.length === 0">
+          <td colspan="5" class="py-12 text-center">
+            <div class="flex flex-col items-center justify-center text-[#77838F]">
+              <svg class="w-12 h-12 mb-3 text-[#E2E8F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              <p class="text-base font-medium text-[#1E2022]">Nessuna news trovata</p>
+              <p class="text-sm mt-1">Non ci sono news o il caricamento è in corso dal backend.</p>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Dynamic Rows -->
+        <tr *ngFor="let news of adminNews; let i = index" class="border-b border-[#E2E8F0]/50 hover:bg-[#F0F5FF]/40 transition-colors group cursor-pointer">
+          <td class="py-4 px-6 max-w-[400px]">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 mt-0.5" 
+                   [ngClass]="news.category === 'Windent' ? 'bg-[#377DFF]/10 text-[#377DFF]' : news.category === 'Poliwin' ? 'bg-[#6D28D9]/10 text-[#6D28D9]' : news.category === 'Winodlab' ? 'bg-[#F97316]/10 text-[#F97316]' : 'bg-[#F80086]/10 text-[#F80086]'">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+              </div>
+              <div>
+                <h3 class="font-medium text-[#1E2022] group-hover:text-[#377DFF] transition-colors truncate">{{news.title}}</h3>
+                <p class="text-sm text-[#77838F] mt-0.5 line-clamp-1">{{news.excerpt}}</p>
+              </div>
+            </div>
+          </td>
+          <td class="py-4 px-6">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" 
+                  [ngClass]="news.category === 'Windent' ? 'bg-[#377DFF]/10 text-[#377DFF]' : news.category === 'Poliwin' ? 'bg-[#6D28D9]/10 text-[#6D28D9]' : news.category === 'Winodlab' ? 'bg-[#F97316]/10 text-[#F97316]' : 'bg-[#F80086]/10 text-[#F80086]'">{{news.category}}</span>
+          </td>
+          <td class="py-4 px-6 text-[#77838F]">{{news.date}}</td>
+          <td class="py-4 px-6">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden text-center flex items-center justify-center text-[10px] font-bold text-white" 
+                   [style.background]="'#1E2022'">
+                {{news.authorInitial || 'AD'}}
+              </div>
+              <span class="text-sm text-[#1E2022] font-medium">{{news.author}}</span>
+            </div>
+          </td>
+          <td class="py-4 px-6 text-right">
+            <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="p-2 text-[#77838F] hover:bg-white hover:text-[#377DFF] hover:shadow-sm rounded-lg transition-all" title="Visualizza">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+              <button (click)="openEditModal(news, i)" class="p-2 text-[#77838F] hover:bg-white hover:text-[#377DFF] hover:shadow-sm rounded-lg transition-all" title="Modifica">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              </button>
+              <button (click)="deleteNews(i)" class="p-2 text-[#77838F] hover:bg-white hover:text-[#FF4757] hover:shadow-sm rounded-lg transition-all" title="Elimina">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Pagination -->
+  <div class="px-6 py-4 border-t border-[#E2E8F0] flex items-center justify-between text-sm text-[#77838F]">
+    <span>Mostrando {{adminNews.length}} news</span>
+    <div class="flex gap-1">
+      <button class="px-3 py-1.5 rounded-lg border border-[#E2E8F0] hover:bg-white hover:text-[#377DFF] transition-all disabled:opacity-50" disabled>Precedente</button>
+      <button class="px-3 py-1.5 rounded-lg border border-[#E2E8F0] hover:bg-white hover:text-[#377DFF] transition-all">Successivo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Aggiungi/Modifica News -->
+<div *ngIf="isModalOpen" class="fixed inset-0 z-[60] flex items-center justify-center">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeModal()"></div>
+  
+  <!-- Modal Content -->
+  <div class="relative bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl shadow-black/20" style="animation: fadeUpCard 0.3s ease-out;">
+    <div class="flex items-center justify-between px-8 py-6 border-b border-[#E2E8F0]">
+      <h3 class="text-xl font-bold text-[#1E2022]">{{ isEditing ? 'Modifica News' : 'Nuova News' }}</h3>
+      <button (click)="closeModal()" class="text-[#A9B4BF] hover:text-[#1E2022] transition-colors">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    
+    <div class="p-8 overflow-y-auto flex-1 custom-scrollbar">
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-bold text-[#1E2022] mb-2">Titolo News</label>
+          <input type="text" [(ngModel)]="currentNews.title" placeholder="Es. Aggiornamento sistema..." class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-bold text-[#1E2022] mb-2">Estratto / Testo</label>
+          <textarea [(ngModel)]="currentNews.excerpt" rows="4" placeholder="Breve descrizione o testo della news..." class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] resize-none"></textarea>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-[#1E2022] mb-2">Categoria</label>
+            <select [(ngModel)]="currentNews.category" class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+              <option value="Generale">Generale (Popup Home)</option>
+              <option value="Windent">Windent</option>
+              <option value="Poliwin">Poliwin</option>
+              <option value="Winodlab">Winodlab</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-[#1E2022] mb-2">Data</label>
+            <input type="text" [(ngModel)]="currentNews.date" class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="px-8 py-6 border-t border-[#E2E8F0] bg-[#F8FAFD] rounded-b-3xl flex justify-end gap-3">
+      <button (click)="closeModal()" class="px-6 py-2.5 rounded-xl font-bold text-[#77838F] hover:bg-white border border-transparent hover:border-[#E2E8F0] transition-all">Annulla</button>
+      <button (click)="saveNews()" class="px-6 py-2.5 rounded-xl font-bold text-white bg-[#377DFF] hover:bg-[#2563EB] shadow-lg shadow-blue-500/20 transition-all">Salva News</button>
+    </div>
+  </div>
+</div>
