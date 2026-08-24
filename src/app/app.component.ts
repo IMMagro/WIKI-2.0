@@ -31,6 +31,10 @@ export class AppComponent implements OnInit {
   private _globalAnimationsEnabled: boolean = localStorage.getItem('globalAnimationsEnabled') ? JSON.parse(localStorage.getItem('globalAnimationsEnabled')!) : false;
 
   get globalAnimationsEnabled(): boolean {
+    // Rilegge sempre da localStorage così il toggle nel pannello admin
+    // si riflette subito sul sito senza ricostruire il componente.
+    const v = localStorage.getItem('globalAnimationsEnabled');
+    this._globalAnimationsEnabled = v ? JSON.parse(v) : false;
     return this._globalAnimationsEnabled;
   }
 
@@ -436,7 +440,10 @@ export class AppComponent implements OnInit {
         const generalNews = this.allNews.filter(n => n.category === 'Generale');
         if (generalNews.length > 0) {
           this.latestGeneralNews = generalNews[0];
-          this.showGeneralNewsPopup = true;
+          // Mostra il popup una sola volta: se già visto, resta disponibile solo l'iconcina.
+          if (!localStorage.getItem(this.generalNewsSeenKey())) {
+            this.showGeneralNewsPopup = true;
+          }
         }
         this.updateProgramNews();
       },
@@ -947,7 +954,22 @@ export class AppComponent implements OnInit {
   allNews: any[] = [];
   latestGeneralNews: any = null;
   showGeneralNewsPopup: boolean = false;
-  
+
+  private generalNewsSeenKey(): string {
+    return 'seenGeneralNews:' + (this.latestGeneralNews?.title || '');
+  }
+
+  openGeneralNewsPopup() {
+    if (this.latestGeneralNews) this.showGeneralNewsPopup = true;
+  }
+
+  closeGeneralNewsPopup() {
+    this.showGeneralNewsPopup = false;
+    if (this.latestGeneralNews) {
+      localStorage.setItem(this.generalNewsSeenKey(), '1');
+    }
+  }
+
   newsItems: any[] = [];
 
   getNewsContentClass() {

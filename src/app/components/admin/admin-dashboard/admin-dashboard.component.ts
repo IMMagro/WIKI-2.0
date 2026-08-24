@@ -13,7 +13,14 @@ export class AdminDashboardComponent implements OnInit {
   isNotificationOpen = false;
   adminNotifications: any[] = [];
   accessStats: any = null;
-  italyPath = '';
+  // Silhouette stilizzata dell'Italia nel viewBox 0 0 300 300, coerente con le
+  // coordinate x/y dei nodi-città seminati in Data/access_stats.json.
+  italyPath =
+    'M40 56 L68 42 L110 46 L134 50 L152 70 L166 96 L182 128 L200 158 L216 186 L228 196 ' +
+    'L214 206 L196 202 L186 210 L182 232 L176 250 L164 252 L156 236 L158 214 L146 198 ' +
+    'L128 176 L116 150 L106 120 L96 96 L78 74 L54 64 Z ' +
+    'M118 250 L186 256 L152 282 Z ' +
+    'M52 150 L84 156 L80 208 L56 202 Z';
 
   constructor(private guideService: GuideService, private http: HttpClient) {}
 

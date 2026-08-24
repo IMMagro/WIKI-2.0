@@ -79,11 +79,10 @@
         <button class="card" *ngFor="let m of c.manuals; let i = index" [style.animationDelay]="(i * 45) + 'ms'" (click)="openGuide(m.id)">
           <div class="cardtop">
             <h3>{{ m.title }}</h3>
-            <span class="pill" [ngClass]="m.status === 'pub' ? 'pub' : 'draft'">{{ m.status === 'pub' ? 'Pubbl.' : 'Bozza' }}</span>
           </div>
           <p>{{ m.desc }}</p>
           <div class="cf">
-            <span>{{ m.faqs.length }} FAQ &middot; agg. {{ m.updated }}</span>
+            <span>{{ m.faqs.length }} FAQ</span>
             <span class="chev"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
           </div>
         </button>
@@ -103,8 +102,6 @@
           <ng-container *ngIf="selFaq === -1">
             <div class="kick">
               <span class="qtag man">Guida</span>
-              <span class="pill" [ngClass]="g.status === 'pub' ? 'pub' : 'draft'">{{ g.status === 'pub' ? 'Pubblicato' : 'Bozza' }}</span>
-              <span class="updated auto">Aggiornato {{ g.updated }}</span>
             </div>
             <h2 class="artTitle">{{ g.title }}</h2>
             <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
@@ -122,7 +119,6 @@
             <div class="kick">
               <span class="qtag">Domanda</span>
               <span class="updated" *ngFor="let t of f.tags">#{{ t }}</span>
-              <span class="updated auto">Aggiornato {{ f.updated }}</span>
             </div>
             <h2 class="artTitle">{{ f.q }}</h2>
             <div class="steps">
