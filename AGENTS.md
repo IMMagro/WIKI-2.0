@@ -45,7 +45,7 @@
 - **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), you must use the `.agents/skills/api-generator/SKILL.md` skill to ensure it follows standard C# JSON-handling patterns.
 - **mock-data-cleaner**: Whenever you need to prepare the frontend for real HTTP integration, use the `.agents/skills/mock-data-cleaner/SKILL.md` skill to strip out hardcoded mock data cleanly.
 - **manual-generator**: Whenever you need to create, format, or write a manual (wiki guide) for the user, you MUST proactively use the `.agents/skills/manual-generator/SKILL.md` skill to ensure the output respects the required MDX structure, HTML formatting, and UI tags.
-
+- **Console Check**: Whenever you finish any code modifications, you MUST check the terminal output (e.g., `ng serve`) or the browser console (if accessible) to ensure there are no errors (like `TypeError` or `HttpErrorResponse`) before considering the task complete.
 ## Boundaries
 
 ### Always Do
