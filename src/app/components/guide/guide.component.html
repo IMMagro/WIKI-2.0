@@ -30,7 +30,21 @@
         </button>
       </div>
 
-      <div class="note"><b>Percorso guidato:</b> Categoria &rarr; Guida (panoramica dell'argomento) &rarr; Domanda (FAQ con procedura a step).</div>
+      <details class="group cursor-pointer border border-[#E2E8F0] rounded-xl p-4 bg-[#F8FAFD] transition-all hover:border-[#377DFF]/30 mt-8">
+        <summary class="flex items-center gap-2 font-bold text-[#1E2022] outline-none list-none marker:hidden">
+          <svg class="w-5 h-5 text-[#377DFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Come consultare questa sezione?
+          <svg class="w-4 h-4 ml-auto text-[#77838F] transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </summary>
+        <div class="mt-3 text-sm text-[#77838F] pl-7">
+          <b>Struttura della Base di Conoscenza:</b><br>
+          Menù laterale <b>"Guide"</b> &rarr; Scegli una <b>Categoria</b> &rarr; Seleziona la <b>Guida</b> (panoramica dell'argomento) &rarr; Consulta le singole <b>Domande Frequenti (FAQ)</b> per le procedure passo-passo.
+        </div>
+      </details>
     </ng-container>
 
     <!-- ===== VIEW: Primi passi ===== -->

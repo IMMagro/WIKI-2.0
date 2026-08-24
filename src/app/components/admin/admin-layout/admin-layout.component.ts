@@ -4,13 +4,12 @@ import { AdminService } from '../../../services/admin.service';
 import { AdminDashboardComponent } from '../admin-dashboard/admin-dashboard.component';
 import { AdminNewsComponent } from '../admin-news/admin-news.component';
 import { AdminServerComponent } from '../admin-server/admin-server.component';
-// Nota: GuideAdminComponent non è ancora estratto o è gestito in un altro modulo
-// Lo mockiamo o lo lasciamo da implementare se serve
+import { GuideAdminComponent } from '../../guide/guide-admin.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, AdminDashboardComponent, AdminNewsComponent, AdminServerComponent],
+  imports: [CommonModule, AdminDashboardComponent, AdminNewsComponent, AdminServerComponent, GuideAdminComponent],
   templateUrl: './admin-layout.component.html'
 })
 export class AdminLayoutComponent {

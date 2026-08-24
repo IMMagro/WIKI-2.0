@@ -17,6 +17,10 @@ export class AdminNewsComponent implements OnInit {
   isEditing = false;
   editingIndex: number = -1;
   
+  // Preview state
+  isPreviewOpen = false;
+  previewItem: any = null;
+  
   currentNews = {
     title: '',
     excerpt: '',
@@ -68,6 +72,16 @@ export class AdminNewsComponent implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
+  }
+  
+  previewNews(news: any) {
+    this.previewItem = news;
+    this.isPreviewOpen = true;
+  }
+  
+  closePreviewModal() {
+    this.isPreviewOpen = false;
+    this.previewItem = null;
   }
 
   saveNews() {

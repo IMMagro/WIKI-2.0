@@ -157,10 +157,7 @@ export class AppComponent implements OnInit {
   exitAdmin() {
     this.isAdminRoute = false;
     this.stopBackgroundRotation();
-    // Pulisce l'url
-    if (window.location.hash.includes('/admin')) {
-      window.history.pushState('', document.title, window.location.pathname + window.location.search);
-    }
+    window.location.href = '/';
   }
 
   isLocalhost = window.location.hostname === 'localhost';
@@ -249,6 +246,10 @@ export class AppComponent implements OnInit {
       }
     });
   }
+  onLoginSuccess() {
+    this.isAdminAuthenticated = true;
+    this.loadAdminData();
+  }
 
   logoutAdmin() {
     this.isAdminAuthenticated = false;
@@ -273,7 +274,7 @@ export class AppComponent implements OnInit {
     { icon: 'home', label: 'QeHome', active: true },
     { icon: 'book-open', label: 'FAQ', active: false },
     { icon: 'briefcase', label: 'Servizi', active: false },
-    { icon: 'folder', label: 'Manuali', active: false },
+    { icon: 'folder', label: 'Guide', active: false },
     { icon: 'newspaper', label: 'News', active: false }
   ];
 
@@ -444,10 +445,16 @@ export class AppComponent implements OnInit {
   }
 
   updateProgramNews() {
-    const activeProgram = this.programs[this.activeProgramIndex].name;
-    this.newsItems = this.allNews.filter(n => n.category === activeProgram);
+    const programName = this.programs[this.activeProgramIndex].name;
+    this.newsItems = this.allNews.filter(n => n.category === programName);
     if (this.newsItems.length === 0) {
-      this.newsItems = [{ title: 'Nessuna news', date: '', description: 'Non ci sono comunicazioni per questo programma.' }];
+      this.newsItems = [
+        {
+          title: `Novità in arrivo per ${programName}`,
+          date: 'Oggi',
+          excerpt: `Stiamo preparando fantastici aggiornamenti per `
+        }
+      ];
     }
     this.activeNewsItemIndex = 0;
   }
@@ -724,17 +731,17 @@ export class AppComponent implements OnInit {
 
     // Reset the old view silently after it fades out
     setTimeout(() => {
-      if (prevLabel === 'QeHome') {
+      if (prevLabel === 'QeHome' && this.activeIndex !== 0) {
         this.homeStage = 0;
-      } else if (prevLabel === 'Servizi') {
+      } else if (prevLabel === 'Servizi' && this.activeIndex !== 2) {
         this.serviziStage = 'title-black';
         this.currentServicePage = 0;
         this.animatingDirection = 0;
-      } else if (prevLabel === 'FAQ') {
+      } else if (prevLabel === 'FAQ' && this.activeIndex !== 1) {
         this.manualiStage = 'center';
-      } else if (prevLabel === 'Manuali') {
+      } else if (prevLabel === 'Guide' && this.activeIndex !== 3) {
         this.docEntranceStage = 'center';
-      } else if (prevLabel === 'News') {
+      } else if (prevLabel === 'News' && this.activeIndex !== 4) {
         this.newsStage = 'title-black';
       }
     }, 700);
@@ -754,7 +761,7 @@ export class AppComponent implements OnInit {
     } else if (selectedItem.label === 'Servizi') {
       this.serviziStage = 'title-black';
       this.animatingDirection = 0;
-    } else if (selectedItem.label === 'Manuali') {
+    } else if (selectedItem.label === 'Guide') {
       if (!this.globalAnimationsEnabled) {
         this.docEntranceStage = 'content';
       } else {

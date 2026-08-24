@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
@@ -10,6 +10,8 @@ import { AdminService } from '../../../services/admin.service';
   templateUrl: './admin-login.component.html'
 })
 export class AdminLoginComponent implements OnInit, OnDestroy {
+  @Output() loginSuccess = new EventEmitter<void>();
+
   loginEmail = '';
   loginPassword = '';
   loginLoading = false;
@@ -57,7 +59,7 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
     this.adminService.login(this.loginEmail, this.loginPassword).subscribe({
       next: (res) => {
         this.loginLoading = false;
-        // La redirezione o il cambio stato verranno gestiti dal layout genitore
+        this.loginSuccess.emit();
       },
       error: (err) => {
         this.loginLoading = false;
