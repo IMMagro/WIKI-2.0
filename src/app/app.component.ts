@@ -408,7 +408,7 @@ export class AppComponent implements OnInit {
   readingDesignVariant: 'A' | 'B' | 'C' | 'D' = 'A';
 
   openFaq(faq: any) {
-    this.readingDesignVariant = 'D'; // Quando si apre dalla pagina FAQ, usa la nuova modale full screen (Variante D)
+    this.readingDesignVariant = 'C'; // Apertura come pannello laterale (destra), coerente con la ricerca in home
     this.selectedFaq = faq;
     if (faq && faq.id) this.markFaqAsRead(faq.id);
     document.body.style.overflow = 'hidden'; // Blocca lo scroll di sfondo
