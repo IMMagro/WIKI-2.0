@@ -133,7 +133,7 @@ export class AppComponent implements OnInit {
    */
   get allFaqItems(): any[] {
     const out: any[] = [];
-    const cats = this.guideService.categories || [];
+    const cats = this.guideService.publicCategories || []; // esclude le guide in bozza
     cats.forEach((c: any, ci: number) => {
       const color = c.accent === 'magenta' ? 'from-fuchsia-500 to-pink-400' : 'from-blue-500 to-sky-400';
       (c.manuals || []).forEach((g: any, mi: number) => {
@@ -488,7 +488,8 @@ export class AppComponent implements OnInit {
 
   updateProgramNews() {
     const programName = this.programs[this.activeProgramIndex].name;
-    this.newsItems = this.allNews.filter(n => n.category === programName);
+    // esclude le bozze: non visibili all'utente
+    this.newsItems = this.allNews.filter(n => n.category === programName && n.status !== 'draft');
     if (this.newsItems.length === 0) {
       this.newsItems = [
         {
@@ -996,9 +997,9 @@ export class AppComponent implements OnInit {
     return Math.max(360, ...blocks.map(b => (b.y || 0) + (b.h || 0))) + 24;
   }
 
-  /** Tutte le news della categoria "Generale" — contenuto della campanella in home. */
+  /** News "Generale" pubblicate (le bozze non sono visibili all'utente) — campanella in home. */
   get generalNews(): any[] {
-    return (this.allNews || []).filter(n => n && n.category === 'Generale');
+    return (this.allNews || []).filter(n => n && n.category === 'Generale' && n.status !== 'draft');
   }
 
   // --- Tracciamento comunicazioni già viste (per il pallino rosso di notifica) ---

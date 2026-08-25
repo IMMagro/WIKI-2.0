@@ -88,8 +88,11 @@
             </div>
           </td>
           <td class="py-4 px-6">
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium" 
-                  [ngClass]="news.category === 'Windent' ? 'bg-[#377DFF]/10 text-[#377DFF]' : news.category === 'Poliwin' ? 'bg-[#6D28D9]/10 text-[#6D28D9]' : news.category === 'Winodlab' ? 'bg-[#F97316]/10 text-[#F97316]' : 'bg-[#F80086]/10 text-[#F80086]'">{{news.category}}</span>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium"
+                    [ngClass]="news.category === 'Windent' ? 'bg-[#377DFF]/10 text-[#377DFF]' : news.category === 'Poliwin' ? 'bg-[#6D28D9]/10 text-[#6D28D9]' : news.category === 'Winodlab' ? 'bg-[#F97316]/10 text-[#F97316]' : 'bg-[#F80086]/10 text-[#F80086]'">{{news.category}}</span>
+              <span *ngIf="news.status === 'draft'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-[#FEF0D8] text-[#F79009]">Bozza</span>
+            </div>
           </td>
           <td class="py-4 px-6 text-[#77838F]">{{news.date}}</td>
           <td class="py-4 px-6">
@@ -169,6 +172,15 @@
             <label class="block text-sm font-bold text-[#1E2022] mb-2">Data</label>
             <input type="text" [(ngModel)]="currentNews.date" class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
           </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-[#1E2022] mb-2">Stato</label>
+          <div class="inline-flex rounded-xl border border-[#E2E8F0] overflow-hidden">
+            <button type="button" (click)="currentNews.status = 'published'" class="px-5 py-2.5 text-sm font-bold transition-colors" [ngClass]="currentNews.status !== 'draft' ? 'bg-[#12B76A] text-white' : 'bg-white text-[#77838F] hover:bg-[#F8FAFD]'">Pubblicato</button>
+            <button type="button" (click)="currentNews.status = 'draft'" class="px-5 py-2.5 text-sm font-bold transition-colors" [ngClass]="currentNews.status === 'draft' ? 'bg-[#F79009] text-white' : 'bg-white text-[#77838F] hover:bg-[#F8FAFD]'">Bozza</button>
+          </div>
+          <p class="text-xs text-[#A9B4BF] mt-1.5 font-medium">Le bozze non sono visibili agli utenti sul sito.</p>
         </div>
 
         <!-- Editor grafico libero -->

@@ -72,13 +72,24 @@ export class GuideService {
     });
   }
 
-  /** Ricerca su TUTTE le singole FAQ (domanda + tag + testo degli step). */
+  /**
+   * Vista PUBBLICA: solo guide pubblicate (le bozze non sono visibili all'utente),
+   * e categorie senza guide pubblicate vengono escluse. L'area admin usa `categories`.
+   */
+  get publicCategories(): Category[] {
+    return (this.categories || [])
+      .map(c => ({ ...c, manuals: (c.manuals || []).filter(m => m.status !== 'draft') }))
+      .filter(c => c.manuals.length > 0);
+  }
+
+  /** Ricerca su TUTTE le singole FAQ pubblicate (domanda + tag + testo degli step). */
   search(query: string, limit = 6): FaqHit[] {
     const t = (query || '').trim().toLowerCase();
     if (!t) return [];
     const hits: FaqHit[] = [];
     for (const c of this.categories) {
       for (const g of c.manuals) {
+        if (g.status === 'draft') continue; // le bozze non compaiono nella ricerca pubblica
         g.faqs.forEach((f, i) => {
           const hay = (f.q + ' ' + f.tags.join(' ') + ' ' + f.steps.map(s => s.t).join(' ')).toLowerCase();
           if (hay.includes(t)) hits.push({ category: c, guide: g, faqIndex: i, faq: f });

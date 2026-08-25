@@ -43,7 +43,7 @@ export class GuideComponent {
   };
 
   // ===== Dati (dal GuideService: reali via /api/get_guides.ashx, con fallback interno) =====
-  get categories(): Category[] { return this.guides.categories; }
+  get categories(): Category[] { return this.guides.publicCategories; }
   get journey(): Journey { return this.guides.journey; }
 
   // ===== Helpers =====

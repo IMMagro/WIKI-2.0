@@ -36,6 +36,7 @@ export class AdminNewsComponent implements OnInit {
     date: '',
     author: 'Amministratore',
     authorInitial: 'AD',
+    status: 'published', // 'published' | 'draft' — le bozze non sono visibili all'utente
     blocks: []
   };
 
@@ -68,6 +69,7 @@ export class AdminNewsComponent implements OnInit {
       date: new Date().toLocaleDateString('it-IT'),
       author: 'Amministratore',
       authorInitial: 'AD',
+      status: 'published',
       blocks: []
     };
     this.isModalOpen = true;
@@ -77,7 +79,7 @@ export class AdminNewsComponent implements OnInit {
     this.isEditing = true;
     this.editingIndex = index;
     // clona anche i blocchi così le modifiche si applicano solo al salvataggio
-    this.currentNews = { ...news, blocks: (news.blocks || []).map((b: any) => ({ ...b })) };
+    this.currentNews = { ...news, status: news.status || 'published', blocks: (news.blocks || []).map((b: any) => ({ ...b })) };
     this.isModalOpen = true;
   }
 
