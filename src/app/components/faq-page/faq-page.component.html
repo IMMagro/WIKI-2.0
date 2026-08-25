@@ -142,7 +142,7 @@
   <!-- DESIGN A: BENTO GRID -->
   <div *ngIf="manualsDesignVariant === 'A' && filteredFAQ.length > 0" class="w-full pb-12 animate-[fadeIn_0.5s_ease-out]">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px]">
-      <div *ngFor="let m of filteredFAQ; let i = index"
+      <div *ngFor="let m of filteredFAQ; let i = index; trackBy: trackByFaq"
            (click)="openFaq(m)"
            class="group relative rounded-3xl p-6 overflow-hidden bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(55,125,255,0.2)] dark:hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] transition-all duration-500 hover:-translate-y-1 cursor-pointer flex flex-col justify-between"
            [ngClass]="m.featured ? 'md:col-span-2' : 'col-span-1'">
@@ -170,7 +170,7 @@
   <!-- DESIGN B: SLEEK ACCORDION LIST -->
   <div *ngIf="manualsDesignVariant === 'B' && filteredFAQ.length > 0" class="w-full pb-12 animate-[fadeIn_0.5s_ease-out]">
     <div class="flex flex-col gap-3">
-      <div *ngFor="let m of filteredFAQ" (click)="openFaq(m)" class="group flex items-center justify-between p-5 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-700/50 hover:border-qe-blue/30 hover:shadow-lg hover:shadow-qe-blue/5 transition-all duration-300 cursor-pointer">
+      <div *ngFor="let m of filteredFAQ; trackBy: trackByFaq" (click)="openFaq(m)" class="group flex items-center justify-between p-5 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-700/50 hover:border-qe-blue/30 hover:shadow-lg hover:shadow-qe-blue/5 transition-all duration-300 cursor-pointer">
         <div class="flex items-center gap-5">
           <div class="w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" [ngClass]="m.color">
             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
@@ -196,7 +196,7 @@
   <!-- DESIGN C: 3D FLOATING CARDS -->
   <div *ngIf="manualsDesignVariant === 'C' && filteredFAQ.length > 0" class="w-full pb-12 animate-[fadeIn_0.5s_ease-out]" style="perspective: 1000px;">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
-      <div *ngFor="let m of filteredFAQ; let i = index"
+      <div *ngFor="let m of filteredFAQ; let i = index; trackBy: trackByFaq"
            (click)="openFaq(m)"
            class="group bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-md border border-slate-100 dark:border-slate-700 transition-all duration-500 cursor-pointer flex flex-col h-[280px]"
            style="transform-style: preserve-3d;"
@@ -228,7 +228,7 @@
       <div class="absolute -top-20 -left-20 w-96 h-96 bg-blue-400/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 pointer-events-none"></div>
       <div class="absolute top-40 right-10 w-72 h-72 bg-purple-400/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 pointer-events-none"></div>
 
-      <div *ngFor="let m of filteredFAQ; let i = index"
+      <div *ngFor="let m of filteredFAQ; let i = index; trackBy: trackByFaq"
            (click)="openFaq(m)"
            class="group relative rounded-3xl p-6 overflow-hidden bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/60 dark:border-slate-700/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(55,125,255,0.15)] transition-all duration-500 hover:-translate-y-1 hover:bg-white/60 dark:hover:bg-slate-800/60 cursor-pointer flex flex-col justify-between z-10"
            [ngClass]="m.featured ? 'md:col-span-2' : 'col-span-1'">
@@ -263,7 +263,7 @@
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
       </div>
 
-      <div *ngFor="let m of filteredFAQ; let i = index"
+      <div *ngFor="let m of filteredFAQ; let i = index; trackBy: trackByFaq"
            (click)="openFaq(m)"
            class="group relative rounded-3xl p-6 overflow-hidden bg-white/10 dark:bg-white/5 backdrop-blur-2xl border-t border-l border-white/40 dark:border-white/20 border-b border-r border-white/10 shadow-[inset_0_0_20px_rgba(255,255,255,0.2)] dark:shadow-[inset_0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_8px_32px_rgba(31,38,135,0.15)] transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between"
            [ngClass]="m.featured ? 'md:col-span-2' : 'col-span-1'">

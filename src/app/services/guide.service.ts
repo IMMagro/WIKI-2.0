@@ -6,8 +6,7 @@ import { Category, Journey, FaqHit } from '../components/guide/guide.models';
 export class GuideService {
   loaded = false;
 
-  // Dati di fallback (usati sotto ng serve, dove i .ashx non girano)
-  categories: Category[] = [
+  private _categories: Category[] = [
     { id: 'fatture', name: 'Fatture', icon: 'receipt', accent: 'blue', desc: 'Emissione, invio allo SDI, note di credito e incassi.', manuals: [
       { id: 'fe', title: 'Fatturazione Elettronica', status: 'pub', updated: '20 ago 2026', desc: 'Emettere e inviare fatture allo SDI dal gestionale.',
         overview: '<p>La <strong>fatturazione elettronica</strong> ti permette di emettere fatture e note di credito e inviarle automaticamente al <strong>Sistema di Interscambio (SDI)</strong>. I dati fiscali del paziente vengono ripresi dalla cartella clinica.</p><p>In questa guida trovi il flusso completo, dall\'emissione fino alla gestione degli scarti SDI.</p><h3>Prima di iniziare</h3><ul><li>P.IVA o Codice Fiscale corretti in anagrafica.</li><li>Credenziali SDI configurate nelle impostazioni.</li></ul>',
@@ -46,6 +45,18 @@ export class GuideService {
         { q: 'Come creo un preventivo?', tags: ['preventivo'], updated: '09 ago 2026', steps: [ { t: 'Apri <b>Preventivi &rarr; Nuovo</b> e aggiungi le voci.', img: true }, { t: 'Stampa o invia il PDF.' } ] } ] } ] }
   ];
 
+  private _publicCategories: Category[] = [];
+  private _allFaqItems: any[] = [];
+
+  get categories(): Category[] {
+    return this._categories;
+  }
+
+  set categories(val: Category[]) {
+    this._categories = val || [];
+    this.recomputeDerived();
+  }
+
   journey: Journey = {
     intro: 'Sei alle prime armi? Segui questi passi in ordine: ognuno ti porta alla guida o alla FAQ giusta.',
     steps: [
@@ -57,41 +68,35 @@ export class GuideService {
     ]
   };
 
-  constructor(private http: HttpClient) { this.load(); }
+  constructor(private http: HttpClient) {
+    this.recomputeDerived();
+    this.load();
+  }
 
   /** Carica l'albero reale da /api/get_guides.ashx; in errore mantiene il fallback. */
   load(): void {
     if (this.loaded) return;
     this.http.get<any>('/api/get_guides.ashx').subscribe({
       next: (data) => {
-        if (data && Array.isArray(data.categories) && data.categories.length) this.categories = data.categories;
-        if (data && data.journey && Array.isArray(data.journey.steps) && data.journey.steps.length) this.journey = data.journey;
+        if (data && Array.isArray(data.categories) && data.categories.length) {
+          this.categories = data.categories;
+        }
+        if (data && data.journey && Array.isArray(data.journey.steps) && data.journey.steps.length) {
+          this.journey = data.journey;
+        }
         this.loaded = true;
       },
       error: () => { /* mantiene i dati di fallback */ }
     });
   }
 
-  /**
-   * Vista PUBBLICA: solo guide pubblicate (le bozze non sono visibili all'utente),
-   * e categorie senza guide pubblicate vengono escluse. L'area admin usa `categories`.
-   */
-  get publicCategories(): Category[] {
-    return (this.categories || [])
+  private recomputeDerived(): void {
+    this._publicCategories = (this._categories || [])
       .map(c => ({ ...c, manuals: (c.manuals || []).filter(m => m.status !== 'draft') }))
       .filter(c => c.manuals.length > 0);
-  }
 
-  /**
-   * Elenco appiattito di TUTTE le FAQ reali (da publicCategories), nella forma attesa
-   * dalla modale di lettura: { id, category, color, desc (=guida), title (=domanda), steps, service }.
-   * È la sorgente unica per la ricerca in home e per la pagina FAQ, così il contenuto
-   * (step, servizio) è lo stesso che si legge nella sezione Guide.
-   */
-  get allFaqItems(): any[] {
     const out: any[] = [];
-    const cats = this.publicCategories || []; // esclude le guide in bozza
-    cats.forEach((c: any, ci: number) => {
+    this._publicCategories.forEach((c: any, ci: number) => {
       const color = c.accent === 'magenta' ? 'from-fuchsia-500 to-pink-400' : 'from-blue-500 to-sky-400';
       (c.manuals || []).forEach((g: any, mi: number) => {
         (g.faqs || []).forEach((f: any, fi: number) => {
@@ -111,7 +116,25 @@ export class GuideService {
         });
       });
     });
-    return out;
+    this._allFaqItems = out;
+  }
+
+  /**
+   * Vista PUBBLICA: solo guide pubblicate (le bozze non sono visibili all'utente),
+   * e categorie senza guide pubblicate vengono escluse. L'area admin usa `categories`.
+   */
+  get publicCategories(): Category[] {
+    return this._publicCategories;
+  }
+
+  /**
+   * Elenco appiattito di TUTTE le FAQ reali (da publicCategories), nella forma attesa
+   * dalla modale di lettura: { id, category, color, desc (=guida), title (=domanda), steps, service }.
+   * È la sorgente unica per la ricerca in home e per la pagina FAQ, così il contenuto
+   * (step, servizio) è lo stesso che si legge nella sezione Guide.
+   */
+  get allFaqItems(): any[] {
+    return this._allFaqItems;
   }
 
   /** Ricerca su TUTTE le singole FAQ pubblicate (domanda + tag + testo degli step). */
