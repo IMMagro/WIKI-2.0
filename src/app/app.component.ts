@@ -33,8 +33,6 @@ export class AppComponent implements OnInit {
   isAdminRoute = false;
   isAdminAuthenticated = false;
   isUploadModalOpen = false;
-  adminNotifications: any[] = [];
-  // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_notifications.ashx)
 
   openUploadModal() {
     this.isUploadModalOpen = true;
@@ -43,12 +41,6 @@ export class AppComponent implements OnInit {
   closeUploadModal() {
     this.isUploadModalOpen = false;
   }
-
-  backgroundImages = [
-    '/assets/images/quaderno-bg-left-logo.jpg'
-  ];
-  currentBgIndex = 0;
-  private bgInterval: any;
 
   @ViewChild(GuideComponent) guideRef?: GuideComponent;
 
@@ -62,32 +54,9 @@ export class AppComponent implements OnInit {
     public faqReadingService: FaqReadingService
   ) {}
 
-  // --- ADMIN MOCK DATA CLEANUP ---
-  // TODO: Popolare tramite chiamate HTTP al backend
-  adminNews: any[] = [];
-  adminDashboardStats: any = null; // conterrà { onlineUsers, mapNodes, weeklyAccess, storageUsage, searchStats }
-  adminServerStats: any = null; // conterrà { cpu, ram, storage, uptime }
-  adminServerServices: any[] = [];
-  adminServerLogs: any[] = [];
-  // -------------------------------
-
-  startBackgroundRotation() {
-    this.bgInterval = setInterval(() => {
-      this.currentBgIndex = (this.currentBgIndex + 1) % this.backgroundImages.length;
-    }, 6000); // Ruota ogni 6 secondi
-  }
-
-  stopBackgroundRotation() {
-    if (this.bgInterval) {
-      clearInterval(this.bgInterval);
-      this.bgInterval = null;
-    }
-  }
-
   // Uscita dalla modalità admin
   exitAdmin() {
     this.isAdminRoute = false;
-    this.stopBackgroundRotation();
     window.location.href = '/';
   }
 
@@ -95,63 +64,16 @@ export class AppComponent implements OnInit {
 
   goToAdmin() {
     this.isAdminRoute = true;
-    this.startBackgroundRotation();
     if (this.isLocalhost) {
-      // Accesso diretto e dati mock per localhost per evitare loop 404
+      // Accesso diretto per localhost, per evitare loop 404
       this.isAdminAuthenticated = true;
-      this.adminDashboardStats = {
-        onlineUsers: 24,
-        mapNodes: [
-          { name: 'Milano-01', users: 8, x: 72, y: 52, color: '#377DFF', gradientId: '#heatBlue', glowRadius: 6, pointRadius: 4 },
-          { name: 'Torino-01', users: 4, x: 45, y: 62, color: '#377DFF', gradientId: '#heatBlue', glowRadius: 5, pointRadius: 4 },
-          { name: 'Venezia-01', users: 3, x: 128, y: 58, color: '#F80086', gradientId: '#heatMagenta', glowRadius: 5, pointRadius: 4 },
-          { name: 'Firenze-01', users: 5, x: 115, y: 112, color: '#377DFF', gradientId: '#heatBlue', glowRadius: 5, pointRadius: 4 },
-          { name: 'Roma-02', users: 6, x: 140, y: 165, color: '#F80086', gradientId: '#heatMagenta', glowRadius: 6, pointRadius: 4 }
-        ],
-        weeklyAccess: [
-          { day: 'Lun', x1: 45,  y1: 85,  h1: 105, x2: 65,  y2: 115, h2: 75,  isCurrent: false },
-          { day: 'Mar', x1: 107, y1: 107, h1: 83,  x2: 127, y2: 130, h2: 60,  isCurrent: false },
-          { day: 'Mer', x1: 169, y1: 47,  h1: 143, x2: 189, y2: 77,  h2: 113, isCurrent: true },
-          { day: 'Gio', x1: 231, y1: 130, h1: 60,  x2: 251, y2: 145, h2: 45,  isCurrent: false },
-          { day: 'Ven', x1: 293, y1: 62,  h1: 128, x2: 313, y2: 92,  h2: 98,  isCurrent: false },
-          { day: 'Sab', x1: 355, y1: 145, h1: 45,  x2: 375, y2: 157, h2: 33,  isCurrent: false },
-          { day: 'Dom', x1: 417, y1: 160, h1: 30,  x2: 437, y2: 167, h2: 23,  isCurrent: false }
-        ],
-        trendlineData: 'M53 85 L115 107 L177 47 L239 130 L301 62 L363 145 L425 160',
-        storageUsage: { manualsPct: 45, mediaPct: 35, totalPct: 80 },
-        searchStats: { total: 12.5, suffix: 'k', trend: 12, topKeywords: ['Fatturazione', 'TS', 'Agenda', 'Backup'] }
-      };
-      this.adminServerStats = {
-        cpu: 32, ramTotal: 16, ramUsed: 8.5, storageTotal: 2, storageUsed: 800,
-        uptimeDays: 45, uptimeTime: '12:30:45'
-      };
-      this.adminServerServices = [
-        { name: 'Database Engine', status: 'online', memory: '450MB' },
-        { name: 'API Server', status: 'online', memory: '1.2GB' },
-        { name: 'Background Jobs', status: 'warning', memory: '850MB' }
-      ];
-      this.adminServerLogs = [
-        '[INFO] Servizio avviato correttamente.',
-        '[WARN] Utilizzo memoria oltre la soglia (85%).'
-      ];
-      this.adminNews = [
-        { title: 'Aggiornamento Sistema TS 2.0 completato', date: 'Oggi', category: 'Sistema' }
-      ];
-      this.adminNotifications = [
-        { message: 'Nuovo backup generato con successo', time: '10 min fa' }
-      ];
-    } else {
-      const savedToken = sessionStorage.getItem('adminToken');
-      if (savedToken) {
-        this.isAdminAuthenticated = true;
-        this.loadAdminData();
-      }
+    } else if (sessionStorage.getItem('adminToken')) {
+      this.isAdminAuthenticated = true;
     }
   }
 
   onLoginSuccess() {
     this.isAdminAuthenticated = true;
-    this.loadAdminData();
   }
 
   tags: string[] = [];
@@ -248,50 +170,6 @@ export class AppComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Errore nel caricamento dei tags:', err)
-    });
-  }
-
-  // TODO: Implementare funzioni per caricare i dati delle altre sezioni Admin
-  loadAdminData() {
-    const token = sessionStorage.getItem('adminToken');
-    if (!token) return;
-
-    const headers = { 'Authorization': `Bearer ${token}` };
-
-    this.http.get<any>('/api/get_admin_dashboard.ashx', { headers }).subscribe({
-      next: (data) => this.adminDashboardStats = data,
-      error: () => this.handleAuthError()
-    });
-    
-    this.http.get<any[]>('/api/get_admin_news.ashx', { headers }).subscribe({
-      next: (data) => this.adminNews = data,
-      error: () => this.handleAuthError()
-    });
-    
-    this.loadNotifications();
-    
-    this.http.get<any>('/api/get_admin_server.ashx', { headers }).subscribe({
-      next: (data) => {
-        this.adminServerStats = data.stats;
-        this.adminServerServices = data.services;
-        this.adminServerLogs = data.logs;
-      },
-      error: () => this.handleAuthError()
-    });
-  }
-
-  handleAuthError() {
-    this.isAdminAuthenticated = false;
-    sessionStorage.removeItem('adminToken');
-  }
-  
-  loadNotifications() {
-    const token = sessionStorage.getItem('adminToken');
-    if (!token) return;
-    const headers = { 'Authorization': `Bearer ${token}` };
-    this.http.get<any[]>('/api/get_notifications.ashx', { headers }).subscribe({
-      next: (data) => this.adminNotifications = data,
-      error: () => console.error('Errore nel caricamento notifiche')
     });
   }
 
@@ -660,12 +538,8 @@ export class AppComponent implements OnInit {
     
     if (path === '/admin' || hash.includes('/admin')) {
       this.isAdminRoute = true;
-      this.startBackgroundRotation();
-      
-      const savedToken = sessionStorage.getItem('adminToken');
-      if (savedToken) {
+      if (sessionStorage.getItem('adminToken')) {
         this.isAdminAuthenticated = true;
-        this.loadAdminData();
       }
     }
 
