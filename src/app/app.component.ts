@@ -16,11 +16,12 @@ import { HomeComponent } from './components/home/home.component';
 import { ServiziComponent } from './components/servizi/servizi.component';
 import { FaqPageComponent } from './components/faq-page/faq-page.component';
 import { FaqReadingPanelComponent } from './components/shared/faq-reading-panel/faq-reading-panel.component';
+import { NewsCarouselComponent } from './components/news-carousel/news-carousel.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent, FaqPageComponent, FaqReadingPanelComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent, FaqPageComponent, FaqReadingPanelComponent, NewsCarouselComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
@@ -231,75 +232,6 @@ export class AppComponent implements OnInit {
     return this.hexToRgba(hex, 0.4);
   }
 
-  getOrbitTransform(orb: number): string {
-    const time = Date.now() * 0.001;
-    const speed = 0.5;
-    if (orb === 1) {
-      const x = Math.cos(time * speed) * 15;
-      const y = Math.sin(time * speed) * 15;
-      return `translate(${x}px, ${y}px)`;
-    } else {
-      const x = Math.sin(time * speed * -0.7) * 20;
-      const y = Math.cos(time * speed * -0.7) * 20;
-      return `translate(${x}px, ${y}px)`;
-    }
-  }
-
-  getCarouselStyle(index: number): any {
-    const total = this.programs.length;
-    let offset = index - this.activeProgramIndex;
-    if (offset > Math.floor(total / 2)) offset -= total;
-    if (offset < -Math.floor(total / 2)) offset += total;
-
-    const absOffset = Math.abs(offset);
-    const isCenter = offset === 0;
-
-    let style: any = {
-      transition: 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
-      position: 'absolute',
-      width: '300px',
-      height: '360px',
-      top: '0',
-      left: 'calc(50% - 150px)',
-      zIndex: 10 - absOffset,
-      transformOrigin: 'bottom center'
-    };
-
-    if (this.newsStage === 'detail') {
-      if (isCenter) {
-        style.left = '48px';
-        style.transform = `translateX(0) scale(0.9) translateZ(0)`;
-        style.opacity = 1;
-        style.filter = 'brightness(1)';
-        style.cursor = 'default';
-      } else {
-        style.transform = `translateX(${Math.sign(offset) * 112}%) scale(0.82) translateZ(-100px)`;
-        style.opacity = 0;
-        style.pointerEvents = 'none';
-      }
-      return style;
-    }
-
-    if (isCenter) {
-      style.transform = `translateX(0) scale(1.08) translateZ(50px)`;
-      style.opacity = 1;
-      style.filter = 'brightness(1)';
-    } else {
-      const sign = Math.sign(offset);
-      style.transform = `translateX(${sign * 112}%) scale(0.82) translateZ(-100px)`;
-      style.opacity = 0.55;
-      style.filter = 'brightness(0.7)';
-      style.cursor = 'pointer';
-    }
-
-    if (absOffset > 1) {
-      style.opacity = 0;
-      style.pointerEvents = 'none';
-    }
-
-    return style;
-  }
-
   selectMenuItem(selectedItem: any) {
     if (selectedItem.active) return; // Prevent resetting if clicking the same item
 
@@ -471,17 +403,6 @@ export class AppComponent implements OnInit {
   newsAnimState: 'stable' | 'leaving-up' | 'leaving-down' | 'entering-up' | 'entering-down' = 'stable';
 
   newsItems: any[] = [];
-
-  getNewsContentClass() {
-    switch(this.newsAnimState) {
-      case 'stable': return 'opacity-100 translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]';
-      case 'leaving-up': return 'opacity-0 -translate-y-12 transition-all duration-400 ease-in';
-      case 'leaving-down': return 'opacity-0 translate-y-12 transition-all duration-400 ease-in';
-      case 'entering-up': return 'opacity-0 translate-y-12 transition-none';
-      case 'entering-down': return 'opacity-0 -translate-y-12 transition-none';
-      default: return 'opacity-100 translate-y-0 transition-all duration-500';
-    }
-  }
 
   changeNewsItem(newIndex: number) {
       const isDown = newIndex > this.activeNewsItemIndex;

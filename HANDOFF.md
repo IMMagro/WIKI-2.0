@@ -99,20 +99,27 @@ Piano approvato:
      consumatori verificato via grep sull'intero repo.
    - Rimane in app.component (orchestrazione vera): `activeIndex`/`menuItems`/`selectMenuItem`/
      `triggerPageAnimation` (macchina a stati delle 5 viste), gating admin (`isAdminRoute`/
-     `isAdminAuthenticated`/`goToAdmin`/`exitAdmin`), carosello "Prodotti & Novità" del tab News
-     (`programs`/`activeProgramIndex`/`newsStage`/`newsItems`/carousel styles — usato anche dagli
-     orb di sfondo "Aurora" in cima al template, non solo dalla vista News), sidebar, contatti,
-     dark mode toggle nel footer, `goToCategoryFromFaq` (riceve il categoryId dall'Output di
-     `FaqReadingPanelComponent`).
+     `isAdminAuthenticated`/`goToAdmin`/`exitAdmin`), sidebar, contatti, dark mode toggle nel footer,
+     `goToCategoryFromFaq` (riceve il categoryId dall'Output di `FaqReadingPanelComponent`).
    - `app.component.ts`: 961 → 693 → 567 righe (partito da 1281). `app.component.html` invariato
      a 482 (nessun markup toccato in questo step, solo `.ts`). Bundle -10kB circa. Build verde
      (solo i 6 warning CSS preesistenti).
-   - **Non estratto** (giudicato fuori scope rispetto al piano a 5 step, non "shell" ma vista vera
-     e propria): il carosello "Prodotti & Novità" del tab News (Windent/Poliwin/Winodlab). È
-     l'ultimo pezzo di vista rimasto grande in `app.component`, ma richiederebbe lo stesso pattern
-     di delega DOM già usato per `ServiziComponent` (FLIP-style) più la gestione degli orb di
-     sfondo condivisi a livello di root — se si vuole procedere, seguire l'esempio di
-     `ServiziComponent`/`servizi.component.ts`.
+6. **`NewsCarouselComponent`** — estrazione del carosello "Prodotti & Novità" del tab News
+   (Windent/Poliwin/Winodlab), oltre il piano originale a 5 step. ← **FATTO (2026-08-25)**
+   - `src/app/components/news-carousel/`: titolo con liquid-fill del colore del prodotto attivo +
+     carosello 3D. `getCarouselStyle()`/`getNewsContentClass()` spostati come metodi locali (puri,
+     dipendono solo dagli `@Input`).
+   - `programs`/`activeProgramIndex`/`newsStage`/`newsBaseColor`/`newsOverlayColor`/
+     `newsFillPosition`/`isRefilling`/`newsItems`/`activeNewsItemIndex`/`newsAnimState` **restano
+     in app.component** (a differenza di Home/Servizi/FaqPage) e vengono passati come `@Input`:
+     sono scritti da `selectMenuItem`/`triggerPageAnimation`/`onWheel`/`updateProgramNews`
+     (orchestrazione) E letti da `getGlowColor()` per colorare gli orb di sfondo "Aurora" in cima
+     al template (root-level, fuori dalla vista News) — non potevano diventare stato locale del
+     componente. `prevProgram`/`nextProgram`/`selectProgram` sono Output verso i metodi già
+     esistenti in app.component (che mutano `activeProgramIndex`).
+   - Rimosso `getOrbitTransform` da app.component: dead code, zero riferimenti nel template
+     (probabile residuo di una versione precedente degli orb).
+   - `app.component.ts`: 567 → 488 righe. `app.component.html`: 482 → 319 righe. Build verde.
 
 Regola: **un pezzo alla volta**, `npm run build` verde + `git commit` dopo ognuno (l'ambiente ha subìto `git reset --hard` che perde il lavoro NON committato).
 
