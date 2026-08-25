@@ -14,11 +14,13 @@ import { NewsService } from './services/news.service';
 import { FaqReadingService } from './services/faq-reading.service';
 import { HomeComponent } from './components/home/home.component';
 import { ServiziComponent } from './components/servizi/servizi.component';
+import { FaqPageComponent } from './components/faq-page/faq-page.component';
+import { FaqReadingPanelComponent } from './components/shared/faq-reading-panel/faq-reading-panel.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent, FaqPageComponent, FaqReadingPanelComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
@@ -33,7 +35,6 @@ export class AppComponent implements OnInit {
   isAdminRoute = false;
   isAdminAuthenticated = false;
   activeAdminTab: 'dashboard' | 'manuals' | 'news' | 'server' | 'users' | 'settings' = 'dashboard';
-  manualsDesignVariant: 'A' | 'B' | 'C' | 'D' | 'E' = 'A';
   selectedManualStats: any = null;
   isStatsPanelOpen = false;
   isUploadModalOpen = false;
@@ -121,11 +122,6 @@ export class AppComponent implements OnInit {
     public newsService: NewsService,
     public faqReadingService: FaqReadingService
   ) {}
-
-  /** @deprecated Usare `guideService.allFaqItems` direttamente. Rimosso man mano che le sezioni Home/FAQ vengono estratte in componenti dedicati. */
-  get allFaqItems(): any[] {
-    return this.guideService.allFaqItems;
-  }
 
   // --- ADMIN MOCK DATA CLEANUP ---
   // TODO: Popolare tramite chiamate HTTP al backend
@@ -302,68 +298,6 @@ export class AppComponent implements OnInit {
     }, 2800);
   }
 
-  goToAllFaqs() {
-    this.closeFaq();
-    
-    // Switch to manuali view
-    this.menuItems.forEach((m, idx) => m.active = (idx === 1)); // Set FAQ tab active
-    this.activeIndex = 1;
-    
-    // Salta l'animazione e vai direttamente al contenuto per un'apertura immediata
-    this.manualiStage = 'content';
-  }
-
-  // -- FAQ SEARCH --
-  faqSearchQuery: string = '';
-
-  openFaq(faq: any) {
-    this.faqReadingService.openFaq(faq); // Apertura come pannello laterale (destra), coerente con la ricerca in home
-    document.body.style.overflow = 'hidden'; // Blocca lo scroll di sfondo
-  }
-
-  closeFaq() {
-    this.faqReadingService.closeFaq();
-    document.body.style.overflow = 'auto'; // Ripristina lo scroll
-  }
-
-  // -- FAQ STATS --
-  isFaqStatsModalOpen = false;
-
-  getReadCount(): number {
-    const all = this.allFaqItems;
-    return all.filter(d => this.faqReadingService.isFaqRead(d.id)).length;
-  }
-
-  getUnreadCount(): number {
-    return this.allFaqItems.length - this.getReadCount();
-  }
-
-  getReadPercentage(): number {
-    const total = this.allFaqItems.length;
-    if (total === 0) return 0;
-    return (this.getReadCount() / total) * 100;
-  }
-
-  getPieGradient(): string {
-    const p = this.getReadPercentage();
-    const bg = this.themeService.isDarkMode ? '#334155' : '#E2E8F0'; // slate-700 or slate-200
-    return `conic-gradient(#10B981 ${p}%, ${bg} ${p}%)`;
-  }
-
-
-  get filteredFAQ() {
-    const all = this.allFaqItems;
-    if (!this.faqSearchQuery || this.faqSearchQuery.trim() === '') {
-      return all;
-    }
-    const q = this.faqSearchQuery.toLowerCase();
-    return all.filter(doc =>
-      (doc.title && doc.title.toLowerCase().includes(q)) ||
-      (doc.desc && doc.desc.toLowerCase().includes(q)) ||
-      (doc.category && doc.category.toLowerCase().includes(q)) ||
-      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q))
-    );
-  }
   private pageTimeout: any;
   private animationId = 0;
   newsStage: 'title-black' | 'title-blue' | 'moving' | 'cards' | 'detail' = 'title-black';
@@ -1016,9 +950,7 @@ export class AppComponent implements OnInit {
     }, 3000);
   }
 
-  goToCategoryFromFaq() {
-    const catId = this.faqReadingService.selectedFaq?.categoryId;
-    this.closeFaq();
+  goToCategoryFromFaq(catId?: string) {
     // Passa alla sezione Guide (indice menu 3) e apri la categoria della FAQ.
     this.menuItems.forEach((m, idx) => m.active = (idx === 3));
     this.activeIndex = 3;

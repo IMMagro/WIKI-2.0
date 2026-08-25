@@ -1,0 +1,78 @@
+<!-- READING VIEW MODALS -->
+<div *ngIf="faqReadingService.selectedFaq" class="fixed inset-0 z-[100] animate-[fadeIn_0.3s_ease-out]"
+      [ngClass]="{
+        'bg-slate-900/20 dark:bg-black/40 backdrop-blur-md': faqReadingService.readingDesignVariant === 'A' || faqReadingService.readingDesignVariant === 'B',
+        'bg-black/40 backdrop-blur-sm': faqReadingService.readingDesignVariant === 'C',
+        'bg-white dark:bg-slate-950': faqReadingService.readingDesignVariant === 'D'
+      }">
+
+  <!-- Sfondo cliccabile per chiudere -->
+  <div class="absolute inset-0 z-0" (click)="close()"></div>
+
+  <!-- CONTENITORE PRINCIPALE (Le 4 Varianti) -->
+  <div class="absolute z-10 w-full flex flex-col overflow-hidden"
+        [style.height]="faqReadingService.readingDesignVariant === 'A' ? '85vh' : (faqReadingService.readingDesignVariant === 'B' ? '92vh' : '100%')"
+        [ngClass]="{
+          'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-4xl rounded-[2rem] h-[85vh] bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] border border-white/60 dark:border-slate-700/50 animate-[scaleUp_0.4s_cubic-bezier(0.175,0.885,0.32,1.275)]': faqReadingService.readingDesignVariant === 'A',
+          'bottom-0 left-1/2 -translate-x-1/2 max-w-5xl rounded-t-[2.5rem] h-[92vh] bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/60 dark:border-slate-700/50 animate-[slideUp_0.4s_ease-out]': faqReadingService.readingDesignVariant === 'B',
+          'top-0 right-0 max-w-2xl h-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl border-l border-slate-100 dark:border-slate-800 animate-[slideLeft_0.4s_ease-out]': faqReadingService.readingDesignVariant === 'C',
+          'inset-0 h-full w-full bg-white dark:bg-slate-950 animate-[fadeIn_0.3s_ease-out]': faqReadingService.readingDesignVariant === 'D'
+        }">
+
+    <!-- HEADER LETTURA -->
+    <div class="flex-shrink-0 flex items-center justify-between p-6 md:px-10 md:py-8 border-b sticky top-0 z-20"
+         [ngClass]="{
+           'border-white/40 dark:border-slate-700/40 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-t-[2rem]': faqReadingService.readingDesignVariant === 'A',
+           'border-white/40 dark:border-slate-700/40 bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl rounded-t-[2.5rem]': faqReadingService.readingDesignVariant === 'B',
+           'border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md': faqReadingService.readingDesignVariant === 'C',
+           'border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-950 max-w-5xl mx-auto w-full border-b-0 pt-10': faqReadingService.readingDesignVariant === 'D'
+         }">
+      <div class="flex items-center gap-4">
+        <button (click)="close()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-qe-blue hover:text-white transition-colors shadow-sm">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </button>
+        <span class="px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest text-white shadow-sm bg-gradient-to-br" [ngClass]="faqReadingService.selectedFaq.color">{{faqReadingService.selectedFaq.category}}</span>
+      </div>
+
+      <!-- Vai a tutte le FAQ/guide di questa categoria (sezione Guide) -->
+      <button (click)="goToCategory()" class="text-sm font-bold text-qe-blue hover:text-blue-700 dark:hover:text-blue-400 transition-colors flex items-center gap-1 group bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-xl">
+        Tutte le FAQ di {{ faqReadingService.selectedFaq.category }}
+        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- CORPO LETTURA -->
+    <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-6 md:p-10 pb-12 md:pb-16 scroll-smooth"
+         [ngClass]="{'max-w-5xl mx-auto w-full pt-4': faqReadingService.readingDesignVariant === 'D'}">
+      <div class="text-sm font-bold uppercase tracking-wider text-qe-blue mb-3">{{ faqReadingService.selectedFaq.desc }}</div>
+      <h1 class="font-extrabold text-slate-900 dark:text-white mb-8 leading-tight tracking-tight text-3xl md:text-4xl">{{ faqReadingService.selectedFaq.title }}</h1>
+
+      <!-- Procedura a step reale della FAQ -->
+      <div *ngIf="faqReadingService.selectedFaq as f" class="space-y-6">
+        <div *ngFor="let s of f.steps; let i = index" class="flex gap-4">
+          <div class="w-9 h-9 rounded-full bg-qe-blue text-white flex items-center justify-center font-bold shrink-0 shadow-md shadow-qe-blue/30">{{ i + 1 }}</div>
+          <div class="flex-1 pt-1">
+            <p class="text-slate-700 dark:text-slate-200 leading-relaxed m-0" [innerHTML]="s.t"></p>
+            <div *ngIf="s.img" class="mt-3 h-32 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center text-slate-400 text-xs font-semibold">🖼️ Screenshot procedura</div>
+            <div *ngIf="s.video" class="mt-3 h-36 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center relative overflow-hidden">
+              <div class="w-12 h-12 rounded-full bg-white/20 border border-white/50 flex items-center justify-center"><svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+              <span class="absolute bottom-2 left-3 text-xs font-semibold text-white/80">Video &middot; 0:42</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servizio consigliato (se la FAQ ne ha uno) -->
+        <div *ngIf="f.service as sv" class="mt-8 flex items-center gap-4 p-4 rounded-2xl border border-fuchsia-200 dark:border-fuchsia-900/40 bg-gradient-to-r from-fuchsia-50 dark:from-fuchsia-900/20 to-transparent">
+          <div class="w-11 h-11 rounded-xl bg-fuchsia-100 dark:bg-fuchsia-900/40 text-fuchsia-600 dark:text-fuchsia-300 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10c.7.7 1 1.4 1 2h6c0-.6.3-1.3 1-2a6 6 0 00-4-10z"/></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-fuchsia-600 dark:text-fuchsia-400">Servizio consigliato</div>
+            <div class="font-bold text-slate-800 dark:text-slate-100">{{ sv.name }}</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">{{ sv.desc }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
