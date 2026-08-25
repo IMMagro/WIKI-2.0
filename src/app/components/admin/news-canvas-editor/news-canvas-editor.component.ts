@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -39,6 +39,8 @@ export class NewsCanvasEditorComponent implements OnChanges {
   private sx = 0; private sy = 0;
   private ox = 0; private oy = 0; private ow = 0; private oh = 0;
   private active: NewsBlock | null = null;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(): void {
     if (!this.blocks) this.blocks = [];
@@ -121,4 +123,41 @@ export class NewsCanvasEditorComponent implements OnChanges {
 
   /** Da chiamare quando cambiano i campi nel pannello proprietà. */
   emit(): void { this.growCanvas(); this.blocksChange.emit(this.blocks); }
+
+  /** Carica un'immagine da file: la ridimensiona e la salva inline (data URL) nel blocco. */
+  onImageFile(block: NewsBlock, ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.downscale(reader.result as string, 1200, (dataUrl, w, h) => {
+        block.content = dataUrl;
+        // adatta l'altezza del blocco alle proporzioni dell'immagine
+        if (w && h && block.w) block.h = Math.round(block.w * h / w);
+        this.emit();
+        this.cdr.detectChanges();
+      });
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  /** Ridimensiona l'immagine a maxW px di larghezza ed esporta in JPEG per contenere il peso. */
+  private downscale(src: string, maxW: number, cb: (out: string, w?: number, h?: number) => void): void {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { cb(src, img.width, img.height); return; }
+      ctx.drawImage(img, 0, 0, w, h);
+      try { cb(canvas.toDataURL('image/jpeg', 0.85), w, h); }
+      catch { cb(src, img.width, img.height); }
+    };
+    img.onerror = () => cb(src);
+    img.src = src;
+  }
 }

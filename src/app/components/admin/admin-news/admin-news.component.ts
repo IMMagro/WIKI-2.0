@@ -21,6 +21,13 @@ export class AdminNewsComponent implements OnInit {
   // Preview state
   isPreviewOpen = false;
   previewItem: any = null;
+  readonly newsCanvasW = 720;
+
+  /** Altezza minima del canvas per l'anteprima, in base ai blocchi. */
+  canvasH(blocks: any[]): number {
+    if (!blocks || !blocks.length) return 400;
+    return Math.max(360, ...blocks.map(b => (b.y || 0) + (b.h || 0))) + 24;
+  }
   
   currentNews: any = {
     title: '',
