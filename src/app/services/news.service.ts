@@ -18,21 +18,49 @@ export class NewsService {
   loadNews(onLoaded?: () => void) {
     this.http.get<any[]>('/api/news.ashx').subscribe({
       next: (data) => {
+        this.allNews = (Array.isArray(data) && data.length > 0) ? data : [];
+        if (this.allNews.length === 0) {
+          this.loadFallbackNews(onLoaded);
+        } else {
+          onLoaded?.();
+        }
+      },
+      error: () => {
+        this.loadFallbackNews(onLoaded);
+      }
+    });
+  }
+
+  private loadFallbackNews(onLoaded?: () => void) {
+    this.http.get<any[]>('/Data/news.json').subscribe({
+      next: (data) => {
         this.allNews = data || [];
         onLoaded?.();
       },
-      error: (err) => console.error('Errore caricamento news:', err)
+      error: () => {
+        this.allNews = [
+          {
+            id: 1,
+            title: 'Benvenuti nel nuovo Portale Assistenza QE 2.0',
+            category: 'Generale',
+            date: 'Oggi',
+            excerpt: 'È online il nuovo portale con motore di ricerca istantaneo per manuali, FAQ interattive e visualizzatore a schede.',
+            status: 'published'
+          }
+        ];
+        onLoaded?.();
+      }
     });
   }
 
   /** News per un programma (es. "Windent"): esclude le bozze, non visibili all'utente. */
   newsForProgram(programName: string): any[] {
-    return (this.allNews || []).filter(n => n.category === programName && n.status !== 'draft');
+    return (this.allNews || []).filter(n => n && String(n.category || '').toLowerCase() === String(programName || '').toLowerCase() && n.status !== 'draft');
   }
 
   /** News "Generale" pubblicate (le bozze non sono visibili all'utente) — campanella in home. */
   get generalNews(): any[] {
-    return (this.allNews || []).filter(n => n && n.category === 'Generale' && n.status !== 'draft');
+    return (this.allNews || []).filter(n => n && String(n.category || '').toLowerCase() === 'generale' && n.status !== 'draft');
   }
 
   /** Vero se c'è almeno una comunicazione Generale non ancora aperta → pallino rosso. */

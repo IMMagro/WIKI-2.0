@@ -23,6 +23,13 @@ export class NewsBellComponent {
     }
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isOpen) {
+      this.isOpen = false;
+    }
+  }
+
   toggle() {
     this.isOpen = !this.isOpen;
   }
