@@ -66,4 +66,8 @@ export class FaqPageComponent {
     this.faqReadingService.openFaq(faq); // Apertura come pannello laterale (destra), coerente con la ricerca in home
     document.body.style.overflow = 'hidden'; // Blocca lo scroll di sfondo
   }
+
+  trackByFaq(index: number, doc: any) {
+    return doc?.id ?? index;
+  }
 }

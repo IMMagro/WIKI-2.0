@@ -18,7 +18,7 @@
       </button>
 
       <div class="grid3">
-        <button class="card" [class.mg]="c.accent === 'magenta'" *ngFor="let c of categories; let i = index"
+        <button class="card" [class.mg]="c.accent === 'magenta'" *ngFor="let c of categories; let i = index; trackBy: trackByCat"
                 [style.animationDelay]="(i * 40) + 'ms'" (click)="openCat(c.id)">
           <div class="ci"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons[c.icon]"></path></svg></div>
           <h3>{{ c.name }}</h3>
@@ -54,7 +54,7 @@
       <h1 class="page">Muovere i primi passi</h1>
       <p class="lede">{{ journey.intro }}</p>
       <div class="journey">
-        <button class="jstep" *ngFor="let s of journey.steps; let i = index" [style.animationDelay]="(i * 55) + 'ms'" (click)="openRef(s)">
+        <button class="jstep" *ngFor="let s of journey.steps; let i = index; trackBy: trackByStep" [style.animationDelay]="(i * 55) + 'ms'" (click)="openRef(s)">
           <span class="jnum">{{ i + 1 }}</span>
           <div class="jbody">
             <h3>{{ s.title }}</h3>
@@ -76,7 +76,7 @@
       <h1 class="page">{{ c.name }}</h1>
       <p class="lede">{{ c.desc }}</p>
       <div class="grid3">
-        <button class="card" *ngFor="let m of c.manuals; let i = index" [style.animationDelay]="(i * 45) + 'ms'" (click)="openGuide(m.id)">
+        <button class="card" *ngFor="let m of c.manuals; let i = index; trackBy: trackByManual" [style.animationDelay]="(i * 45) + 'ms'" (click)="openGuide(m.id)">
           <div class="cardtop">
             <h3>{{ m.title }}</h3>
           </div>
@@ -106,7 +106,7 @@
             <h2 class="artTitle">{{ g.title }}</h2>
             <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
             <div class="faqhead">Domande frequenti <span class="ln"></span></div>
-            <button class="faqrow" *ngFor="let f of g.faqs; let i = index" [style.animationDelay]="(i * 40) + 'ms'" (click)="openFaq(i)">
+            <button class="faqrow" *ngFor="let f of g.faqs; let i = index; trackBy: trackByFaq" [style.animationDelay]="(i * 40) + 'ms'" (click)="openFaq(i)">
               <span class="qn">{{ i + 1 }}</span>
               <b>{{ f.q }}</b>
               <span class="rd" *ngIf="f.read">Letta</span>
@@ -122,7 +122,7 @@
             </div>
             <h2 class="artTitle">{{ f.q }}</h2>
             <div class="steps">
-              <div class="step" *ngFor="let s of f.steps; let i = index">
+              <div class="step" *ngFor="let s of f.steps; let i = index; trackBy: trackByStep">
                 <div class="num">{{ i + 1 }}</div>
                 <div class="body">
                   <p [innerHTML]="s.t"></p>
@@ -152,7 +152,7 @@
           <h4>Contenuto guida</h4>
           <button [class.on]="selFaq === -1" (click)="openFaq(-1)"><span class="dot"></span><span>Panoramica</span></button>
           <div class="dv">Domande</div>
-          <button *ngFor="let f of g.faqs; let i = index" [class.on]="selFaq === i" [class.rd]="f.read" (click)="openFaq(i)">
+          <button *ngFor="let f of g.faqs; let i = index; trackBy: trackByFaq" [class.on]="selFaq === i" [class.rd]="f.read" (click)="openFaq(i)">
             <span class="dot"></span><span>{{ f.q }}</span>
           </button>
         </aside>

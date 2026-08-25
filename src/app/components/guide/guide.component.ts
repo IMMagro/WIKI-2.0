@@ -46,6 +46,12 @@ export class GuideComponent {
   get categories(): Category[] { return this.guides.publicCategories; }
   get journey(): Journey { return this.guides.journey; }
 
+  // ===== TrackBy Helpers (evita re-render / lampeggio animazioni al click) =====
+  trackByCat(index: number, c: Category): string { return c.id; }
+  trackByManual(index: number, m: Guide): string { return m.id; }
+  trackByFaq(index: number, f: Faq): string { return f.q; }
+  trackByStep(index: number, s: any): number { return index; }
+
   // ===== Helpers =====
   cat(id: string | null): Category | undefined { return this.categories.find(c => c.id === id); }
   guide(cid: string | null, gid: string | null): Guide | undefined { return this.cat(cid)?.manuals.find(m => m.id === gid); }
