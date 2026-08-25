@@ -12,17 +12,17 @@ import { NewsPopupComponent } from './components/shared/news-popup/news-popup.co
 import { ThemeService } from './services/theme.service';
 import { NewsService } from './services/news.service';
 import { FaqReadingService } from './services/faq-reading.service';
+import { HomeComponent } from './components/home/home.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   activeFaqCategory: string = 'General';
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
-  @ViewChild('homeSearchContainer') homeSearchContainer!: ElementRef;
   @ViewChild('serviziTitle') serviziTitle!: ElementRef;
   query = '';
   stage = 0;
@@ -282,9 +282,6 @@ export class AppComponent implements OnInit {
     if (this.isContactOpen && this.contactDropdown && !this.contactDropdown.nativeElement.contains(event.target)) {
       this.isContactOpen = false;
     }
-    if (this.isHomeSearchOpen && this.homeSearchContainer && !this.homeSearchContainer.nativeElement.contains(event.target)) {
-      this.isHomeSearchOpen = false;
-    }
   }
 
   activeIndex = 0;
@@ -302,44 +299,6 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.manualiStage = 'content';
     }, 2800);
-  }
-
-  // -- HOME SPOTLIGHT SEARCH --
-  homeSearchQuery: string = '';
-  isHomeSearchOpen: boolean = false;
-
-  get homeSearchResults() {
-    if (!this.homeSearchQuery || this.homeSearchQuery.trim() === '') {
-      return [];
-    }
-    const q = this.homeSearchQuery.toLowerCase();
-    // Cerca sulle singole FAQ reali (domanda + guida + categoria + tag + testo step). Max 5.
-    return this.allFaqItems.filter(doc =>
-      (doc.title && doc.title.toLowerCase().includes(q)) ||
-      (doc.desc && doc.desc.toLowerCase().includes(q)) ||
-      (doc.category && doc.category.toLowerCase().includes(q)) ||
-      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q)) ||
-      (doc.steps && doc.steps.map((s: any) => s.t).join(' ').toLowerCase().includes(q))
-    ).slice(0, 5);
-  }
-
-  onHomeSearchFocus() {
-    if (this.homeSearchQuery.trim() !== '') {
-      this.isHomeSearchOpen = true;
-    }
-  }
-
-  onHomeSearchInput() {
-    this.isHomeSearchOpen = this.homeSearchQuery.trim() !== '';
-  }
-
-  openFaqFromHome(faq: any) {
-    this.homeSearchQuery = '';
-    this.isHomeSearchOpen = false;
-
-    // Apre la FAQ in modalità sidepage (Variante C) e rimane nella home
-    this.faqReadingService.openFaq(faq);
-    document.body.style.overflow = 'hidden';
   }
 
   goToAllFaqs() {

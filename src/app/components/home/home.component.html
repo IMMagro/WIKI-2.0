@@ -1,0 +1,86 @@
+<!-- Titolo -->
+<h1 class="text-qe-text dark:text-slate-100 text-center font-extrabold mb-8 tracking-tight"
+  [style.opacity]="titleVisible ? 1 : 0"
+  [style.transform]="homeStage === 0 ? 'translateY(80px)' : 'translateY(0)'"
+  style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: opacity 1.5s ease, transform 1s cubic-bezier(0.25, 1, 0.5, 1)">
+  Assistenza Clienti
+</h1>
+
+<!-- Search bar -->
+<div #homeSearchContainer class="w-full max-w-2xl group relative z-50"
+  [style.opacity]="homeStage === 1 ? 1 : 0"
+  [style.transform]="homeStage === 1 ? 'translateY(0)' : 'translateY(30px)'"
+  [style.pointer-events]="(isActive && homeStage === 1) ? 'auto' : 'none'"
+  style="transition: opacity 1s ease 0.2s, transform 1s cubic-bezier(0.25, 1, 0.5, 1) 0.2s">
+  <div class="relative rounded-[2rem] overflow-hidden backdrop-blur-xl bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_8px_30px_rgba(55,125,255,0.15)] focus-within:shadow-[0_8px_40px_rgba(55,125,255,0.2)] focus-within:bg-white/90 dark:focus-within:bg-slate-800/90"
+       [ngClass]="{'!rounded-b-none !border-b-transparent': isHomeSearchOpen}">
+    <svg class="absolute left-6 top-1/2 -translate-y-1/2 text-qe-blue transition-transform group-focus-within:scale-110" width="22" height="22" fill="none" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2.5" />
+      <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+    </svg>
+    <input type="text" placeholder="Cerca guide, funzioni, faq..."
+           [(ngModel)]="homeSearchQuery"
+           (focus)="onHomeSearchFocus()"
+           (input)="onHomeSearchInput()"
+           class="w-full pl-14 pr-12 py-5 rounded-full text-qe-text dark:text-slate-100 text-lg outline-none bg-transparent placeholder-gray-400 dark:placeholder-slate-500 font-medium" />
+
+    <!-- Clear button (appare se c'è testo) -->
+    <button *ngIf="homeSearchQuery" (click)="homeSearchQuery = ''; isHomeSearchOpen = false" class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 rounded-full transition-colors">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+    </button>
+  </div>
+
+  <!-- Risultati Dropdown Spotlight -->
+  <div *ngIf="isHomeSearchOpen" class="absolute left-0 right-0 top-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border border-t-0 border-white/50 dark:border-slate-700/50 rounded-b-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden animate-[slideDown_0.2s_ease-out]">
+    <div class="max-h-[60vh] overflow-y-auto scrollbar-hide py-2">
+      <!-- Se ci sono risultati -->
+      <ng-container *ngIf="homeSearchResults.length > 0; else noResults">
+        <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">FAQ Suggerite</div>
+
+        <div *ngFor="let res of homeSearchResults"
+             (click)="openFaqFromHome(res)"
+             class="px-6 py-4 flex items-start gap-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors group border-l-2 border-transparent hover:border-qe-blue">
+
+          <div class="w-10 h-10 rounded-xl bg-qe-blue/10 flex items-center justify-center shrink-0 text-qe-blue group-hover:scale-110 transition-transform">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8.2 9a3.8 3.8 0 117.6.4c0 2.2-3.4 2.6-3.4 5M12 18h.01"/></svg>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <h4 class="text-slate-900 dark:text-slate-100 font-bold group-hover:text-qe-blue transition-colors text-base line-clamp-1">{{ res.title }}</h4>
+            <p class="text-sm text-slate-500 line-clamp-1 mt-0.5">{{ res.category }} &#8250; {{ res.desc }}</p>
+          </div>
+
+          <div class="shrink-0 mt-1">
+            <span class="text-[10px] font-bold uppercase px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md text-slate-500">FAQ</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Se NON ci sono risultati -->
+      <ng-template #noResults>
+        <div class="px-6 py-12 text-center flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400 mb-4">
+            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          </div>
+          <h4 class="text-slate-900 dark:text-slate-100 font-bold text-lg">Nessun risultato trovato</h4>
+          <p class="text-slate-500 text-sm mt-1 max-w-sm">Non siamo riusciti a trovare manuali o FAQ per "<span class="font-semibold text-slate-700 dark:text-slate-300">{{homeSearchQuery}}</span>". Prova con parole chiave diverse.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- Ricerche frequenti -->
+<div class="flex flex-wrap justify-center gap-3 mt-8">
+  <div *ngFor="let tag of tags; let i = index"
+      [style.opacity]="homeStage === 1 ? 1 : 0"
+      [style.transform]="homeStage === 1 ? 'translateY(0)' : 'translateY(20px)'"
+      [style.pointer-events]="(isActive && homeStage === 1) ? 'auto' : 'none'"
+      [style.transition]="'opacity 0.8s ease ' + (0.4 + i * 0.1) + 's, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ' + (0.4 + i * 0.1) + 's'">
+
+      <button
+        class="px-4 py-1.5 rounded-full text-[13px] font-semibold text-qe-textSecondary dark:text-slate-300 bg-white/70 dark:bg-slate-800/70 backdrop-blur-md border border-white/50 dark:border-slate-700/50 shadow-sm hover:-translate-y-1 hover:text-qe-blue dark:hover:text-qe-blue hover:shadow-[0_8px_20px_rgba(55,125,255,0.25)] hover:border-qe-blue/40 transition-all duration-300 active:scale-95 block">
+        {{ tag }}
+      </button>
+  </div>
+</div>
