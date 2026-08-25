@@ -1,10 +1,10 @@
-<%@ WebHandler Language="C#" Class="GetAdminNews" %>
+<%@ WebHandler Language="C#" Class="NewsHandler" %>
 
 using System;
 using System.Web;
 using System.IO;
 
-public class GetAdminNews : IHttpHandler {
+public class NewsHandler : IHttpHandler {
 
     public void ProcessRequest (HttpContext context) {
         context.Response.ContentType = "application/json";
@@ -36,6 +36,8 @@ public class GetAdminNews : IHttpHandler {
             else if (context.Request.HttpMethod == "POST") {
                 using (var reader = new StreamReader(context.Request.InputStream)) {
                     string jsonBody = reader.ReadToEnd();
+                    string dir = Path.GetDirectoryName(dataPath);
+                    if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
                     File.WriteAllText(dataPath, jsonBody);
                     context.Response.Write("{\"success\": true}");
                 }

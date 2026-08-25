@@ -47,11 +47,11 @@ export class AdminService {
   }
 
   getNews(): Observable<any[]> {
-    return this.http.get<any[]>('/api/news.ashx', { headers: this.getHeaders() });
+    return this.http.get<any[]>('/api/get_admin_news.ashx', { headers: this.getHeaders() });
   }
   
   saveNews(newsList: any[]): Observable<any> {
-    return this.http.post<any>('/api/news.ashx', newsList, { headers: this.getHeaders() });
+    return this.http.post<any>('/api/get_admin_news.ashx', newsList, { headers: this.getHeaders() });
   }
 
   getServerStats(): Observable<any> {

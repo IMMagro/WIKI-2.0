@@ -16,7 +16,7 @@ export class NewsService {
   constructor(private http: HttpClient) {}
 
   loadNews(onLoaded?: () => void) {
-    this.http.get<any[]>('/api/news.ashx').subscribe({
+    this.http.get<any[]>('/api/get_admin_news.ashx').subscribe({
       next: (data) => {
         this.allNews = data || [];
         onLoaded?.();
