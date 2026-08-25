@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
+import { NewsCanvasEditorComponent } from '../news-canvas-editor/news-canvas-editor.component';
 
 @Component({
   selector: 'app-admin-news',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NewsCanvasEditorComponent],
   templateUrl: './admin-news.component.html'
 })
 export class AdminNewsComponent implements OnInit {
@@ -21,13 +22,14 @@ export class AdminNewsComponent implements OnInit {
   isPreviewOpen = false;
   previewItem: any = null;
   
-  currentNews = {
+  currentNews: any = {
     title: '',
     excerpt: '',
     category: 'Generale',
     date: '',
     author: 'Amministratore',
-    authorInitial: 'AD'
+    authorInitial: 'AD',
+    blocks: []
   };
 
   constructor(private adminService: AdminService) {}
@@ -58,7 +60,8 @@ export class AdminNewsComponent implements OnInit {
       category: 'Generale',
       date: new Date().toLocaleDateString('it-IT'),
       author: 'Amministratore',
-      authorInitial: 'AD'
+      authorInitial: 'AD',
+      blocks: []
     };
     this.isModalOpen = true;
   }
@@ -66,7 +69,8 @@ export class AdminNewsComponent implements OnInit {
   openEditModal(news: any, index: number) {
     this.isEditing = true;
     this.editingIndex = index;
-    this.currentNews = { ...news };
+    // clona anche i blocchi così le modifiche si applicano solo al salvataggio
+    this.currentNews = { ...news, blocks: (news.blocks || []).map((b: any) => ({ ...b })) };
     this.isModalOpen = true;
   }
 
@@ -85,7 +89,8 @@ export class AdminNewsComponent implements OnInit {
   }
 
   saveNews() {
-    if (!this.currentNews.title || !this.currentNews.excerpt) return;
+    // Il titolo è obbligatorio; l'estratto no (una comunicazione può essere solo grafica).
+    if (!this.currentNews.title) return;
     
     if (this.isEditing) {
       this.adminNews[this.editingIndex] = { ...this.currentNews };

@@ -135,7 +135,7 @@
   <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" (click)="closeModal()"></div>
   
   <!-- Modal Content -->
-  <div class="relative bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl shadow-black/20" style="animation: fadeUpCard 0.3s ease-out;">
+  <div class="relative bg-white rounded-3xl w-full max-w-5xl max-h-[92vh] flex flex-col shadow-2xl shadow-black/20" style="animation: fadeUpCard 0.3s ease-out;">
     <div class="flex items-center justify-between px-8 py-6 border-b border-[#E2E8F0]">
       <h3 class="text-xl font-bold text-[#1E2022]">{{ isEditing ? 'Modifica News' : 'Nuova News' }}</h3>
       <button (click)="closeModal()" class="text-[#A9B4BF] hover:text-[#1E2022] transition-colors">
@@ -169,6 +169,15 @@
             <label class="block text-sm font-bold text-[#1E2022] mb-2">Data</label>
             <input type="text" [(ngModel)]="currentNews.date" class="w-full px-4 py-3 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
           </div>
+        </div>
+
+        <!-- Editor grafico libero -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-sm font-bold text-[#1E2022]">Contenuto grafico</label>
+            <span class="text-xs text-[#A9B4BF] font-medium">Componi la comunicazione con box, testi, immagini e link. Aperta a schermo dalla campanella.</span>
+          </div>
+          <app-news-canvas-editor [(blocks)]="currentNews.blocks"></app-news-canvas-editor>
         </div>
       </div>
     </div>

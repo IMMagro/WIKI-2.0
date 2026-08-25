@@ -1,0 +1,160 @@
+<div class="border border-[#E2E8F0] rounded-2xl overflow-hidden bg-white">
+  <!-- Toolbar -->
+  <div class="flex items-center gap-2 px-4 py-3 border-b border-[#E2E8F0] bg-[#F8FAFD] flex-wrap">
+    <span class="text-xs font-bold text-[#77838F] uppercase tracking-wider mr-1">Aggiungi</span>
+    <button type="button" (click)="add('text')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-sm font-semibold text-[#1E2022] hover:border-[#377DFF] hover:text-[#377DFF] transition-all">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M6 6v12m12-12v12M9 18h6"/></svg>
+      Testo
+    </button>
+    <button type="button" (click)="add('image')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-sm font-semibold text-[#1E2022] hover:border-[#377DFF] hover:text-[#377DFF] transition-all">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      Immagine
+    </button>
+    <button type="button" (click)="add('link')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-sm font-semibold text-[#1E2022] hover:border-[#377DFF] hover:text-[#377DFF] transition-all">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+      Link
+    </button>
+    <button type="button" (click)="add('box')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-sm font-semibold text-[#1E2022] hover:border-[#377DFF] hover:text-[#377DFF] transition-all">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/></svg>
+      Box
+    </button>
+    <span class="ml-auto text-xs text-[#A9B4BF] font-medium">Trascina per spostare · angolo per ridimensionare</span>
+  </div>
+
+  <div class="flex">
+    <!-- Canvas -->
+    <div class="flex-1 overflow-auto p-6 bg-[#F1F5F9] max-h-[62vh]" style="min-height:340px">
+      <div class="relative mx-auto bg-white shadow-sm rounded-lg select-none"
+           [style.width.px]="canvasW" [style.height.px]="canvasH"
+           style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 20px 20px;"
+           (click)="clearSel()">
+
+        <div *ngFor="let b of blocks"
+             class="absolute cursor-move"
+             [style.outline]="selectedId === b.id ? '2px solid #377DFF' : 'none'"
+             [style.outlineOffset.px]="selectedId === b.id ? 1 : 0"
+             [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="b.w" [style.height.px]="b.h"
+             (mousedown)="startMove(b, $event)" (click)="select(b.id, $event)">
+
+          <!-- BOX -->
+          <div *ngIf="b.type === 'box'" class="w-full h-full pointer-events-none"
+               [style.background]="b.bg || '#EAF1FF'" [style.borderRadius.px]="b.radius != null ? b.radius : 12"></div>
+
+          <!-- TESTO -->
+          <div *ngIf="b.type === 'text'" class="w-full h-full overflow-hidden whitespace-pre-wrap break-words leading-snug pointer-events-none"
+               [style.color]="b.color || '#1E2022'" [style.fontSize.px]="b.fontSize || 18"
+               [style.fontWeight]="b.bold ? 700 : 400" [style.textAlign]="b.align || 'left'">{{ b.content }}</div>
+
+          <!-- IMMAGINE -->
+          <img *ngIf="b.type === 'image' && b.content" class="w-full h-full object-cover rounded-lg pointer-events-none" [src]="b.content" alt=""/>
+          <div *ngIf="b.type === 'image' && !b.content" class="w-full h-full rounded-lg border-2 border-dashed border-[#CBD5E1] bg-[#F8FAFD] flex flex-col items-center justify-center text-[#A9B4BF] pointer-events-none">
+            <svg class="w-6 h-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span class="text-[11px] font-semibold">Imposta URL immagine</span>
+          </div>
+
+          <!-- LINK -->
+          <div *ngIf="b.type === 'link'" class="w-full h-full rounded-xl bg-[#377DFF] text-white font-semibold text-sm flex items-center justify-center px-3 text-center pointer-events-none">
+            {{ b.content || 'Link' }}
+          </div>
+
+          <!-- Controlli selezione -->
+          <ng-container *ngIf="selectedId === b.id">
+            <button type="button" (mousedown)="$event.stopPropagation()" (click)="remove(b.id); $event.stopPropagation()"
+                    class="absolute -top-3 -right-3 w-6 h-6 rounded-full bg-[#FF4757] text-white flex items-center justify-center shadow-md hover:bg-red-600 z-10" title="Elimina">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <div (mousedown)="startResize(b, $event)"
+                 class="absolute -bottom-1.5 -right-1.5 w-4 h-4 rounded-sm bg-white border-2 border-[#377DFF] cursor-nwse-resize z-10" title="Ridimensiona"></div>
+          </ng-container>
+        </div>
+
+        <!-- Stato vuoto -->
+        <div *ngIf="blocks.length === 0" class="absolute inset-0 flex flex-col items-center justify-center text-[#A9B4BF] pointer-events-none">
+          <svg class="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+          <p class="text-sm font-semibold">Aggiungi elementi dalla barra in alto</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pannello proprietà -->
+    <div class="w-72 shrink-0 border-l border-[#E2E8F0] p-4 bg-white max-h-[62vh] overflow-y-auto custom-scrollbar">
+      <div *ngIf="!selected" class="text-center text-[#A9B4BF] py-10">
+        <svg class="w-8 h-8 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        <p class="text-sm font-medium">Seleziona un elemento<br>per modificarlo</p>
+      </div>
+
+      <div *ngIf="selected as s" class="space-y-4">
+        <div class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">
+          {{ s.type === 'text' ? 'Testo' : s.type === 'image' ? 'Immagine' : s.type === 'link' ? 'Link' : 'Box' }}
+        </div>
+
+        <!-- Contenuto per tipo -->
+        <div *ngIf="s.type === 'text'">
+          <label class="block text-[11px] font-bold text-[#77838F] mb-1">Testo</label>
+          <textarea [(ngModel)]="s.content" (ngModelChange)="emit()" rows="3" class="w-full px-3 py-2 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF] resize-none"></textarea>
+          <div class="grid grid-cols-2 gap-2 mt-3">
+            <div>
+              <label class="block text-[11px] font-bold text-[#77838F] mb-1">Colore</label>
+              <input type="color" [(ngModel)]="s.color" (ngModelChange)="emit()" class="w-full h-9 rounded-lg border border-[#E2E8F0] bg-white cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-[#77838F] mb-1">Dimensione</label>
+              <input type="number" [(ngModel)]="s.fontSize" (ngModelChange)="emit()" min="10" max="72" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]">
+            </div>
+          </div>
+          <div class="flex items-center gap-2 mt-3">
+            <button type="button" (click)="s.bold = !s.bold; emit()" class="px-3 py-1.5 rounded-lg border text-sm font-bold transition-all" [ngClass]="s.bold ? 'bg-[#377DFF] text-white border-[#377DFF]' : 'bg-white text-[#1E2022] border-[#E2E8F0]'">B</button>
+            <div class="flex rounded-lg border border-[#E2E8F0] overflow-hidden ml-auto">
+              <button type="button" (click)="s.align = 'left'; emit()" class="px-2.5 py-1.5" [ngClass]="(s.align || 'left') === 'left' ? 'bg-[#377DFF] text-white' : 'bg-white text-[#77838F]'"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M4 12h10M4 18h13"/></svg></button>
+              <button type="button" (click)="s.align = 'center'; emit()" class="px-2.5 py-1.5" [ngClass]="s.align === 'center' ? 'bg-[#377DFF] text-white' : 'bg-white text-[#77838F]'"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M7 12h10M6 18h12"/></svg></button>
+              <button type="button" (click)="s.align = 'right'; emit()" class="px-2.5 py-1.5" [ngClass]="s.align === 'right' ? 'bg-[#377DFF] text-white' : 'bg-white text-[#77838F]'"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 6h16M10 12h10M7 18h13"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="s.type === 'image'">
+          <label class="block text-[11px] font-bold text-[#77838F] mb-1">URL immagine</label>
+          <input type="text" [(ngModel)]="s.content" (ngModelChange)="emit()" placeholder="https://..." class="w-full px-3 py-2 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]">
+        </div>
+
+        <div *ngIf="s.type === 'link'" class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-[#77838F] mb-1">Etichetta</label>
+            <input type="text" [(ngModel)]="s.content" (ngModelChange)="emit()" class="w-full px-3 py-2 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-[#77838F] mb-1">Destinazione (URL)</label>
+            <input type="text" [(ngModel)]="s.href" (ngModelChange)="emit()" placeholder="https://..." class="w-full px-3 py-2 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]">
+          </div>
+        </div>
+
+        <div *ngIf="s.type === 'box'" class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-[#77838F] mb-1">Sfondo</label>
+            <input type="color" [(ngModel)]="s.bg" (ngModelChange)="emit()" class="w-full h-9 rounded-lg border border-[#E2E8F0] bg-white cursor-pointer">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-[#77838F] mb-1">Angoli</label>
+            <input type="number" [(ngModel)]="s.radius" (ngModelChange)="emit()" min="0" max="60" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]">
+          </div>
+        </div>
+
+        <!-- Posizione e dimensioni -->
+        <div>
+          <label class="block text-[11px] font-bold text-[#77838F] mb-1">Posizione e dimensioni</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-1 text-xs text-[#77838F]">X <input type="number" [(ngModel)]="s.x" (ngModelChange)="emit()" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]"></label>
+            <label class="flex items-center gap-1 text-xs text-[#77838F]">Y <input type="number" [(ngModel)]="s.y" (ngModelChange)="emit()" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]"></label>
+            <label class="flex items-center gap-1 text-xs text-[#77838F]">L <input type="number" [(ngModel)]="s.w" (ngModelChange)="emit()" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]"></label>
+            <label class="flex items-center gap-1 text-xs text-[#77838F]">A <input type="number" [(ngModel)]="s.h" (ngModelChange)="emit()" class="w-full px-2 py-1.5 text-sm bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#377DFF]"></label>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2 border-t border-[#E2E8F0]">
+          <button type="button" (click)="bringToFront(s)" class="flex-1 px-3 py-2 rounded-lg text-xs font-semibold text-[#1E2022] bg-[#F8FAFD] border border-[#E2E8F0] hover:border-[#377DFF] hover:text-[#377DFF] transition-all">In primo piano</button>
+          <button type="button" (click)="remove(s.id)" class="px-3 py-2 rounded-lg text-xs font-semibold text-[#FF4757] bg-red-50 border border-red-100 hover:bg-red-100 transition-all">Elimina</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

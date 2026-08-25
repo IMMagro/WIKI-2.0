@@ -479,14 +479,7 @@ export class AppComponent implements OnInit {
     this.http.get<any[]>('/api/news.ashx').subscribe({
       next: (data) => {
         this.allNews = data || [];
-        const generalNews = this.allNews.filter(n => n.category === 'Generale');
-        if (generalNews.length > 0) {
-          this.latestGeneralNews = generalNews[0];
-          // Mostra il popup una sola volta: se già visto, resta disponibile solo l'iconcina.
-          if (!localStorage.getItem(this.generalNewsSeenKey())) {
-            this.showGeneralNewsPopup = true;
-          }
-        }
+        // Nessuna apertura automatica: le comunicazioni restano nella campanella.
         this.updateProgramNews();
       },
       error: (err) => console.error('Errore caricamento news:', err)
@@ -994,27 +987,54 @@ export class AppComponent implements OnInit {
   newsAnimState: 'stable' | 'leaving-up' | 'leaving-down' | 'entering-up' | 'entering-down' = 'stable';
   
   allNews: any[] = [];
-  latestGeneralNews: any = null;
-  showGeneralNewsPopup: boolean = false;
+  selectedNews: any = null; // comunicazione aperta a schermo nel popup
+  readonly newsCanvasW = 720; // larghezza fissa del canvas libero (stessa dell'editor admin)
+
+  /** Altezza minima del canvas in base ai blocchi (per il popup a schermo). */
+  canvasHeight(blocks: any[]): number {
+    if (!blocks || !blocks.length) return 400;
+    return Math.max(360, ...blocks.map(b => (b.y || 0) + (b.h || 0))) + 24;
+  }
 
   /** Tutte le news della categoria "Generale" — contenuto della campanella in home. */
   get generalNews(): any[] {
     return (this.allNews || []).filter(n => n && n.category === 'Generale');
   }
 
-  private generalNewsSeenKey(): string {
-    return 'seenGeneralNews:' + (this.latestGeneralNews?.title || '');
-  }
+  // --- Tracciamento comunicazioni già viste (per il pallino rosso di notifica) ---
+  private seenNewsKeys = new Set<string>(this.loadSeenNews());
 
-  openGeneralNewsPopup() {
-    if (this.latestGeneralNews) this.showGeneralNewsPopup = true;
+  private loadSeenNews(): string[] {
+    try { return JSON.parse(localStorage.getItem('qe_seen_news') || '[]'); } catch { return []; }
   }
+  private newsKey(n: any): string { return String((n && (n.id ?? n.title)) || ''); }
 
-  closeGeneralNewsPopup() {
-    this.showGeneralNewsPopup = false;
-    if (this.latestGeneralNews) {
-      localStorage.setItem(this.generalNewsSeenKey(), '1');
+  isNewsSeen(n: any): boolean { return this.seenNewsKeys.has(this.newsKey(n)); }
+
+  markNewsSeen(n: any): void {
+    const k = this.newsKey(n);
+    if (k && !this.seenNewsKeys.has(k)) {
+      this.seenNewsKeys.add(k);
+      localStorage.setItem('qe_seen_news', JSON.stringify(Array.from(this.seenNewsKeys)));
     }
+  }
+
+  /** Vero se c'è almeno una comunicazione Generale non ancora aperta → pallino rosso. */
+  get hasUnseenGeneralNews(): boolean {
+    return this.generalNews.some(n => !this.isNewsSeen(n));
+  }
+
+  /** Apre la comunicazione a schermo intero (rende i blocchi liberi se presenti). */
+  openNewsPopup(n: any): void {
+    this.selectedNews = n;
+    this.markNewsSeen(n);
+    this.isNotificationOpen = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeNewsPopup(): void {
+    this.selectedNews = null;
+    document.body.style.overflow = 'auto';
   }
 
   newsItems: any[] = [];
