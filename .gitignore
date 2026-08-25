@@ -41,11 +41,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Legacy / reference material not part of the deployed app
-/Wiki Vecchia/
-/Wiki mockup - FIGMA/
-temp_page.pdf
-
 # Manuali: asset video pesanti serviti da IIS, non dal repo (superano i limiti di GitHub)
 public/Data/docs/**/*.mp4
 *.mp4

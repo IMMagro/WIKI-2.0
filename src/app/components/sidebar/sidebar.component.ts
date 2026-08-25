@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   imports: [],
   template: `
     <p>
-      sidebar works!
+      
     </p>
   `,
   styles: ``
