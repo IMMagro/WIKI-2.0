@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideComponent } from './components/guide/guide.component';
+import { GuideService } from './services/guide.service';
 import { GuideAdminComponent } from './components/guide/guide-admin.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
@@ -120,7 +121,41 @@ export class AppComponent implements OnInit {
   currentBgIndex = 0;
   private bgInterval: any;
 
-  constructor(private eRef: ElementRef, private cdr: ChangeDetectorRef, private http: HttpClient) {}
+  @ViewChild(GuideComponent) guideRef?: GuideComponent;
+
+  constructor(private eRef: ElementRef, private cdr: ChangeDetectorRef, private http: HttpClient, public guideService: GuideService) {}
+
+  /**
+   * Elenco appiattito di TUTTE le FAQ reali (da GuideService), nella forma attesa
+   * dalla modale di lettura: { id, category, color, desc (=guida), title (=domanda), steps, service }.
+   * È la sorgente unica per la ricerca in home e per la pagina FAQ, così il contenuto
+   * (step, servizio) è lo stesso che si legge nella sezione Guide.
+   */
+  get allFaqItems(): any[] {
+    const out: any[] = [];
+    const cats = this.guideService.categories || [];
+    cats.forEach((c: any, ci: number) => {
+      const color = c.accent === 'magenta' ? 'from-fuchsia-500 to-pink-400' : 'from-blue-500 to-sky-400';
+      (c.manuals || []).forEach((g: any, mi: number) => {
+        (g.faqs || []).forEach((f: any, fi: number) => {
+          out.push({
+            id: ci * 10000 + mi * 100 + fi,
+            category: c.name,
+            categoryId: c.id,
+            guideId: g.id,
+            faqIndex: fi,
+            color,
+            desc: g.title,
+            title: f.q,
+            steps: f.steps || [],
+            tags: f.tags || [],
+            service: f.service || g.service || null
+          });
+        });
+      });
+    });
+    return out;
+  }
 
   readFaqs: Set<number> = new Set<number>();
 
@@ -325,11 +360,13 @@ export class AppComponent implements OnInit {
       return [];
     }
     const q = this.homeSearchQuery.toLowerCase();
-    // Return max 5 matches
-    return this.publicManuals.filter(doc => 
-      (doc.title && doc.title.toLowerCase().includes(q)) || 
+    // Cerca sulle singole FAQ reali (domanda + guida + categoria + tag + testo step). Max 5.
+    return this.allFaqItems.filter(doc =>
+      (doc.title && doc.title.toLowerCase().includes(q)) ||
       (doc.desc && doc.desc.toLowerCase().includes(q)) ||
-      (doc.category && doc.category.toLowerCase().includes(q))
+      (doc.category && doc.category.toLowerCase().includes(q)) ||
+      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q)) ||
+      (doc.steps && doc.steps.map((s: any) => s.t).join(' ').toLowerCase().includes(q))
     ).slice(0, 5);
   }
 
@@ -386,16 +423,18 @@ export class AppComponent implements OnInit {
   isFaqStatsModalOpen = false;
 
   getReadCount(): number {
-    return this.publicManuals ? this.publicManuals.filter(d => this.isFaqRead(d.id)).length : 0;
+    const all = this.allFaqItems;
+    return all.filter(d => this.isFaqRead(d.id)).length;
   }
 
   getUnreadCount(): number {
-    return this.publicManuals ? this.publicManuals.length - this.getReadCount() : 0;
+    return this.allFaqItems.length - this.getReadCount();
   }
 
   getReadPercentage(): number {
-    if (!this.publicManuals || this.publicManuals.length === 0) return 0;
-    return (this.getReadCount() / this.publicManuals.length) * 100;
+    const total = this.allFaqItems.length;
+    if (total === 0) return 0;
+    return (this.getReadCount() / total) * 100;
   }
 
   getPieGradient(): string {
@@ -406,13 +445,16 @@ export class AppComponent implements OnInit {
 
 
   get filteredFAQ() {
+    const all = this.allFaqItems;
     if (!this.faqSearchQuery || this.faqSearchQuery.trim() === '') {
-      return this.publicManuals;
+      return all;
     }
     const q = this.faqSearchQuery.toLowerCase();
-    return this.publicManuals.filter(doc => 
-      (doc.title && doc.title.toLowerCase().includes(q)) || 
-      (doc.desc && doc.desc.toLowerCase().includes(q))
+    return all.filter(doc =>
+      (doc.title && doc.title.toLowerCase().includes(q)) ||
+      (doc.desc && doc.desc.toLowerCase().includes(q)) ||
+      (doc.category && doc.category.toLowerCase().includes(q)) ||
+      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q))
     );
   }
   private pageTimeout: any;
@@ -1206,6 +1248,13 @@ export class AppComponent implements OnInit {
   }
 
   goToCategoryFromFaq() {
-    this.activeFaqCategory = 'General';
+    const catId = this.selectedFaq?.categoryId;
+    this.closeFaq();
+    // Passa alla sezione Guide (indice menu 3) e apri la categoria della FAQ.
+    this.menuItems.forEach((m, idx) => m.active = (idx === 3));
+    this.activeIndex = 3;
+    if (catId) {
+      setTimeout(() => this.guideRef?.openCat(catId), 0);
+    }
   }
 }
