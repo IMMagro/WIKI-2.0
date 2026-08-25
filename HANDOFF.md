@@ -1,11 +1,11 @@
-# HANDOFF — punto di lavoro (aggiornato 2026-08-24)
+# HANDOFF — punto di lavoro (aggiornato 2026-08-25)
 
 > Documento per riprendere il lavoro in una nuova sessione Claude (in questa cartella).
 > Leggi anche la skill `.claude/skills/wiki-angular/SKILL.md` e `AGENTS.md`.
 
 ## Stato repo
-- Branch `master`, tutto pushato su GitHub `IMMagro/WIKI-2.0`.
-- Ultimo commit funzionale: `159e03c` (bozze non visibili all'utente).
+- Branch `master`, tutto pushato su GitHub `IMMagro/WIKI-2.0` fino al commit `c55df87`.
+- Ultimo commit funzionale: `c55df87` (step 4 del refactoring: FaqPage/Servizi/Home estratti).
 - Build di riferimento: `npm run build` → verde (6 warning CSS preesistenti, innocui).
 - Dev server: `npm start -- --port 4250`.
 
@@ -23,7 +23,8 @@
 - ⚠️ Il path in `.mcp.json` è assoluto e legato a QUESTO PC.
 
 ## Refactoring in corso (a tappe, con commit dopo ognuna)
-Obiettivo: sciogliere il monolite `app.component.{ts,html}` (~1290+1130 righe) in componenti/servizi.
+Obiettivo: sciogliere il monolite `app.component.{ts,html}` (partito da ~1290+1130 righe,
+ora a 961+482 dopo gli step 1-4) in componenti/servizi.
 
 Piano approvato:
 1. **`NewsBlockRenderer` condiviso** — dedup del rendering blocchi (popup pubblico + anteprima admin). ← **FATTO (2026-08-25)**
@@ -42,8 +43,39 @@ Piano approvato:
    - `app.component.html`: i due blocchi di markup sono ora `<app-news-bell>` e `<app-news-popup *ngIf="!isAdminRoute">`.
    - Rimossi da `app.component`: `isNotificationOpen`, `notificationDropdown` (ViewChild + ramo del click-outside), `openNewsPopup`/`closeNewsPopup`, `newsCanvasW`.
    - `app.component.ts`: 1183 → 1165 righe. Build verde (solo i 6 warning CSS preesistenti).
-4. `FaqPageComponent` + `ServiziComponent` + `HomeComponent`.
-5. `app.component` = sola shell di orchestrazione.
+4. **`FaqPageComponent` + `ServiziComponent` + `HomeComponent`** ← **FATTO (2026-08-25)**, in 4 commit:
+   - `guideService.allFaqItems`: la vista appiattita delle FAQ (prima in app.component) ora vive
+     in `GuideService`, così Home e FaqPage la usano senza passaggi dal parent.
+   - `src/app/services/faq-reading.service.ts`: `selectedFaq`/`readingDesignVariant`, tracciamento
+     "già letta" (`qe_read_faqs`), `openFaq()`/`closeFaq()` — sul modello di `NewsService`.
+   - `src/app/components/home/`: ricerca spotlight (query, dropdown, click-outside) — locale,
+     inietta `GuideService`/`FaqReadingService`. Input: `isActive`, `titleVisible`, `homeStage`, `tags`.
+   - `src/app/components/servizi/`: titolo animato + carosello card. Il titolo richiede un FLIP
+     (misura/muta/misura/anima) sul suo DOM: `ServiziComponent` espone `getTitleRect()`/
+     `animateTitleFlip()`, chiamati da `app.component` via `@ViewChild(ServiziComponent)`
+     (stesso pattern di `guideRef`/`GuideComponent.openCat()`). Wheel scroll resta condiviso con
+     le altre viste tramite Output `wheelScroll` → `onWheel($event)` in app.component.
+   - `src/app/components/faq-page/`: animazione d'ingresso, ricerca/filtro, 5 varianti di card,
+     popover statistiche lettura — tutto locale, inietta `GuideService`/`FaqReadingService`/`ThemeService`.
+   - `src/app/components/shared/faq-reading-panel/`: pannello di lettura (4 varianti), condiviso
+     tra Home e FaqPage tramite `FaqReadingService`; Output `categorySelected` per il bottone
+     "Vai alla guida" (l'orchestratore cambia `activeIndex` e chiama `guideRef.openCat()`).
+   - Rimossi da `app.component`: `filteredFAQ`, `getReadCount/getUnreadCount/getReadPercentage/
+     getPieGradient`, `manualsDesignVariant`, `faqSearchQuery`, `isFaqStatsModalOpen`, `openFaq`/
+     `closeFaq`, `allFaqItems` (deprecato), `getCardAnimation`, `homeSearchQuery`/`isHomeSearchOpen`/
+     `homeSearchResults`/`onHomeSearchFocus`/`onHomeSearchInput`/`openFaqFromHome`,
+     `goToAllFaqs` (dead code, dipendeva solo da `closeFaq`).
+   - Bump budget bundle in `angular.json` (620kB → 650kB) per il peso dei nuovi componenti.
+   - `app.component.ts`: 1165 → 961 righe. `app.component.html`: 1030 → 482 righe. Build verde
+     (solo i 6 warning CSS preesistenti).
+5. `app.component` = sola shell di orchestrazione. ← **PROSSIMO STEP**
+   - Rimane in app.component: `activeIndex`/`menuItems`/`selectMenuItem`/`triggerPageAnimation`
+     (macchina a stati delle 5 viste), stato admin, carosello "Prodotti & Novità" (News tab:
+     `programs`/`activeProgramIndex`/`newsStage`/`newsItems`/carousel styles), 3D carousel Guide
+     (`docAngleStep`/`docTargetRotation`/...), sidebar, contatti, dark mode toggle nel footer.
+   - Valutare se vale la pena estrarre anche la vista "News/Prodotti" (carosello Windent/Poliwin/
+     Winodlab) in un proprio componente — non era nel piano originale a 5 step, ma è il pezzo di
+     vista rimasto più grande in app.component.html dopo lo step 4.
 
 Regola: **un pezzo alla volta**, `npm run build` verde + `git commit` dopo ognuno (l'ambiente ha subìto `git reset --hard` che perde il lavoro NON committato).
 
