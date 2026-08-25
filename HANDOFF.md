@@ -4,8 +4,10 @@
 > Leggi anche la skill `.claude/skills/wiki-angular/SKILL.md` e `AGENTS.md`.
 
 ## Stato repo
-- Branch `master`, tutto pushato su GitHub `IMMagro/WIKI-2.0` fino al commit `c55df87`.
-- Ultimo commit funzionale: `c55df87` (step 4 del refactoring: FaqPage/Servizi/Home estratti).
+- Branch `master`. Commit locali `0c92ca9` e `188c65a` (step 5, pulizia dead code) da pushare —
+  verificare `git status`/`git log origin/master..HEAD` a inizio sessione.
+- Ultimo commit funzionale: `188c65a` (step 5 completato: app.component ridotto a shell +
+  rimozione codice morto). **Il piano di refactoring a 5 step è concluso.**
 - Build di riferimento: `npm run build` → verde (6 warning CSS preesistenti, innocui).
 - Dev server: `npm start -- --port 4250`.
 
@@ -22,9 +24,10 @@
 - `ng mcp` è un comando *nascosto* (non compare in `ng help`); opzioni utili: `--read-only`, `--local-only`.
 - ⚠️ Il path in `.mcp.json` è assoluto e legato a QUESTO PC.
 
-## Refactoring in corso (a tappe, con commit dopo ognuna)
+## Refactoring COMPLETATO (2026-08-25) — a tappe, con commit dopo ognuna
 Obiettivo: sciogliere il monolite `app.component.{ts,html}` (partito da ~1290+1130 righe,
-ora a 961+482 dopo gli step 1-4) in componenti/servizi.
+arrivato a 567+482 dopo gli step 1-5) in componenti/servizi. Piano a 5 step concluso;
+possibile lavoro futuro annotato in fondo allo step 5.
 
 Piano approvato:
 1. **`NewsBlockRenderer` condiviso** — dedup del rendering blocchi (popup pubblico + anteprima admin). ← **FATTO (2026-08-25)**
@@ -68,14 +71,48 @@ Piano approvato:
    - Bump budget bundle in `angular.json` (620kB → 650kB) per il peso dei nuovi componenti.
    - `app.component.ts`: 1165 → 961 righe. `app.component.html`: 1030 → 482 righe. Build verde
      (solo i 6 warning CSS preesistenti).
-5. `app.component` = sola shell di orchestrazione. ← **PROSSIMO STEP**
-   - Rimane in app.component: `activeIndex`/`menuItems`/`selectMenuItem`/`triggerPageAnimation`
-     (macchina a stati delle 5 viste), stato admin, carosello "Prodotti & Novità" (News tab:
-     `programs`/`activeProgramIndex`/`newsStage`/`newsItems`/carousel styles), 3D carousel Guide
-     (`docAngleStep`/`docTargetRotation`/...), sidebar, contatti, dark mode toggle nel footer.
-   - Valutare se vale la pena estrarre anche la vista "News/Prodotti" (carosello Windent/Poliwin/
-     Winodlab) in un proprio componente — non era nel piano originale a 5 step, ma è il pezzo di
-     vista rimasto più grande in app.component.html dopo lo step 4.
+5. **`app.component` = sola shell di orchestrazione.** ← **FATTO (2026-08-25)**, in 2 commit di pulizia:
+   - **Carosello 3D "documenti"** (`documents`/`loadDocuments`/`docAngleStep`/`docTargetRotation`/
+     `docCurrentRotation`/`docActiveIndex`/`docAnimationId`/`hoveredDocIndex`/`isReadingMode`/
+     `documentSearchQuery`/`isSearchExpanded`/`docTitleLetters`/`docEntranceStage`/`toggleSearch`/
+     `closeSearch`/`onDocumentSearch`/`updateDocActiveIndex`/`docPopupStage`/`startDocAnimation`/
+     `getDocTransform`/`toggleReadingMode`/`getDocStyles`) — **rimosso**, zero riferimenti nel
+     template: superato da `<app-guide>`, completamente autonomo (nessun `@Input` dal parent).
+     Rimossa anche la sua diramazione nel branch `'Guide'` di `selectMenuItem` e in `onWheel`.
+   - **Login/logout admin inline** (`loginEmail`/`loginPassword`/`loginError`/`loginLoading`/
+     `loginAdmin`/`logoutAdmin`) — **rimosso**: superato da `AdminLoginComponent`/`AdminLayoutComponent`,
+     che hanno la propria logica via `AdminService`.
+   - **Fetch dati admin duplicato** (`loadAdminData`/`handleAuthError`/`loadNotifications`,
+     `adminNews`/`adminDashboardStats`/`adminServerStats`/`adminServerServices`/`adminServerLogs`/
+     `adminNotifications`, il mock in `goToAdmin()`) — **rimosso**: verificato che
+     `AdminDashboardComponent`/`AdminServerComponent`/`AdminNewsComponent` caricano già da soli i
+     propri dati (HttpClient/AdminService diretti, nessun `@Input`); questi scrivevano su campi
+     che nessun template leggeva. `goToAdmin()`/`onLoginSuccess()`/`ngOnInit()` ora impostano solo
+     `isAdminRoute`/`isAdminAuthenticated`.
+   - **Rotazione sfondo admin** (`backgroundImages`/`currentBgIndex`/`bgInterval`/
+     `startBackgroundRotation`/`stopBackgroundRotation`) — **rimossa**: calcolava un indice mai
+     renderizzato.
+   - **Campi orfani** (`activeFaqCategory`, `query`, `publicManuals`, `activeAdminTab`, popup
+     statistiche manuale `selectedManualStats`/`isStatsPanelOpen`/`openManualStats`/
+     `closeManualStats`, filtri admin inline `adminSearchQuery`/`adminCategoryFilter`/
+     `adminStatusFilter`/`isAdminFilterMenuOpen`/`filteredAdminDocuments`) — **rimossi**, zero
+     consumatori verificato via grep sull'intero repo.
+   - Rimane in app.component (orchestrazione vera): `activeIndex`/`menuItems`/`selectMenuItem`/
+     `triggerPageAnimation` (macchina a stati delle 5 viste), gating admin (`isAdminRoute`/
+     `isAdminAuthenticated`/`goToAdmin`/`exitAdmin`), carosello "Prodotti & Novità" del tab News
+     (`programs`/`activeProgramIndex`/`newsStage`/`newsItems`/carousel styles — usato anche dagli
+     orb di sfondo "Aurora" in cima al template, non solo dalla vista News), sidebar, contatti,
+     dark mode toggle nel footer, `goToCategoryFromFaq` (riceve il categoryId dall'Output di
+     `FaqReadingPanelComponent`).
+   - `app.component.ts`: 961 → 693 → 567 righe (partito da 1281). `app.component.html` invariato
+     a 482 (nessun markup toccato in questo step, solo `.ts`). Bundle -10kB circa. Build verde
+     (solo i 6 warning CSS preesistenti).
+   - **Non estratto** (giudicato fuori scope rispetto al piano a 5 step, non "shell" ma vista vera
+     e propria): il carosello "Prodotti & Novità" del tab News (Windent/Poliwin/Winodlab). È
+     l'ultimo pezzo di vista rimasto grande in `app.component`, ma richiederebbe lo stesso pattern
+     di delega DOM già usato per `ServiziComponent` (FLIP-style) più la gestione degli orb di
+     sfondo condivisi a livello di root — se si vuole procedere, seguire l'esempio di
+     `ServiziComponent`/`servizi.component.ts`.
 
 Regola: **un pezzo alla volta**, `npm run build` verde + `git commit` dopo ognuno (l'ambiente ha subìto `git reset --hard` che perde il lavoro NON committato).
 
