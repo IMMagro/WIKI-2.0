@@ -8,6 +8,8 @@ import { GuideAdminComponent } from './components/guide/guide-admin.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 import { NewsBlockRendererComponent } from './components/shared/news-block-renderer/news-block-renderer.component';
+import { ThemeService } from './services/theme.service';
+import { NewsService } from './services/news.service';
 
 @Component({
   selector: 'app-root',
@@ -24,26 +26,11 @@ export class AppComponent implements OnInit {
   query = '';
   stage = 0;
   titleVisible = false;
-  isDarkMode = false;
   isSidebarExpanded = false;
   isContactOpen = false;
   isAdminRoute = false;
   isAdminAuthenticated = false;
   activeAdminTab: 'dashboard' | 'manuals' | 'news' | 'server' | 'users' | 'settings' = 'dashboard';
-  private _globalAnimationsEnabled: boolean = localStorage.getItem('globalAnimationsEnabled') ? JSON.parse(localStorage.getItem('globalAnimationsEnabled')!) : false;
-
-  get globalAnimationsEnabled(): boolean {
-    // Rilegge sempre da localStorage così il toggle nel pannello admin
-    // si riflette subito sul sito senza ricostruire il componente.
-    const v = localStorage.getItem('globalAnimationsEnabled');
-    this._globalAnimationsEnabled = v ? JSON.parse(v) : false;
-    return this._globalAnimationsEnabled;
-  }
-
-  set globalAnimationsEnabled(value: boolean) {
-    this._globalAnimationsEnabled = value;
-    localStorage.setItem('globalAnimationsEnabled', JSON.stringify(value));
-  }
   manualsDesignVariant: 'A' | 'B' | 'C' | 'D' | 'E' = 'A';
   selectedManualStats: any = null;
   isStatsPanelOpen = false;
@@ -124,7 +111,14 @@ export class AppComponent implements OnInit {
 
   @ViewChild(GuideComponent) guideRef?: GuideComponent;
 
-  constructor(private eRef: ElementRef, private cdr: ChangeDetectorRef, private http: HttpClient, public guideService: GuideService) {}
+  constructor(
+    private eRef: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
+    public guideService: GuideService,
+    public themeService: ThemeService,
+    public newsService: NewsService
+  ) {}
 
   /**
    * Elenco appiattito di TUTTE le FAQ reali (da GuideService), nella forma attesa
@@ -440,7 +434,7 @@ export class AppComponent implements OnInit {
 
   getPieGradient(): string {
     const p = this.getReadPercentage();
-    const bg = this.isDarkMode ? '#334155' : '#E2E8F0'; // slate-700 or slate-200
+    const bg = this.themeService.isDarkMode ? '#334155' : '#E2E8F0'; // slate-700 or slate-200
     return `conic-gradient(#10B981 ${p}%, ${bg} ${p}%)`;
   }
 
@@ -477,20 +471,13 @@ export class AppComponent implements OnInit {
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_services.ashx)
 
   loadNews() {
-    this.http.get<any[]>('/api/news.ashx').subscribe({
-      next: (data) => {
-        this.allNews = data || [];
-        // Nessuna apertura automatica: le comunicazioni restano nella campanella.
-        this.updateProgramNews();
-      },
-      error: (err) => console.error('Errore caricamento news:', err)
-    });
+    // Nessuna apertura automatica: le comunicazioni restano nella campanella.
+    this.newsService.loadNews(() => this.updateProgramNews());
   }
 
   updateProgramNews() {
     const programName = this.programs[this.activeProgramIndex].name;
-    // esclude le bozze: non visibili all'utente
-    this.newsItems = this.allNews.filter(n => n.category === programName && n.status !== 'draft');
+    this.newsItems = this.newsService.newsForProgram(programName);
     if (this.newsItems.length === 0) {
       this.newsItems = [
         {
@@ -794,7 +781,7 @@ export class AppComponent implements OnInit {
     if (selectedItem.label === 'QeHome') {
       this.homeStage = 0;
     } else if (selectedItem.label === 'FAQ') {
-      if (!this.globalAnimationsEnabled) {
+      if (!this.themeService.globalAnimationsEnabled) {
         this.manualiStage = 'content';
       } else {
         this.manualiStage = 'center';
@@ -806,7 +793,7 @@ export class AppComponent implements OnInit {
       this.serviziStage = 'title-black';
       this.animatingDirection = 0;
     } else if (selectedItem.label === 'Guide') {
-      if (!this.globalAnimationsEnabled) {
+      if (!this.themeService.globalAnimationsEnabled) {
         this.docEntranceStage = 'content';
       } else {
         this.docEntranceStage = 'center';
@@ -842,7 +829,7 @@ export class AppComponent implements OnInit {
         this.homeStage = 1;
       }, 800);
     } else if (pageLabel === 'Servizi') {
-      if (!this.globalAnimationsEnabled) {
+      if (!this.themeService.globalAnimationsEnabled) {
         this.serviziStage = 'cards';
         return;
       }
@@ -901,7 +888,7 @@ export class AppComponent implements OnInit {
         }, 500);
       }, 800);
     } else if (pageLabel === 'News') {
-      if (!this.globalAnimationsEnabled) {
+      if (!this.themeService.globalAnimationsEnabled) {
         this.newsStage = 'cards';
         this.newsBaseColor = this.newsOverlayColor;
         this.newsFillPosition = '100% 0%';
@@ -988,48 +975,17 @@ export class AppComponent implements OnInit {
   isNewsAnimating: boolean = false;
   newsAnimState: 'stable' | 'leaving-up' | 'leaving-down' | 'entering-up' | 'entering-down' = 'stable';
   
-  allNews: any[] = [];
-  selectedNews: any = null; // comunicazione aperta a schermo nel popup
   readonly newsCanvasW = 720; // larghezza fissa del canvas libero (stessa dell'editor admin)
-
-  /** News "Generale" pubblicate (le bozze non sono visibili all'utente) — campanella in home. */
-  get generalNews(): any[] {
-    return (this.allNews || []).filter(n => n && n.category === 'Generale' && n.status !== 'draft');
-  }
-
-  // --- Tracciamento comunicazioni già viste (per il pallino rosso di notifica) ---
-  private seenNewsKeys = new Set<string>(this.loadSeenNews());
-
-  private loadSeenNews(): string[] {
-    try { return JSON.parse(localStorage.getItem('qe_seen_news') || '[]'); } catch { return []; }
-  }
-  private newsKey(n: any): string { return String((n && (n.id ?? n.title)) || ''); }
-
-  isNewsSeen(n: any): boolean { return this.seenNewsKeys.has(this.newsKey(n)); }
-
-  markNewsSeen(n: any): void {
-    const k = this.newsKey(n);
-    if (k && !this.seenNewsKeys.has(k)) {
-      this.seenNewsKeys.add(k);
-      localStorage.setItem('qe_seen_news', JSON.stringify(Array.from(this.seenNewsKeys)));
-    }
-  }
-
-  /** Vero se c'è almeno una comunicazione Generale non ancora aperta → pallino rosso. */
-  get hasUnseenGeneralNews(): boolean {
-    return this.generalNews.some(n => !this.isNewsSeen(n));
-  }
 
   /** Apre la comunicazione a schermo intero (rende i blocchi liberi se presenti). */
   openNewsPopup(n: any): void {
-    this.selectedNews = n;
-    this.markNewsSeen(n);
+    this.newsService.openNewsPopup(n);
     this.isNotificationOpen = false;
     document.body.style.overflow = 'hidden';
   }
 
   closeNewsPopup(): void {
-    this.selectedNews = null;
+    this.newsService.closeNewsPopup();
     document.body.style.overflow = 'auto';
   }
 
@@ -1202,13 +1158,6 @@ export class AppComponent implements OnInit {
     }
 
     this.triggerPageAnimation('QeHome');
-    // Check initial theme preference
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      this.isDarkMode = true;
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
 
     // Il titolo appare in fade in morbido appena la pagina carica
     setTimeout(() => {
@@ -1219,53 +1168,6 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.stage = 1;
     }, 3000);
-  }
-
-  toggleTheme(event: MouseEvent | null, forceDark?: boolean) {
-    const isDark = forceDark !== undefined ? forceDark : !this.isDarkMode;
-    if (this.isDarkMode === isDark) return;
-
-    if (!('startViewTransition' in document)) {
-      this.applyTheme(isDark);
-      return;
-    }
-
-    const x = event ? event.clientX : window.innerWidth * 0.05;
-    const y = event ? event.clientY : window.innerHeight * 0.95;
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    ) + 150; // Aumento ulteriore del margine
-
-    const transition = (document as any).startViewTransition(() => {
-      this.applyTheme(isDark);
-    });
-
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        [
-          { clipPath: `circle(0px at ${x}px ${y}px)` },
-          { clipPath: `circle(${endRadius}px at ${x}px ${y}px)` }
-        ],
-        {
-          duration: 700, // Più veloce e reattiva (0.7s invece di 1s)
-          easing: 'ease-out',
-          fill: 'forwards', // FONDAMENTALE: impedisce il reset del clip-path alla fine dell'animazione
-          pseudoElement: '::view-transition-new(root)'
-        }
-      );
-    });
-  }
-
-  private applyTheme(isDark: boolean) {
-    this.isDarkMode = isDark;
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
   }
 
   goToCategoryFromFaq() {

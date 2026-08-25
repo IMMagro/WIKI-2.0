@@ -31,8 +31,12 @@ Piano approvato:
    - Rimossi `canvasHeight`/`canvasH` locali (l'altezza è calcolata dal componente condiviso via `minH`).
    - Bump minore del budget bundle in `angular.json` (600kB → 620kB) per il peso extra del componente.
    - Build verde (solo i 6 warning CSS preesistenti).
-2. `NewsService` + `ThemeService` (estrarre logica news e dark-mode/animazioni da app.component).
-3. `NewsBellComponent` + `NewsPopupComponent`.
+2. **`NewsService` + `ThemeService`** — estrarre logica news e dark-mode/animazioni da app.component. ← **FATTO (2026-08-25)**
+   - `src/app/services/news.service.ts`: `allNews`, `loadNews()`, `newsForProgram()`, `generalNews`, `hasUnseenGeneralNews`, tracciamento "già viste" (`qe_seen_news`), `selectedNews` + `openNewsPopup`/`closeNewsPopup`.
+   - `src/app/services/theme.service.ts`: `isDarkMode`, `toggleTheme()` (con View Transitions), `globalAnimationsEnabled` (get/set su localStorage).
+   - `app.component` ora inietta `newsService`/`themeService` (public, usati anche nel template) invece di duplicare lo stato; `admin-layout.component` usa lo stesso `ThemeService.globalAnimationsEnabled` al posto del getter/setter locale che duplicava la stessa chiave localStorage.
+   - `app.component.ts`: 1281 → 1183 righe. Build verde (solo i 6 warning CSS preesistenti).
+3. `NewsBellComponent` + `NewsPopupComponent` — possono ora iniettare `NewsService` direttamente (stato già centralizzato).
 4. `FaqPageComponent` + `ServiziComponent` + `HomeComponent`.
 5. `app.component` = sola shell di orchestrazione.
 
