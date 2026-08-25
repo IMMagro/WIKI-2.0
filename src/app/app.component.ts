@@ -7,20 +7,20 @@ import { GuideService } from './services/guide.service';
 import { GuideAdminComponent } from './components/guide/guide-admin.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
-import { NewsBlockRendererComponent } from './components/shared/news-block-renderer/news-block-renderer.component';
+import { NewsBellComponent } from './components/shared/news-bell/news-bell.component';
+import { NewsPopupComponent } from './components/shared/news-popup/news-popup.component';
 import { ThemeService } from './services/theme.service';
 import { NewsService } from './services/news.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBlockRendererComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   activeFaqCategory: string = 'General';
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
-  @ViewChild('notificationDropdown') notificationDropdown!: ElementRef;
   @ViewChild('homeSearchContainer') homeSearchContainer!: ElementRef;
   @ViewChild('serviziTitle') serviziTitle!: ElementRef;
   query = '';
@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
   selectedManualStats: any = null;
   isStatsPanelOpen = false;
   isUploadModalOpen = false;
-  isNotificationOpen = false;
   adminNotifications: any[] = [];
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_notifications.ashx)
 
@@ -320,9 +319,6 @@ export class AppComponent implements OnInit {
   clickout(event: Event) {
     if (this.isContactOpen && this.contactDropdown && !this.contactDropdown.nativeElement.contains(event.target)) {
       this.isContactOpen = false;
-    }
-    if (this.isNotificationOpen && this.notificationDropdown && !this.notificationDropdown.nativeElement.contains(event.target)) {
-      this.isNotificationOpen = false;
     }
     if (this.isHomeSearchOpen && this.homeSearchContainer && !this.homeSearchContainer.nativeElement.contains(event.target)) {
       this.isHomeSearchOpen = false;
@@ -974,20 +970,6 @@ export class AppComponent implements OnInit {
   activeNewsItemIndex: number = 0;
   isNewsAnimating: boolean = false;
   newsAnimState: 'stable' | 'leaving-up' | 'leaving-down' | 'entering-up' | 'entering-down' = 'stable';
-  
-  readonly newsCanvasW = 720; // larghezza fissa del canvas libero (stessa dell'editor admin)
-
-  /** Apre la comunicazione a schermo intero (rende i blocchi liberi se presenti). */
-  openNewsPopup(n: any): void {
-    this.newsService.openNewsPopup(n);
-    this.isNotificationOpen = false;
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeNewsPopup(): void {
-    this.newsService.closeNewsPopup();
-    document.body.style.overflow = 'auto';
-  }
 
   newsItems: any[] = [];
 

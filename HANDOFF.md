@@ -36,7 +36,12 @@ Piano approvato:
    - `src/app/services/theme.service.ts`: `isDarkMode`, `toggleTheme()` (con View Transitions), `globalAnimationsEnabled` (get/set su localStorage).
    - `app.component` ora inietta `newsService`/`themeService` (public, usati anche nel template) invece di duplicare lo stato; `admin-layout.component` usa lo stesso `ThemeService.globalAnimationsEnabled` al posto del getter/setter locale che duplicava la stessa chiave localStorage.
    - `app.component.ts`: 1281 → 1183 righe. Build verde (solo i 6 warning CSS preesistenti).
-3. `NewsBellComponent` + `NewsPopupComponent` — possono ora iniettare `NewsService` direttamente (stato già centralizzato).
+3. **`NewsBellComponent` + `NewsPopupComponent`** ← **FATTO (2026-08-25)**
+   - `src/app/components/shared/news-bell/`: bottone campanella + tendina "Comunicazioni" (`isOpen` locale, click-outside via proprio `#notificationDropdown`, `openNews()` che apre il popup e blocca lo scroll). Inietta `NewsService` direttamente.
+   - `src/app/components/shared/news-popup/`: overlay a schermo intero, usa `NewsBlockRendererComponent` (larghezza di default 720, non più passata esplicitamente). Inietta `NewsService`.
+   - `app.component.html`: i due blocchi di markup sono ora `<app-news-bell>` e `<app-news-popup *ngIf="!isAdminRoute">`.
+   - Rimossi da `app.component`: `isNotificationOpen`, `notificationDropdown` (ViewChild + ramo del click-outside), `openNewsPopup`/`closeNewsPopup`, `newsCanvasW`.
+   - `app.component.ts`: 1183 → 1165 righe. Build verde (solo i 6 warning CSS preesistenti).
 4. `FaqPageComponent` + `ServiziComponent` + `HomeComponent`.
 5. `app.component` = sola shell di orchestrazione.
 

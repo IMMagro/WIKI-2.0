@@ -16,41 +16,7 @@
   <!-- ADMIN DASHBOARD -->
   <app-admin-layout *ngIf="isAdminRoute && isAdminAuthenticated" (exitAdmin)="exitAdmin()"></app-admin-layout>
 
-  <!-- ===== Popup comunicazione a schermo (rende il layout libero a blocchi) ===== -->
-  <div *ngIf="newsService.selectedNews && !isAdminRoute"
-       class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
-       style="animation: fadeInPage .3s ease forwards" (click)="closeNewsPopup()">
-    <div class="relative w-full max-w-4xl max-h-[92vh] bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col animate-[scaleUp_0.35s_cubic-bezier(0.175,0.885,0.32,1.275)]"
-         (click)="$event.stopPropagation()">
-      <!-- Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
-        <div class="flex items-center gap-2">
-          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-magenta bg-magenta/10 rounded-full px-3 py-1">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
-            Comunicazione
-          </span>
-          <span *ngIf="newsService.selectedNews.date" class="text-xs font-semibold text-slate-400">{{ newsService.selectedNews.date }}</span>
-        </div>
-        <button (click)="closeNewsPopup()" aria-label="Chiudi"
-                class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-qe-blue hover:text-white transition-colors">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      <!-- Corpo scrollabile -->
-      <div class="flex-1 min-h-0 overflow-auto p-6 md:p-8 custom-scrollbar">
-        <!-- Layout libero a blocchi (creato dall'editor) -->
-        <app-news-block-renderer *ngIf="newsService.selectedNews.blocks?.length; else plainNews"
-             [blocks]="newsService.selectedNews.blocks" [width]="newsCanvasW"></app-news-block-renderer>
-
-        <!-- Comunicazione semplice (senza blocchi) -->
-        <ng-template #plainNews>
-          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-4 leading-tight">{{ newsService.selectedNews.title }}</h2>
-          <p class="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">{{ newsService.selectedNews.excerpt || newsService.selectedNews.description }}</p>
-        </ng-template>
-      </div>
-    </div>
-  </div>
+  <app-news-popup *ngIf="!isAdminRoute"></app-news-popup>
 
   <!-- Main Content Wrapper (Static padding, non si muove più) -->
   <div *ngIf="!isAdminRoute" class="absolute inset-0 z-10 flex flex-col">
@@ -60,56 +26,7 @@
       <!-- Top nav bar -->
       <div class="relative flex items-center justify-end gap-4 px-8 py-6" style="animation: fadeInPage 1s ease forwards">
 
-        <!-- Campanella comunicazioni: raccoglie tutte le news della categoria "Generale" -->
-        <div class="relative z-50" #notificationDropdown>
-          <button (click)="isNotificationOpen = !isNotificationOpen" title="Comunicazioni" aria-label="Comunicazioni"
-                  class="relative text-qe-textSecondary dark:text-slate-400 hover:text-qe-blue transition-colors duration-300 cursor-pointer bg-transparent outline-none focus:outline-none"
-                  [class.text-qe-blue]="isNotificationOpen">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            <!-- Pallino rosso: c'è almeno una comunicazione non ancora vista -->
-            <span *ngIf="newsService.hasUnseenGeneralNews" class="absolute top-0 right-0 flex h-2.5 w-2.5">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60"></span>
-              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 ring-2 ring-white dark:ring-slate-900"></span>
-            </span>
-          </button>
-
-          <!-- Tendina comunicazioni -->
-          <div [ngClass]="isNotificationOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'"
-               class="absolute right-0 top-full mt-4 w-[360px] bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-[1.75rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-            <div class="px-5 py-4 border-b border-gray-100/80 dark:border-slate-700/60 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="text-magenta"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                <span class="font-bold text-slate-800 dark:text-slate-100 text-sm">Comunicazioni</span>
-              </div>
-              <span *ngIf="newsService.generalNews.length > 0" class="text-xs font-semibold text-slate-400">{{ newsService.generalNews.length }}</span>
-            </div>
-
-            <div class="max-h-[60vh] overflow-y-auto custom-scrollbar">
-              <!-- Vuoto -->
-              <div *ngIf="newsService.generalNews.length === 0" class="px-5 py-10 text-center">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="mx-auto text-slate-300 dark:text-slate-600 mb-2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                <p class="text-sm text-slate-400 dark:text-slate-500 font-medium">Nessuna comunicazione</p>
-              </div>
-
-              <!-- Elenco news Generale (click → popup a schermo) -->
-              <button *ngFor="let n of newsService.generalNews" (click)="openNewsPopup(n)"
-                      class="w-full text-left px-5 py-4 border-b border-gray-50 dark:border-slate-700/40 last:border-0 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors bg-transparent outline-none focus:outline-none cursor-pointer">
-                <div class="flex items-center gap-2 mb-1.5">
-                  <span class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-magenta bg-magenta/10 rounded-full px-2 py-0.5">Comunicazione</span>
-                  <span *ngIf="n.date" class="text-[11px] font-semibold text-slate-400">{{ n.date }}</span>
-                  <span *ngIf="!newsService.isNewsSeen(n)" class="ml-auto inline-flex h-2 w-2 rounded-full bg-red-500 shrink-0" title="Non letta"></span>
-                </div>
-                <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm leading-snug mb-1">{{ n.title }}</h4>
-                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">{{ n.excerpt || n.description }}</p>
-                <span class="inline-flex items-center gap-1 mt-2 text-[11px] font-bold text-qe-blue">Apri
-                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <app-news-bell></app-news-bell>
 
         <div class="relative z-50" #contactDropdown>
           <button (click)="isContactOpen = !isContactOpen" class="group flex items-center gap-1.5 text-[15px] outline-none focus:outline-none bg-transparent cursor-pointer">
