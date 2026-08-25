@@ -82,6 +82,38 @@ export class GuideService {
       .filter(c => c.manuals.length > 0);
   }
 
+  /**
+   * Elenco appiattito di TUTTE le FAQ reali (da publicCategories), nella forma attesa
+   * dalla modale di lettura: { id, category, color, desc (=guida), title (=domanda), steps, service }.
+   * È la sorgente unica per la ricerca in home e per la pagina FAQ, così il contenuto
+   * (step, servizio) è lo stesso che si legge nella sezione Guide.
+   */
+  get allFaqItems(): any[] {
+    const out: any[] = [];
+    const cats = this.publicCategories || []; // esclude le guide in bozza
+    cats.forEach((c: any, ci: number) => {
+      const color = c.accent === 'magenta' ? 'from-fuchsia-500 to-pink-400' : 'from-blue-500 to-sky-400';
+      (c.manuals || []).forEach((g: any, mi: number) => {
+        (g.faqs || []).forEach((f: any, fi: number) => {
+          out.push({
+            id: ci * 10000 + mi * 100 + fi,
+            category: c.name,
+            categoryId: c.id,
+            guideId: g.id,
+            faqIndex: fi,
+            color,
+            desc: g.title,
+            title: f.q,
+            steps: f.steps || [],
+            tags: f.tags || [],
+            service: f.service || g.service || null
+          });
+        });
+      });
+    });
+    return out;
+  }
+
   /** Ricerca su TUTTE le singole FAQ pubblicate (domanda + tag + testo degli step). */
   search(query: string, limit = 6): FaqHit[] {
     const t = (query || '').trim().toLowerCase();

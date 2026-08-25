@@ -11,6 +11,7 @@ import { NewsBellComponent } from './components/shared/news-bell/news-bell.compo
 import { NewsPopupComponent } from './components/shared/news-popup/news-popup.component';
 import { ThemeService } from './services/theme.service';
 import { NewsService } from './services/news.service';
+import { FaqReadingService } from './services/faq-reading.service';
 
 @Component({
   selector: 'app-root',
@@ -116,52 +117,13 @@ export class AppComponent implements OnInit {
     private http: HttpClient,
     public guideService: GuideService,
     public themeService: ThemeService,
-    public newsService: NewsService
+    public newsService: NewsService,
+    public faqReadingService: FaqReadingService
   ) {}
 
-  /**
-   * Elenco appiattito di TUTTE le FAQ reali (da GuideService), nella forma attesa
-   * dalla modale di lettura: { id, category, color, desc (=guida), title (=domanda), steps, service }.
-   * È la sorgente unica per la ricerca in home e per la pagina FAQ, così il contenuto
-   * (step, servizio) è lo stesso che si legge nella sezione Guide.
-   */
+  /** @deprecated Usare `guideService.allFaqItems` direttamente. Rimosso man mano che le sezioni Home/FAQ vengono estratte in componenti dedicati. */
   get allFaqItems(): any[] {
-    const out: any[] = [];
-    const cats = this.guideService.publicCategories || []; // esclude le guide in bozza
-    cats.forEach((c: any, ci: number) => {
-      const color = c.accent === 'magenta' ? 'from-fuchsia-500 to-pink-400' : 'from-blue-500 to-sky-400';
-      (c.manuals || []).forEach((g: any, mi: number) => {
-        (g.faqs || []).forEach((f: any, fi: number) => {
-          out.push({
-            id: ci * 10000 + mi * 100 + fi,
-            category: c.name,
-            categoryId: c.id,
-            guideId: g.id,
-            faqIndex: fi,
-            color,
-            desc: g.title,
-            title: f.q,
-            steps: f.steps || [],
-            tags: f.tags || [],
-            service: f.service || g.service || null
-          });
-        });
-      });
-    });
-    return out;
-  }
-
-  readFaqs: Set<number> = new Set<number>();
-
-  markFaqAsRead(id: number) {
-    if (id && !this.readFaqs.has(id)) {
-      this.readFaqs.add(id);
-      localStorage.setItem('qe_read_faqs', JSON.stringify(Array.from(this.readFaqs)));
-    }
-  }
-
-  isFaqRead(id: number): boolean {
-    return this.readFaqs.has(id);
+    return this.guideService.allFaqItems;
   }
 
   // --- ADMIN MOCK DATA CLEANUP ---
@@ -374,11 +336,9 @@ export class AppComponent implements OnInit {
   openFaqFromHome(faq: any) {
     this.homeSearchQuery = '';
     this.isHomeSearchOpen = false;
-    
+
     // Apre la FAQ in modalità sidepage (Variante C) e rimane nella home
-    this.readingDesignVariant = 'C';
-    this.selectedFaq = faq;
-    if (faq && faq.id) this.markFaqAsRead(faq.id);
+    this.faqReadingService.openFaq(faq);
     document.body.style.overflow = 'hidden';
   }
 
@@ -395,18 +355,14 @@ export class AppComponent implements OnInit {
 
   // -- FAQ SEARCH --
   faqSearchQuery: string = '';
-  selectedFaq: any = null;
-  readingDesignVariant: 'A' | 'B' | 'C' | 'D' = 'A';
 
   openFaq(faq: any) {
-    this.readingDesignVariant = 'C'; // Apertura come pannello laterale (destra), coerente con la ricerca in home
-    this.selectedFaq = faq;
-    if (faq && faq.id) this.markFaqAsRead(faq.id);
+    this.faqReadingService.openFaq(faq); // Apertura come pannello laterale (destra), coerente con la ricerca in home
     document.body.style.overflow = 'hidden'; // Blocca lo scroll di sfondo
   }
 
   closeFaq() {
-    this.selectedFaq = null;
+    this.faqReadingService.closeFaq();
     document.body.style.overflow = 'auto'; // Ripristina lo scroll
   }
 
@@ -415,7 +371,7 @@ export class AppComponent implements OnInit {
 
   getReadCount(): number {
     const all = this.allFaqItems;
-    return all.filter(d => this.isFaqRead(d.id)).length;
+    return all.filter(d => this.faqReadingService.isFaqRead(d.id)).length;
   }
 
   getUnreadCount(): number {
@@ -1113,18 +1069,7 @@ export class AppComponent implements OnInit {
     this.loadDocuments();
     this.loadServices();
     this.loadTags();
-    
-    // Inizializza FAQs lette da localStorage
-    const storedReads = localStorage.getItem('qe_read_faqs');
-    if (storedReads) {
-      try {
-        const parsed = JSON.parse(storedReads);
-        if (Array.isArray(parsed)) {
-          this.readFaqs = new Set<number>(parsed);
-        }
-      } catch (e) {}
-    }
-    
+
     const path = window.location.pathname;
     const hash = window.location.hash;
     
@@ -1153,7 +1098,7 @@ export class AppComponent implements OnInit {
   }
 
   goToCategoryFromFaq() {
-    const catId = this.selectedFaq?.categoryId;
+    const catId = this.faqReadingService.selectedFaq?.categoryId;
     this.closeFaq();
     // Passa alla sezione Guide (indice menu 3) e apri la categoria della FAQ.
     this.menuItems.forEach((m, idx) => m.active = (idx === 3));
