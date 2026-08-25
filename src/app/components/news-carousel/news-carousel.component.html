@@ -1,20 +1,17 @@
-<div class="w-full h-full max-w-7xl mx-auto flex flex-col relative justify-start">
+<div class="w-full h-full max-w-7xl mx-auto flex flex-col relative justify-between py-2">
 
-  <!-- TITLE PLACEHOLDER -->
-  <div class="w-full" style="height: clamp(2rem, 4vw, 3.5rem); margin-bottom: 1rem;"></div>
-
-  <!-- ANIMATED TITLE -->
-  <div class="absolute w-full z-20 flex flex-col justify-center items-center pointer-events-none transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] left-0"
+  <!-- ANIMATED TITLE CONTAINER -->
+  <div class="absolute z-30 flex flex-col pointer-events-none transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
        [ngClass]="{
-         'top-[45%] scale-[1.4] -translate-y-1/2': stage === 'title-black' || stage === 'title-blue',
-         '-top-4 scale-100 translate-y-0': stage === 'moving' || stage === 'cards',
-         'top-0 left-0 scale-[0.8] translate-y-0 !items-start !justify-start pl-8 pt-4': stage === 'detail'
+         'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[1.3] items-center text-center': stage === 'title-black' || stage === 'title-blue',
+         'top-2 left-1/2 -translate-x-1/2 translate-y-0 scale-100 items-center text-center': stage === 'moving' || stage === 'cards',
+         'top-2 left-4 md:left-8 translate-x-0 translate-y-0 scale-[0.85] origin-top-left items-start text-left': stage === 'detail'
        }">
     <h1 class="text-qe-text dark:text-slate-100 font-extrabold tracking-tight m-0 flex items-center"
         [ngClass]="stage === 'detail' ? 'justify-start' : 'justify-center w-full text-center'"
-        style="font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; text-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        style="font-size: clamp(2rem, 3.5vw, 3.2rem); line-height: 1.15; text-shadow: 0 4px 20px rgba(0,0,0,0.05);">
 
-      <span class="transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden whitespace-nowrap text-right"
+      <span class="transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden whitespace-nowrap text-right"
             [ngStyle]="{
               'opacity': stage === 'cards' ? '1' : '0',
               'max-width': stage === 'cards' ? '300px' : '0px',
@@ -52,8 +49,8 @@
       </span>
     </h1>
 
-    <!-- Sottotitolo (Appare dopo) -->
-    <div class="mt-4 flex items-center gap-3" *ngIf="stage === 'cards'">
+    <!-- Sottotitolo (Appare nella fase cards) -->
+    <div class="mt-2.5 flex items-center gap-3" *ngIf="stage === 'cards'">
       <div class="w-10 h-0.5 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
       <p class="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide animate-simple-fade-in"
          [class.animate-none]="!themeService.globalAnimationsEnabled"
@@ -63,52 +60,60 @@
     </div>
   </div>
 
-  <!-- 3D CAROUSEL CONTAINER -->
-  <div class="relative w-full max-w-5xl mx-auto h-[420px] perspective-1000 flex justify-center items-center overflow-visible mt-auto mb-24"
-       [ngClass]="stage === 'cards' || stage === 'detail' ? 'transition-all duration-[1500ms] ease-in-out opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-10'">
+  <!-- TITLE HEIGHT RESERVATION (evita salti di layout) -->
+  <div class="w-full shrink-0 h-16 md:h-20"></div>
+
+  <!-- MAIN INTERACTIVE AREA (3D CAROUSEL / DETAIL) -->
+  <div class="relative flex-1 w-full flex items-center justify-center min-h-[420px] overflow-visible">
+
+    <!-- 3D CAROUSEL CONTAINER -->
+    <div class="relative w-full max-w-5xl mx-auto h-[400px] perspective-1000 flex justify-center items-center overflow-visible"
+         [ngClass]="stage === 'cards' || stage === 'detail' ? 'transition-all duration-[1200ms] ease-in-out opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-10'">
 
       <!-- Left Arrow -->
       <button (click)="prevProgram.emit()" aria-label="Precedente"
-              class="absolute top-1/2 -translate-y-1/2 left-0 md:left-2 z-50 p-2 text-slate-300 dark:text-slate-600 hover:text-qe-blue hover:-translate-x-0.5 transition-all duration-300 cursor-pointer pointer-events-auto"
+              class="absolute top-1/2 -translate-y-1/2 left-0 md:left-4 z-50 p-3 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-md shadow-sm border border-slate-200/50 dark:border-slate-700/50 text-slate-400 dark:text-slate-400 hover:text-qe-blue hover:scale-110 transition-all duration-300 cursor-pointer pointer-events-auto"
               [ngClass]="{'opacity-0 pointer-events-none': stage === 'detail'}">
-        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
       </button>
 
-      <!-- Cards (nome integrato, si sposta con la card) -->
-      <!-- Cards -->
+      <!-- Cards Container -->
       <div class="relative w-full h-full" style="perspective: 1500px; transform-style: preserve-3d;">
         <div *ngFor="let prog of programs; let i = index"
              [ngStyle]="getCarouselStyle(i)"
-             (click)="selectProgram.emit(i)"
-             class="flex flex-col justify-center items-center gap-3 transition-all group select-none">
-          <img [src]="prog.image" [alt]="prog.name" class="w-full h-auto max-h-[310px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105" draggable="false">
+             (click)="stage === 'detail' ? backToCards.emit() : selectProgram.emit(i)"
+             class="flex flex-col justify-center items-center gap-2 transition-all group select-none cursor-pointer">
 
-          <div class="relative shrink-0 flex flex-col items-center justify-center px-2 w-full mt-2">
+          <img [src]="prog.image" [alt]="prog.name" 
+               class="w-full h-auto max-h-[280px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105" 
+               draggable="false">
+
+          <div class="relative shrink-0 flex flex-col items-center justify-center px-2 w-full mt-1">
 
             <!-- Name wrapper -->
             <div class="relative flex justify-center items-center" [ngClass]="{'opacity-0 transition-opacity duration-300': stage === 'detail'}">
-              <!-- Shimmer sweep effect (only visible when active) -->
+              <!-- Shimmer sweep effect -->
               <span *ngIf="activeProgramIndex === i"
                     class="absolute -inset-x-6 inset-y-0 rounded-lg opacity-40 blur-md shimmer-active pointer-events-none"
                     [style.--shimmer-color]="prog.hexColor">
               </span>
 
-              <!-- TESTO DEL NOME -->
-              <span class="text-xl md:text-3xl font-black tracking-tight relative z-10 transition-all duration-300"
+              <!-- Program Name -->
+              <span class="text-xl md:text-2xl font-black tracking-tight relative z-10 transition-all duration-300"
                     [ngClass]="activeProgramIndex === i ? 'text-slate-900 dark:text-white drop-shadow-md' : 'text-slate-400 dark:text-slate-500'">
                 {{ prog.name }}
               </span>
             </div>
 
-            <!-- AGGIORNAMENTI -->
-            <div class="flex flex-col items-center mt-2 transition-all duration-500 ease-out"
+            <!-- Aggiornamenti CTA -->
+            <div class="flex flex-col items-center mt-1.5 transition-all duration-500 ease-out"
                  [ngClass]="activeProgramIndex === i && stage !== 'detail' ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none absolute'">
-              <span class="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-qe-blue dark:text-blue-400">
+              <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-qe-blue dark:text-blue-400 flex items-center gap-1">
                 Aggiornamenti
+                <svg class="w-3 h-3 text-qe-blue dark:text-blue-400 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
               </span>
-              <svg class="w-3 h-3 text-qe-blue dark:text-blue-400 mt-0.5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
             </div>
 
           </div>
@@ -117,51 +122,74 @@
 
       <!-- Right Arrow -->
       <button (click)="nextProgram.emit()" aria-label="Successivo"
-              class="absolute top-1/2 -translate-y-1/2 right-0 md:right-2 z-50 p-2 text-slate-300 dark:text-slate-600 hover:text-qe-blue hover:translate-x-0.5 transition-all duration-300 cursor-pointer pointer-events-auto"
+              class="absolute top-1/2 -translate-y-1/2 right-0 md:right-4 z-50 p-3 rounded-full bg-white/60 dark:bg-slate-800/60 backdrop-blur-md shadow-sm border border-slate-200/50 dark:border-slate-700/50 text-slate-400 dark:text-slate-400 hover:text-qe-blue hover:scale-110 transition-all duration-300 cursor-pointer pointer-events-auto"
               [ngClass]="{'opacity-0 pointer-events-none': stage === 'detail'}">
-        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
       </button>
     </div>
 
-    <!-- DETAIL VIEW CONTENT PLACEHOLDER -->
-    <div class="absolute right-4 md:right-12 xl:right-32 top-[55%] -translate-y-1/2 w-[45%] max-w-2xl transition-all duration-[1200ms] delay-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+    <!-- DETAIL VIEW PANEL (Right Column in detail stage) -->
+    <div class="absolute right-4 md:right-10 xl:right-16 top-1/2 -translate-y-1/2 w-[90%] md:w-[50%] lg:w-[48%] max-w-xl transition-all duration-[1000ms] delay-150 ease-[cubic-bezier(0.22,1,0.36,1)] z-40"
          [ngClass]="stage === 'detail' ? 'opacity-100 translate-x-0 pointer-events-auto' : 'opacity-0 translate-x-12 pointer-events-none'">
-      <div class="bg-white/30 dark:bg-slate-900/40 backdrop-blur-2xl rounded-3xl p-8 border border-white/50 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] overflow-hidden min-h-[350px] relative">
+      
+      <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-2xl rounded-3xl p-6 md:p-8 border border-white/60 dark:border-slate-700/50 shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden relative">
 
-        <div class="w-full flex flex-col" [ngClass]="getNewsContentClass()">
-          <div class="flex items-center gap-3 mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-            <span [style.color]="programs[activeProgramIndex].hexColor">{{ newsItems[activeNewsItemIndex]?.date }}</span>
+        <!-- Top Controls in Detail Box -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white shadow-sm"
+               [style.backgroundColor]="programs[activeProgramIndex].hexColor">
+            <span>{{ programs[activeProgramIndex].name }}</span>
+            <span class="opacity-75">&bull;</span>
+            <span>{{ newsItems[activeNewsItemIndex]?.date || 'Oggi' }}</span>
           </div>
 
-          <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-3">
-            <svg class="w-6 h-6 shrink-0" [style.color]="programs[activeProgramIndex].hexColor" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <!-- Back Button -->
+          <button (click)="backToCards.emit()"
+                  class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-slate-500 hover:text-qe-blue hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Tutti i prodotti
+          </button>
+        </div>
+
+        <div class="w-full flex flex-col" [ngClass]="getNewsContentClass()">
+          <h3 class="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3 flex items-start gap-2.5">
+            <svg class="w-6 h-6 shrink-0 mt-0.5" [style.color]="programs[activeProgramIndex].hexColor" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {{ newsItems[activeNewsItemIndex]?.title }}
+            <span>{{ newsItems[activeNewsItemIndex]?.title }}</span>
           </h3>
 
-          <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm xl:text-base">
-            {{ newsItems[activeNewsItemIndex]?.description }}
-            <strong *ngIf="activeNewsItemIndex === 0" [style.color]="programs[activeProgramIndex].hexColor">{{ programs[activeProgramIndex].name }}</strong>.
-          </p>
+          <div class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm md:text-[15px] space-y-2">
+            <p>
+              {{ newsItems[activeNewsItemIndex]?.description || newsItems[activeNewsItemIndex]?.excerpt || 'Nessun dettaglio disponibile.' }}
+            </p>
+          </div>
 
-          <div class="mt-8 flex flex-col gap-4 opacity-50">
-            <div class="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-full"></div>
-            <div class="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-5/6"></div>
-            <div class="h-3 bg-slate-200 dark:bg-slate-700/50 rounded-full w-4/6"></div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Aggiornamento verificato
+            </span>
+            <span *ngIf="newsItems.length > 1">
+              {{ activeNewsItemIndex + 1 }} di {{ newsItems.length }}
+            </span>
           </div>
         </div>
 
-        <!-- Scroll indicators -->
-        <div class="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2">
-          <div *ngFor="let item of newsItems; let i = index"
-               class="w-1.5 rounded-full transition-all duration-500 ease-out"
-               [ngClass]="activeNewsItemIndex === i ? 'h-6 shadow-sm' : 'h-1.5 bg-slate-300 dark:bg-slate-600 opacity-50'"
-               [style.backgroundColor]="activeNewsItemIndex === i ? programs[activeProgramIndex].hexColor : ''">
-          </div>
+        <!-- Scroll / Item indicators when multiple news items exist -->
+        <div *ngIf="newsItems.length > 1" class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-1.5">
+          <button *ngFor="let item of newsItems; let i = index"
+                  (click)="changeNewsItem.emit(i)"
+                  [attr.aria-label]="'News ' + (i + 1)"
+                  class="w-2 rounded-full transition-all duration-300"
+                  [ngClass]="activeNewsItemIndex === i ? 'h-6 shadow-sm' : 'h-2 bg-slate-300 dark:bg-slate-600 opacity-50 hover:opacity-100'"
+                  [style.backgroundColor]="activeNewsItemIndex === i ? programs[activeProgramIndex].hexColor : ''">
+          </button>
         </div>
 
       </div>
     </div>
+
+  </div>
 
 </div>

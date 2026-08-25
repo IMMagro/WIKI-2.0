@@ -7,7 +7,10 @@ import { ThemeService } from '../../services/theme.service';
   selector: 'app-news-carousel',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './news-carousel.component.html'
+  templateUrl: './news-carousel.component.html',
+  host: {
+    class: 'w-full h-full block relative'
+  }
 })
 export class NewsCarouselComponent {
   @Input() stage: 'title-black' | 'title-blue' | 'moving' | 'cards' | 'detail' = 'title-black';
@@ -24,6 +27,8 @@ export class NewsCarouselComponent {
   @Output() prevProgram = new EventEmitter<void>();
   @Output() nextProgram = new EventEmitter<void>();
   @Output() selectProgram = new EventEmitter<number>();
+  @Output() backToCards = new EventEmitter<void>();
+  @Output() changeNewsItem = new EventEmitter<number>();
 
   constructor(public themeService: ThemeService) {}
 
@@ -39,23 +44,24 @@ export class NewsCarouselComponent {
     let style: any = {
       transition: 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
       position: 'absolute',
-      width: '300px',
-      height: '360px',
-      top: '0',
-      left: 'calc(50% - 150px)',
+      width: '320px',
+      height: '380px',
+      top: '50%',
+      marginTop: '-190px',
+      left: 'calc(50% - 160px)',
       zIndex: 10 - absOffset,
-      transformOrigin: 'bottom center'
+      transformOrigin: 'center center'
     };
 
     if (this.stage === 'detail') {
       if (isCenter) {
-        style.left = '48px';
-        style.transform = `translateX(0) scale(0.9) translateZ(0)`;
+        style.left = '4%';
+        style.transform = 'translateX(0) scale(0.92) translateZ(0)';
         style.opacity = 1;
         style.filter = 'brightness(1)';
-        style.cursor = 'default';
+        style.cursor = 'pointer';
       } else {
-        style.transform = `translateX(${Math.sign(offset) * 112}%) scale(0.82) translateZ(-100px)`;
+        style.transform = `translateX(${Math.sign(offset) * 120}%) scale(0.7) translateZ(-150px)`;
         style.opacity = 0;
         style.pointerEvents = 'none';
       }
@@ -63,14 +69,15 @@ export class NewsCarouselComponent {
     }
 
     if (isCenter) {
-      style.transform = `translateX(0) scale(1.08) translateZ(50px)`;
+      style.transform = 'translateX(0) scale(1.05) translateZ(50px)';
       style.opacity = 1;
       style.filter = 'brightness(1)';
+      style.cursor = 'pointer';
     } else {
       const sign = Math.sign(offset);
-      style.transform = `translateX(${sign * 112}%) scale(0.82) translateZ(-100px)`;
-      style.opacity = 0.55;
-      style.filter = 'brightness(0.7)';
+      style.transform = `translateX(${sign * 110}%) scale(0.8) translateZ(-80px)`;
+      style.opacity = 0.45;
+      style.filter = 'brightness(0.75)';
       style.cursor = 'pointer';
     }
 

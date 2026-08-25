@@ -176,22 +176,26 @@ export class AppComponent implements OnInit {
 
   nextProgram() {
     this.activeProgramIndex = (this.activeProgramIndex + 1) % this.programs.length;
+    this.updateProgramNews();
     this.triggerColorChange();
   }
 
   prevProgram() {
     this.activeProgramIndex = (this.activeProgramIndex - 1 + this.programs.length) % this.programs.length;
+    this.updateProgramNews();
     this.triggerColorChange();
   }
 
   selectProgram(index: number) {
     if (this.activeProgramIndex === index) {
       if (this.activeIndex === 4 && this.newsStage === 'cards') {
+        this.updateProgramNews();
         this.newsStage = 'detail';
       }
       return;
     }
     this.activeProgramIndex = index;
+    this.updateProgramNews();
     this.triggerColorChange();
   }
 

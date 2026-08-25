@@ -146,10 +146,12 @@
                [style.pointer-events]="activeIndex === 4 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 4 ? 'translateY(0)' : (4 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
 
-          <app-news-carousel [stage]="newsStage" [programs]="programs" [activeProgramIndex]="activeProgramIndex"
+          <app-news-carousel class="w-full h-full block relative"
+               [stage]="newsStage" [programs]="programs" [activeProgramIndex]="activeProgramIndex"
                [newsBaseColor]="newsBaseColor" [newsOverlayColor]="newsOverlayColor" [newsFillPosition]="newsFillPosition" [isRefilling]="isRefilling"
                [newsItems]="newsItems" [activeNewsItemIndex]="activeNewsItemIndex" [newsAnimState]="newsAnimState"
-               (prevProgram)="prevProgram()" (nextProgram)="nextProgram()" (selectProgram)="selectProgram($event)"></app-news-carousel>
+               (prevProgram)="prevProgram()" (nextProgram)="nextProgram()" (selectProgram)="selectProgram($event)"
+               (backToCards)="newsStage = 'cards'" (changeNewsItem)="changeNewsItem($event)"></app-news-carousel>
 
         </div>
 
