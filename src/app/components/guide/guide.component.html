@@ -20,8 +20,10 @@
       <div class="grid3">
         <button class="card" [class.mg]="c.accent === 'magenta'" *ngFor="let c of categories; let i = index; trackBy: trackByCat"
                 [style.animationDelay]="(i * 40) + 'ms'" (click)="openCat(c.id)">
-          <div class="ci"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons[c.icon]"></path></svg></div>
-          <h3>{{ c.name }}</h3>
+          <div class="card-head">
+            <img [src]="'assets/images/emojis/' + c.id + '.png'" [alt]="c.name" class="cat-emoji" loading="lazy" />
+            <h3>{{ c.name }}</h3>
+          </div>
           <p>{{ c.desc }}</p>
           <div class="cf">
             <span>{{ c.manuals.length }} guide &middot; {{ faqTotal(c) }} FAQ</span>

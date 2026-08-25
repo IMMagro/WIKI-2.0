@@ -1,57 +1,1791 @@
-{
-  "categories": [
-    { "id": "fatture", "name": "Fatture", "icon": "receipt", "accent": "blue", "desc": "Emissione, invio allo SDI, note di credito e incassi.", "manuals": [
-      { "id": "fe", "title": "Fatturazione Elettronica", "status": "pub", "updated": "20 ago 2026", "desc": "Emettere e inviare fatture allo SDI dal gestionale.",
-        "overview": "<p>La <strong>fatturazione elettronica</strong> ti permette di emettere fatture e note di credito e inviarle automaticamente al <strong>Sistema di Interscambio (SDI)</strong>. I dati fiscali del paziente vengono ripresi dalla cartella clinica.</p><p>In questa guida trovi il flusso completo, dall'emissione fino alla gestione degli scarti SDI.</p><h3>Prima di iniziare</h3><ul><li>P.IVA o Codice Fiscale corretti in anagrafica.</li><li>Credenziali SDI configurate nelle impostazioni.</li></ul>",
-        "service": { "name": "Attivazione Fatturazione Elettronica", "desc": "Configuriamo noi SDI e credenziali, con assistenza all'avvio." },
-        "faqs": [
-          { "q": "Come emetto una fattura elettronica?", "tags": ["SDI", "fattura"], "updated": "20 ago 2026", "steps": [
-            { "t": "Apri <b>Fatturazione &rarr; Nuova fattura</b>.", "img": true }, { "t": "Seleziona il <b>paziente</b> e aggiungi le prestazioni." }, { "t": "Controlla l'anteprima e premi <b>Invia allo SDI</b>.", "video": true } ] },
-          { "q": "Come emetto una nota di credito?", "tags": ["nota di credito"], "updated": "18 ago 2026", "steps": [
-            { "t": "Apri la fattura e premi <b>Crea nota di credito</b>." }, { "t": "Indica importo e causale.", "img": true }, { "t": "Invia allo SDI." } ] },
-          { "q": "Cosa faccio se lo SDI scarta la fattura?", "tags": ["errore", "SDI"], "updated": "12 ago 2026", "service": { "name": "Supporto Scarti SDI", "desc": "Un tecnico analizza gli scarti ricorrenti e sistema la configurazione." }, "steps": [
-            { "t": "Apri <b>Fatturazione &rarr; Scarti SDI</b> e leggi il codice.", "img": true }, { "t": "Correggi il dato (Codice Destinatario o P.IVA)." }, { "t": "Rigenera e reinvia." } ] } ] },
-      { "id": "solleciti", "title": "Solleciti e Incassi", "status": "draft", "updated": "15 ago 2026", "desc": "Gestire pagamenti, solleciti e prima nota.",
-        "overview": "<p>Questa guida spiega come registrare gli <strong>incassi</strong> sulle fatture e gestire gli insoluti.</p>",
-        "faqs": [
-          { "q": "Come registro un incasso su una fattura?", "tags": ["incasso"], "updated": "15 ago 2026", "steps": [ { "t": "Apri la fattura e premi <b>Registra incasso</b>." }, { "t": "Scegli metodo e data.", "img": true } ] } ] } ] },
-    { "id": "pazienti", "name": "Pazienti", "icon": "users", "accent": "magenta", "desc": "Anagrafica, cartella clinica e anamnesi.", "manuals": [
-      { "id": "cartella", "title": "Cartella Clinica", "status": "pub", "updated": "19 ago 2026", "desc": "Creare e gestire la scheda del paziente.",
-        "overview": "<p>La <strong>cartella clinica</strong> raccoglie anagrafica, anamnesi e storia clinica in un unico posto. &Egrave; il punto di partenza per appuntamenti, piani di terapia e fatturazione.</p>",
-        "faqs": [
-          { "q": "Come inserisco un nuovo paziente?", "tags": ["anagrafica"], "updated": "19 ago 2026", "steps": [ { "t": "Vai su <b>Pazienti &rarr; Nuovo</b> e compila i dati.", "img": true }, { "t": "Aggiungi contatti e consensi, poi <b>Salva</b>." } ] },
-          { "q": "Dove compilo l'anamnesi?", "tags": ["anamnesi"], "updated": "11 ago 2026", "steps": [ { "t": "Apri la scheda <b>Anamnesi</b> del paziente." }, { "t": "Rispondi al questionario: i rischi si evidenziano in rosso.", "video": true } ] } ] } ] },
-    { "id": "pdt", "name": "Piani di Terapia", "icon": "tooth", "accent": "blue", "desc": "Preventivi clinici, accettazione e contabilit&agrave; PDT.", "manuals": [
-      { "id": "contab-pdt", "title": "Contabilità dei Piani di Terapia", "status": "pub", "updated": "20 ago 2026", "desc": "Collegare prestazioni, pagamenti e fatture al piano.",
-        "overview": "<p>Il <strong>Piano di Terapia</strong> tiene insieme prestazioni, accettazione e contabilit&agrave;: acconti, saldi e fatture restano collegati, cos&igrave; vedi sempre il <strong>residuo aggiornato</strong>.</p>",
-        "service": { "name": "Modulo Preventivi Avanzati", "desc": "Preventivi clinici con immagini e firma digitale del paziente." },
-        "faqs": [
-          { "q": "Come creo un piano di terapia?", "tags": ["PDT"], "updated": "20 ago 2026", "steps": [ { "t": "Dalla scheda paziente apri <b>Piani di terapia &rarr; Nuovo</b>.", "img": true }, { "t": "Aggiungi le prestazioni e definisci le sedute." }, { "t": "Registra l'<b>accettazione</b>.", "video": true } ] },
-          { "q": "Come contabilizzo un acconto sul PDT?", "tags": ["acconto"], "updated": "17 ago 2026", "steps": [ { "t": "Apri il piano e premi <b>Registra acconto</b>." }, { "t": "L'importo scala dal residuo automaticamente.", "img": true } ] } ] } ] },
-    { "id": "magazzino", "name": "Magazzino", "icon": "box", "accent": "blue", "desc": "Articoli, carico/scarico e scorte minime.", "manuals": [
-      { "id": "gest-mag", "title": "Gestione Magazzino", "status": "pub", "updated": "14 ago 2026", "desc": "Movimentare articoli e controllare le scorte.",
-        "overview": "<p>Il <strong>magazzino</strong> traccia articoli, carichi e scarichi e ti avvisa quando una scorta scende sotto la soglia minima.</p>",
-        "faqs": [
-          { "q": "Come carico un articolo a magazzino?", "tags": ["carico"], "updated": "14 ago 2026", "steps": [ { "t": "Apri <b>Magazzino &rarr; Carico</b> e seleziona il fornitore.", "img": true }, { "t": "Inserisci articoli e quantit&agrave; dal DDT.", "video": true } ] } ] } ] },
-    { "id": "fornitori", "name": "Fornitori", "icon": "truck", "accent": "magenta", "desc": "Anagrafica fornitori e ordini.", "manuals": [
-      { "id": "anag-forn", "title": "Anagrafica Fornitori", "status": "pub", "updated": "10 ago 2026", "desc": "Registrare fornitori e listini.",
-        "overview": "<p>Registra i tuoi <strong>fornitori</strong> con dati fiscali e listini, subito disponibili nei carichi di magazzino.</p>",
-        "faqs": [
-          { "q": "Come aggiungo un fornitore?", "tags": ["fornitore"], "updated": "10 ago 2026", "steps": [ { "t": "Vai su <b>Fornitori &rarr; Nuovo</b> e compila ragione sociale e P.IVA.", "img": true } ] } ] } ] },
-    { "id": "preventivi", "name": "Preventivi", "icon": "quote", "accent": "blue", "desc": "Preventivi commerciali e conversione in PDT.", "manuals": [
-      { "id": "crea-prev", "title": "Creazione Preventivi", "status": "draft", "updated": "09 ago 2026", "desc": "Preparare un preventivo e convertirlo in piano.",
-        "overview": "<p>Prepara un <strong>preventivo</strong> dal tariffario, invialo in PDF e convertilo in Piano di Terapia quando il paziente accetta.</p>",
-        "faqs": [
-          { "q": "Come creo un preventivo?", "tags": ["preventivo"], "updated": "09 ago 2026", "steps": [ { "t": "Apri <b>Preventivi &rarr; Nuovo</b> e aggiungi le voci.", "img": true }, { "t": "Stampa o invia il PDF." } ] } ] } ] }
-  ],
-  "journey": {
-    "intro": "Sei alle prime armi? Segui questi passi in ordine: ognuno ti porta alla guida o alla FAQ giusta.",
-    "steps": [
-      { "title": "Registra il tuo primo paziente", "text": "Tutto parte dalla cartella clinica.", "ref": { "type": "faq", "cat": "pazienti", "man": "cartella", "faq": 0 } },
-      { "title": "Conosci la Cartella Clinica", "text": "Com'è organizzata la scheda del paziente.", "ref": { "type": "guide", "cat": "pazienti", "man": "cartella" } },
-      { "title": "Crea un piano di terapia", "text": "Preventiva le prestazioni e registra l'accettazione.", "ref": { "type": "faq", "cat": "pdt", "man": "contab-pdt", "faq": 0 } },
-      { "title": "Emetti la tua prima fattura", "text": "Invia la fattura elettronica allo SDI.", "ref": { "type": "faq", "cat": "fatture", "man": "fe", "faq": 0 } },
-      { "title": "Esplora la categoria Fatture", "text": "Tutte le guide su fatturazione e incassi.", "ref": { "type": "category", "cat": "fatture" } }
-    ]
-  }
+﻿{
+    "categories":  [
+                       {
+                           "id":  "primi-passi",
+                           "name":  "Primi Passi",
+                           "icon":  "compass",
+                           "accent":  "blue",
+                           "desc":  "Panoramica, comandi base e prime operazioni per iniziare a usare il programma.",
+                           "manuals":  [
+                                           {
+                                               "id":  "interfaccia-quaderno",
+                                               "title":  "Comprendere l\u0027Interfaccia (Panoramica Quaderno)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Guida visiva agli elementi principali: barra degli strumenti, menu laterale, archivi e schede.",
+                                               "overview":  "\u003cp\u003eIl gestionale è organizzato in aree logiche accessibili dalla barra principale e dal menu di navigazione:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eBarra superiore:\u003c/strong\u003e accesso rapido agli archivi principali (Pazienti, Agenda, Fatture, Sistema TS).\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eArea di lavoro centrale:\u003c/strong\u003e visualizzazione della cartella clinica, dell\u0027odontogramma o del planning.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMenu laterale:\u003c/strong\u003e funzioni di configurazione, statistiche, magazzino e strumenti di utilità.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eTutti gli archivi condividono la stessa logica di ricerca e i medesimi pulsanti di azione rapida.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come navigo tra le sezioni del programma?",
+                                                                "tags":  [
+                                                                             "interfaccia",
+                                                                             "menu",
+                                                                             "navigazione",
+                                                                             "archivi"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Usa la \u003cb\u003ebarra degli strumenti in alto\u003c/b\u003e per passare rapidamente da Pazienti ad Agenda o Fatturazione."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Apri il \u003cb\u003emenu laterale a scomparsa\u003c/b\u003e a sinistra per accedere a Magazzino, Utilità e Configurazioni.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Ogni schermata aperta mantiene lo stato attivo permettendoti di lavorare in multitasking."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "comandi-base",
+                                               "title":  "Comandi Base (Aggiungere, Modificare, Eliminare)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Regole generali e scorciatoie per inserire, cercare e modificare record in qualsiasi archivio.",
+                                               "overview":  "\u003cp\u003eIn qualsiasi tabella o elenco del gestionale i comandi mantengono sempre le stesse icone e posizioni:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eNuovo / Aggiungi:\u003c/strong\u003e pulsante con icona \u003cem\u003e+\u003c/em\u003e o \u003cem\u003eNuovo\u003c/em\u003e in alto a sinistra.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eModifica:\u003c/strong\u003e doppio click sulla riga desiderata oppure tasto \u003cem\u003eModifica\u003c/em\u003e.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eElimina / Annulla:\u003c/strong\u003e pulsante con cestino, sempre protetto da richiesta di conferma.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eSalvataggio:\u003c/strong\u003e pulsante \u003cem\u003eSalva\u003c/em\u003e o \u003cem\u003eConferma\u003c/em\u003e in basso a destra.\u003c/li\u003e\u003c/ul\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Quali sono le scorciatoie e i comandi standard?",
+                                                                "tags":  [
+                                                                             "comandi",
+                                                                             "base",
+                                                                             "aggiungi",
+                                                                             "modifica",
+                                                                             "elimina",
+                                                                             "salva"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eNuovo (+)\u003c/b\u003e nella barra superiore dell\u0027archivio per aprire una nuova scheda."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Fai \u003cb\u003edoppio click\u003c/b\u003e su qualsiasi record per aprirlo in modalità modifica.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eSalva (F10)\u003c/b\u003e o clicca \u003cb\u003eOK\u003c/b\u003e per registrare le modifiche apportate."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🧭"
+                       },
+                       {
+                           "id":  "pazienti",
+                           "name":  "Pazienti",
+                           "icon":  "users",
+                           "accent":  "magenta",
+                           "desc":  "Anagrafica, cartella clinica, consensi, ricette e anamnesi.",
+                           "manuals":  [
+                                           {
+                                               "id":  "inserire-paziente",
+                                               "title":  "Inserire un Paziente",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Procedura completa di registrazione nuovo paziente con dati anagrafici, fiscali e recapiti.",
+                                               "overview":  "\u003cp\u003eLa scheda paziente raccoglie l\u0027anagrafica completa, i dati di contatto, i riferimenti fiscali per la fatturazione e la storia clinica.\u003c/p\u003e\u003cblockquote\u003e💡\u0026nbsp;Tip:\u0026nbsp;Inserendo il Codice Fiscale, il gestionale calcola automaticamente data di nascita, sesso e comune di nascita.\u003c/blockquote\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come inserisco un nuovo paziente in anagrafica?",
+                                                                "tags":  [
+                                                                             "paziente",
+                                                                             "nuovo",
+                                                                             "anagrafica",
+                                                                             "registrazione",
+                                                                             "codice fiscale"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003ePazienti\u003c/b\u003e nella barra in alto e seleziona \u003cb\u003eNuovo Paziente\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci Cognome, Nome e \u003cb\u003eCodice Fiscale\u003c/b\u003e (il sistema verificherà la correttezza formale)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Compila i recapiti (Telefono cellulare per SMS promemoria ed E-mail)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eSalva\u003c/b\u003e per aprire subito la cartella clinica del paziente."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "stampare-consensi",
+                                               "title":  "Stampare Consensi Paziente (Manuale e Automatico)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Come generare e stampare il consenso privacy (GDPR) e i consensi informati.",
+                                               "overview":  "\u003cp\u003eIl programma consente di gestire i consensi sia con stampa cartacea tradizionale (metodo manuale), sia con generazione automatica precompilata con i dati del paziente e firma su tablet.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come stampo il consenso informato o privacy di un paziente?",
+                                                                "tags":  [
+                                                                             "consensi",
+                                                                             "privacy",
+                                                                             "gdpr",
+                                                                             "stampa",
+                                                                             "informato",
+                                                                             "firma"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dalla cartella del paziente clicca sulla scheda \u003cb\u003eDocumenti \u0026rarr; Consensi\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Scegli il modello desiderato (es. \u003ci\u003eConsenso Privacy GDPR\u003c/i\u003e o \u003ci\u003eConsenso Trattamento\u003c/i\u003e)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona \u003cb\u003eStampa Manuale\u003c/b\u003e per la copia cartacea oppure \u003cb\u003eInvia a Tablet\u003c/b\u003e per la firma digitale."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "stampare-anamnesi",
+                                               "title":  "Stampare e Compilare l\u0027Anamnesi",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Gestione del questionario anamnestico, evidenziazione patologie a rischio e stampa.",
+                                               "overview":  "\u003cp\u003eLa scheda anamnesi segnala automaticamente le patologie o le allergie rilevanti evidenziandole in rosso all\u0027apertura della cartella clinica.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come compilo o stampo l\u0027anamnesi del paziente?",
+                                                                "tags":  [
+                                                                             "anamnesi",
+                                                                             "patologie",
+                                                                             "allergie",
+                                                                             "stampa",
+                                                                             "questionario"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri la scheda \u003cb\u003eAnamnesi\u003c/b\u003e nella cartella paziente.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Spunta le risposte al questionario clinico e aggiungi eventuali note mediche."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eStampa\u003c/b\u003e per produrre il foglio cartaceo con data e firma del paziente."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "creare-ricetta-medica",
+                                               "title":  "Creare Ricetta Medica per Paziente",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Compilazione e stampa della ricetta bianca con farmaci, posologia e intestazione studio.",
+                                               "overview":  "\u003cp\u003eModulo per la prescrizione rapida di farmaci, con archivio prontuario e posologie predefinite salvabili per i futuri utilizzi.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come creo una ricetta medica?",
+                                                                "tags":  [
+                                                                             "ricetta",
+                                                                             "prescrizione",
+                                                                             "farmaci",
+                                                                             "posologia",
+                                                                             "stampa ricetta"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dalla scheda del paziente clicca su \u003cb\u003eRicette \u0026rarr; Nuova Ricetta\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Cerca il farmaco nel prontuario o scrivi la prescrizione personalizzata con la posologia."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona il medico prescrittore e clicca \u003cb\u003eStampa Ricetta\u003c/b\u003e."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "effettuare-rx-paziente",
+                                               "title":  "Effettuare e Acquisire RX Paziente",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Integrazione con sensori radiografici, ortopantomografi e importazione radiografie.",
+                                               "overview":  "\u003cp\u003eIntegrazione diretta con i ponti radiografici dei principali sensori e software (Sirona, Carestream, Vatech, MyRay, ecc.).\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come acquisisco o importo un\u0027immagine RX?",
+                                                                "tags":  [
+                                                                             "rx",
+                                                                             "radiografia",
+                                                                             "immagini",
+                                                                             "sensore",
+                                                                             "ortopantomografo",
+                                                                             "ponte"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri la scheda \u003cb\u003eImmagini / RX\u003c/b\u003e nella cartella del paziente.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca sul pulsante del tuo \u003cb\u003esoftware radiografico\u003c/b\u003e per avviare il ponte diagnostico con i dati del paziente già agganciati."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "In alternativa, usa \u003cb\u003eImporta file\u003c/b\u003e per caricare radiografie da cartella o supporto esterno."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "cercare-paziente",
+                                               "title":  "Cercare un Paziente",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Ricerca per cognome, nome, data di nascita, codice fiscale, numero di telefono o codice anagrafico.",
+                                               "overview":  "\u003cp\u003eStrumenti di ricerca rapida con filtro dinamico in tempo reale.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come trovo velocemente una scheda paziente?",
+                                                                "tags":  [
+                                                                             "cerca",
+                                                                             "ricerca",
+                                                                             "paziente",
+                                                                             "filtro",
+                                                                             "telefono",
+                                                                             "codice fiscale"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eF3\u003c/b\u003e o digita nel campo di ricerca in cima all\u0027elenco Pazienti."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Puoi digitare parte del cognome, del numero di cellulare o il codice fiscale.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eInvio\u003c/b\u003e per aprire direttamente la cartella del paziente selezionato."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "creare-nucleo-familiare",
+                                               "title":  "Creare un Nucleo Familiare",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Collegare membri della stessa famiglia, condividere recapiti e gestire fatturazioni cumulative.",
+                                               "overview":  "\u003cp\u003eIl nucleo familiare permette di legare tra loro le cartelle cliniche di genitori e figli, semplificando la gestione dei pagamenti e dei richiami.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come raggruppo più pazienti nello stesso nucleo familiare?",
+                                                                "tags":  [
+                                                                             "famiglia",
+                                                                             "nucleo",
+                                                                             "collegamento",
+                                                                             "parenti",
+                                                                             "pagatore"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Nella scheda anagrafica del paziente clicca sulla sezione \u003cb\u003eNucleo Familiare\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eCollega Familiare\u003c/b\u003e e cerca l\u0027altro paziente registrato."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Indica il grado di parentela e se uno dei membri è l\u0027intestatario fiscale per le fatture."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "inserire-paziente-straniero",
+                                               "title":  "Inserire un Paziente Straniero",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Gestione codici fiscali provvisori, stati esteri e impostazioni per fatture e Sistema TS.",
+                                               "overview":  "\u003cp\u003eIstruzioni per configurare correttamente la nazione estera e i codici di identificazione fiscale per soggetti non residenti.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come registro un paziente con residenza o nascita all\u0027estero?",
+                                                                "tags":  [
+                                                                             "straniero",
+                                                                             "estero",
+                                                                             "codice fiscale",
+                                                                             "ts",
+                                                                             "residenza"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Nella scheda anagrafica imposta la \u003cb\u003eNazione di Nascita\u003c/b\u003e con lo Stato estero.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Se non dispone di codice fiscale italiano, spunta la casella \u003cb\u003eSoggetto Straniero / Non residente\u003c/b\u003e."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci il documento di riconoscimento estero per la corretta gestione delle ricevute fiscali."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "verificare-omonimi",
+                                               "title":  "Verificare Omonimi nella Lista Pazienti",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Come identificare ed evitare doppie registrazioni per pazienti con stesso nome e cognome.",
+                                               "overview":  "\u003cp\u003eControllo automatico in fase di inserimento per evitare duplicazioni di schede anagrafiche.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Cosa fare in caso di omonimia?",
+                                                                "tags":  [
+                                                                             "omonimi",
+                                                                             "duplicati",
+                                                                             "controllo",
+                                                                             "doppione"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "In fase di salvataggio il sistema rileva se esiste già un paziente con lo stesso nome.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Verifica data di nascita e indirizzo per distinguere le due persone."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Se si tratta della stessa persona, apri la scheda esistente invece di crearne una nuova."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "gestire-insoluti",
+                                               "title":  "Gestire gli Insoluti",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Elenco crediti aperti, scadenziari e invio solleciti di pagamento.",
+                                               "overview":  "\u003cp\u003eMonitoraggio dei pagamenti scaduti e residui da saldare sia da piani di terapia che da fatture emesse.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come consulto la lista dei pazienti con insoluti?",
+                                                                "tags":  [
+                                                                             "insoluti",
+                                                                             "debiti",
+                                                                             "scaduti",
+                                                                             "solleciti",
+                                                                             "crediti"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eContabilità \u0026rarr; Gestione Insoluti\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Filtra per periodo o importo minimo per visualizzare i pazienti morosi."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Usa la funzione \u003cb\u003eInvia Sollecito\u003c/b\u003e per inviare SMS o e-mail di promemoria."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "gestire-richiami",
+                                               "title":  "Gestire i Richiami",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Pianificazione controlli periodici, igiene semestrale e invio notifiche automatiche.",
+                                               "overview":  "\u003cp\u003eGestione dei recall di igiene e visite di controllo con notifiche SMS e WhatsApp automatiche.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come imposto un richiamo periodico per un paziente?",
+                                                                "tags":  [
+                                                                             "richiami",
+                                                                             "recall",
+                                                                             "igiene",
+                                                                             "controllo",
+                                                                             "scadenza",
+                                                                             "sms"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Alla chiusura di una seduta, imposta il richiamo (es. \u003ci\u003eIgiene a 6 mesi\u003c/i\u003e).",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Dalla sezione \u003cb\u003ePazienti \u0026rarr; Gestione Richiami\u003c/b\u003e visualizza tutti i pazienti da contattare nel mese."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Genera la lista di invio promemoria multicanale."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "consensi-personalizzati",
+                                               "title":  "Creare dei Consensi Personalizzati",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Editor modelli di testo con campi unione dinamici per privacy e trattamenti specialistici.",
+                                               "overview":  "\u003cp\u003ePersonalizzazione dei testi legali e clinici con inserimento automatico di nome, codice fiscale e prestazioni.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come creo un nuovo modello di consenso personalizzato?",
+                                                                "tags":  [
+                                                                             "consensi",
+                                                                             "modelli",
+                                                                             "personalizzazione",
+                                                                             "campi unione",
+                                                                             "testo"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eConfigurazioni \u0026rarr; Modelli Documenti\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca \u003cb\u003eNuovo Modello\u003c/b\u003e e scrivi il testo del consenso."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci i tag dinamici (es. \u003ccode\u003e[NOME_PAZIENTE]\u003c/code\u003e, \u003ccode\u003e[DATA_NASCITA]\u003c/code\u003e) per la compilazione automatica."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "statistiche-pazienti",
+                                               "title":  "Statistiche Pazienti (Fasce d\u0027Età \u0026 P.d.T. o Preventivi)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Report demografici, tassi di accettazione preventivi e analisi della clientela.",
+                                               "overview":  "\u003cp\u003eStrumenti grafici per analizzare l\u0027età media dei pazienti, la provenienza geografica e la conversione dei preventivi.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come visualizzo i grafici e le statistiche anagrafiche?",
+                                                                "tags":  [
+                                                                             "statistiche",
+                                                                             "report",
+                                                                             "fasce eta",
+                                                                             "preventivi",
+                                                                             "analisi"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Accedi a \u003cb\u003eStatistiche \u0026rarr; Analisi Pazienti\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona il periodo e il tipo di report (Fasce d\u0027età, Nuovi pazienti o Conversione P.d.T.)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Esporta i dati in Excel o visualizza il grafico riepilogativo."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "👥"
+                       },
+                       {
+                           "id":  "odontogramma",
+                           "name":  "Odontogramma",
+                           "icon":  "tooth",
+                           "accent":  "blue",
+                           "desc":  "Cartella clinica grafica, piani di trattamento (P.d.T.), planning e schede specialistiche.",
+                           "manuals":  [
+                                           {
+                                               "id":  "panoramica-odontogramma",
+                                               "title":  "Panoramica Odontogramma",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Come funziona la mappa grafica della dentizione, denti decidui, permanenti e selettori superfici.",
+                                               "overview":  "\u003cp\u003eL\u0027odontogramma interattivo permette di rappresentare visivamente lo stato della bocca, le prestazioni eseguite e i trattamenti futuri pianificati.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come si legge e utilizza l\u0027odontogramma grafico?",
+                                                                "tags":  [
+                                                                             "odontogramma",
+                                                                             "grafica",
+                                                                             "superfici",
+                                                                             "denti",
+                                                                             "panoramica"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Seleziona uno o più denti cliccando sui relativi elementi grafici.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Usa il selettore delle faccette (Occlusale, Mesiale, Distale, Vestibolare, Linguale) per specificare la superficie."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Scegli la prestazione dall\u0027elenco a destra per applicarla al dente selezionato."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "status-dentale-iniziale",
+                                               "title":  "Rappresentare lo Status Dentale Iniziale",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Segnare denti mancanti, otturazioni pregresse, corone o impianti già presenti alla prima visita.",
+                                               "overview":  "\u003cp\u003eLa fotografia della situazione iniziale del paziente prima di iniziare qualsiasi nuovo piano di cura.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come imposto la situazione iniziale della bocca?",
+                                                                "tags":  [
+                                                                             "status iniziale",
+                                                                             "prima visita",
+                                                                             "denti mancanti",
+                                                                             "pregresso"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri la scheda \u003cb\u003eStatus Iniziale\u003c/b\u003e sull\u0027odontogramma.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Segna gli elementi mancanti, le corone o i lavori pregressi eseguiti da altri professionisti."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Salva lo status: farà da sfondo a tutti i futuri Piani di Trattamento."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "inserire-intervento",
+                                               "title":  "Inserire un Intervento",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Aggiungere prestazioni cliniche, associare il medico esecutore e calcolare gli importi.",
+                                               "overview":  "\u003cp\u003eProcedura per aggiungere una prestazione clinica all\u0027interno del Piano di Trattamento attivo.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come aggiungo un intervento a un piano di trattamento?",
+                                                                "tags":  [
+                                                                             "intervento",
+                                                                             "prestazione",
+                                                                             "pdt",
+                                                                             "aggiungi cura",
+                                                                             "medico"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Seleziona l\u0027elemento dentale interessato sull\u0027odontogramma.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Fai doppio click sulla voce di listino (es. \u003ci\u003eOtturazione composito\u003c/i\u003e) o trascinala sul dente."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Specifica il medico operatore, l\u0027importo e salva."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "effettuare-sconti-modificare-costi",
+                                               "title":  "Effettuare Sconti e Modificare Costi Interventi",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Applicare sconti in percentuale o a cifra fissa su singoli interventi o sull\u0027intero preventivo.",
+                                               "overview":  "\u003cp\u003eRegolazione degli importi di listino per agevolazioni, convenzioni o sconti concordati con il paziente.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come applico uno sconto su una prestazione o sul totale?",
+                                                                "tags":  [
+                                                                             "sconto",
+                                                                             "costi",
+                                                                             "modifica prezzo",
+                                                                             "importo",
+                                                                             "ribasso"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Seleziona l\u0027intervento e modifica direttamente il valore nella colonna \u003cb\u003eImporto\u003c/b\u003e o \u003cb\u003eSconto %\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Per scontare l\u0027intero piano, usa la voce \u003cb\u003eSconto Globale\u003c/b\u003e in calce al preventivo."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "stampare-preventivo",
+                                               "title":  "Stampare il Preventivo Clinico",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Layout di stampa preventivo con odontogramma a colori, rateizzazione e firma del paziente.",
+                                               "overview":  "\u003cp\u003eGenerazione del modulo di preventivo personalizzabile con logo dello studio e piano di pagamento.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come stampo o genero il PDF del preventivo?",
+                                                                "tags":  [
+                                                                             "preventivo",
+                                                                             "stampa",
+                                                                             "pdf",
+                                                                             "rate",
+                                                                             "firma preventivo"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dal piano di terapia aperto clicca sul pulsante \u003cb\u003eStampa Preventivo\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Scegli il layout (con o senza disegno odontogramma, con dettaglio sedute o per macro-voci)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eStampa\u003c/b\u003e o \u003cb\u003eInvia per E-mail / WhatsApp\u003c/b\u003e al paziente."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "eseguire-intervento-stato-pdt",
+                                               "title":  "Eseguire Intervento e Gestire Stati P.d.T.",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Marcare le prestazioni come eseguite, gestire preventivato, accettato, in corso e terminato.",
+                                               "overview":  "\u003cp\u003eFlusso di avanzamento clinico: il cambio di stato dell\u0027intervento aggiorna automaticamente la contabilità del piano.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come marco un intervento come eseguito?",
+                                                                "tags":  [
+                                                                             "esegui",
+                                                                             "stato",
+                                                                             "accettazione",
+                                                                             "terminato",
+                                                                             "avanzamento"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Clicca col tasto destro sulla prestazione nell\u0027elenco del piano.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona \u003cb\u003eSegna come Eseguito\u003c/b\u003e e conferma la data e il medico operatore."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "La prestazione cambierà colore nell\u0027odontogramma diventando pronta per la fatturazione."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "creare-modificare-cancellare-pdt",
+                                               "title":  "Creare, Modificare e Cancellare Piani di Trattamento (P.d.T.)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Gestione di piani di trattamento multipli (alternativi, accettati o archiviati).",
+                                               "overview":  "\u003cp\u003ePossibilità di creare preventivi opzionali (Opzione A vs Opzione B) e archiviare o cancellare piani non accettati.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come creo un secondo piano di trattamento alternativo?",
+                                                                "tags":  [
+                                                                             "nuovo pdt",
+                                                                             "piano trattamento",
+                                                                             "cancella",
+                                                                             "alternativo"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eNuovo P.d.T.\u003c/b\u003e nella barra laterale del paziente.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Assegna un titolo descrittivo (es. \u003ci\u003eProposta Impianti\u003c/i\u003e vs \u003ci\u003eProposta Mobile\u003c/i\u003e)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Quando il paziente decide, imposta il piano prescelto come \u003cb\u003eAccettato\u003c/b\u003e."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "planning-schede-specialistiche",
+                                               "title":  "Utilizzare il Planning e le Schede Specialistiche",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Cartelle cliniche specialistiche: Parodontale, Endodonzia, Impianti, PSR, Igiene, Gnatologia, Ortodonzia, Estetica.",
+                                               "overview":  "\u003cp\u003eModuli avanzati dedicati alle singole discipline odontoiatriche con cartelle parodontali millimetriche, tracciamento impianti e schede ortodontiche.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Dove trovo le schede di Parodontologia, Impianti o Ortodonzia?",
+                                                                "tags":  [
+                                                                             "parodontale",
+                                                                             "impianti",
+                                                                             "ortodonzia",
+                                                                             "endodonzia",
+                                                                             "psr",
+                                                                             "igiene",
+                                                                             "gnatologia",
+                                                                             "estetica"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Sotto l\u0027odontogramma clicca sui tab delle sezioni specialistiche (es. \u003cb\u003eParodontale\u003c/b\u003e, \u003cb\u003eImpianti\u003c/b\u003e).",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Registra profondità di sondaggio, mobilità, lotti implantari o schemi cefalometrici."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "I dati rimangono storicizzati per i confronti temporali nel corso delle visite successive."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🦷"
+                       },
+                       {
+                           "id":  "contabilita",
+                           "name":  "Contabilità",
+                           "icon":  "receipt",
+                           "accent":  "blue",
+                           "desc":  "Fatture pazienti, fatturazione elettronica (SDI), Sistema TS / 730, prima nota e spese fornitori.",
+                           "manuals":  [
+                                           {
+                                               "id":  "fatture-pazienti",
+                                               "title":  "Fatture Pazienti (Emissione, Note di Credito, Bollo e Casi Particolari)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Guida completa all\u0027emissione fatture, note di credito, ritenute d\u0027acconto, fatture con enti/assicurazioni, legali rappresentanti e pazienti esteri.",
+                                               "overview":  "\u003cp\u003eModulo per la gestione di tutte le tipologie di documenti contabili attivi verso i pazienti o enti terzi convenzionati.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come emetto una nuova fattura a un paziente?",
+                                                                "tags":  [
+                                                                             "fattura",
+                                                                             "emissione",
+                                                                             "bollo",
+                                                                             "nota di credito",
+                                                                             "assicurazione",
+                                                                             "acconto"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dalla scheda del paziente o dalla sezione \u003cb\u003eFatture \u0026rarr; Nuova Fattura\u003c/b\u003e seleziona il paziente.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Richiama le prestazioni eseguite dal Piano di Terapia oppure aggiungi voci libere."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Controlla l\u0027applicazione automatica del \u003cb\u003ebollo virtuale (2,00 €)\u003c/b\u003e se l\u0027importo esente supera i 77,47 €."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona la modalità di pagamento (Tracciabile / Contanti) e premi \u003cb\u003eEmetti\u003c/b\u003e."
+                                                                              }
+                                                                          ]
+                                                            },
+                                                            {
+                                                                "q":  "Come emetto una nota di credito a storno di una fattura?",
+                                                                "tags":  [
+                                                                             "nota credito",
+                                                                             "storno",
+                                                                             "rimborso",
+                                                                             "annulla fattura"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri la fattura da stornare e clicca sul pulsante \u003cb\u003eCrea Nota di Credito\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Indica l\u0027importo da stornare (totale o parziale) e la causale."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Conferma l\u0027emissione e l\u0027invio allo SDI."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "fatturazione-elettronica",
+                                               "title":  "Fatturazione Elettronica (SDI \u0026 Invio XML)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Attivazione FE, generazione file XML, invio al Sistema di Interscambio, scarico fatture fornitore ed export per il commercialista.",
+                                               "overview":  "\u003cp\u003eIntegrazione diretta con il canale SDI per l\u0027invio automatico delle fatture elettroniche B2B e B2C e la ricezione degli scarti o conferme di consegna.\u003c/p\u003e",
+                                               "service":  {
+                                                               "name":  "Servizio Export Commercialista",
+                                                               "desc":  "Trasmissione automatica mensile di tutti i flussi XML al tuo studio commercialista."
+                                                           },
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come invio una fattura elettronica allo SDI?",
+                                                                "tags":  [
+                                                                             "fe",
+                                                                             "sdi",
+                                                                             "xml",
+                                                                             "invio fattura",
+                                                                             "fattura elettronica"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "All\u0027emissione della fattura clicca su \u003cb\u003eGenera ed Invia SDI\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Il sistema verifica la correttezza di Codice Destinatario, PEC o codice convenzionale \u003ccode\u003e0000000\u003c/code\u003e per privati."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Verifica l\u0027esito della notifica nella colonna \u003cb\u003eStato SDI\u003c/b\u003e (Consegnata / Scartata)."
+                                                                              }
+                                                                          ]
+                                                            },
+                                                            {
+                                                                "q":  "Come invio l\u0027archivio XML al commercialista?",
+                                                                "tags":  [
+                                                                             "commercialista",
+                                                                             "export xml",
+                                                                             "zip",
+                                                                             "invio xml"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eFatturazione Elettronica \u0026rarr; Export Commercialista\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona il mese o trimestre di riferimento e clicca \u003cb\u003eEsporta Pacchetto XML\u003c/b\u003e o \u003cb\u003eInvia via PEC/Email\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "sistema-ts-730",
+                                               "title":  "730 e Sistema Tessera Sanitaria (Invio Spese Sanitarie)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Configurazione credenziali, cambio periodico password, invio dati al Sistema TS, correzione scarti e gestione opposizione paziente.",
+                                               "overview":  "\u003cp\u003eProcedura per la trasmissione telematica delle spese sanitarie detraibili all\u0027Agenzia delle Entrate per il modello 730 precompilato.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come rinnovo la password del Sistema TS e la aggiorno nel gestionale?",
+                                                                "tags":  [
+                                                                             "730",
+                                                                             "ts",
+                                                                             "password",
+                                                                             "credenziali",
+                                                                             "pincode",
+                                                                             "scadenza"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003e730 Invio TS \u0026rarr; Credenziali e cambio periodico password\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Accedi al portale ministeriale tramite il link rapido e modifica la password."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Incolla la nuova password nel programma e premi \u003cb\u003eProva Connessione\u003c/b\u003e per verificare la riuscita."
+                                                                              }
+                                                                          ]
+                                                            },
+                                                            {
+                                                                "q":  "Cosa fare se il paziente si oppone all\u0027invio al Sistema TS?",
+                                                                "tags":  [
+                                                                             "opposizione ts",
+                                                                             "rifiuto 730",
+                                                                             "consenso ts",
+                                                                             "tracciabilita"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "In fattura spunta l\u0027opzione \u003cb\u003eOpposizione all\u0027invio al Sistema TS\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Stampa il modulo di opposizione firmato dal paziente da conservare in studio."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Il documento verrà automaticamente escluso dal flusso telematico inviato all\u0027Agenzia delle Entrate."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "prima-nota",
+                                               "title":  "Prima Nota e Gestione Cassa/Banca",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Registrazione movimenti di cassa, versamenti in banca, saldi iniziali e riconciliazione contabile.",
+                                               "overview":  "\u003cp\u003eRegistro dei flussi finanziari in entrata e in uscita con distinzione tra cassa contanti, POS e conti correnti bancari.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come sposto il contante dalla Cassa Studio al Conto Bancario?",
+                                                                "tags":  [
+                                                                             "prima nota",
+                                                                             "cassa",
+                                                                             "banca",
+                                                                             "giroconto",
+                                                                             "versamento"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Accedi a \u003cb\u003eContabilità \u0026rarr; Prima Nota\u003c/b\u003e e clicca \u003cb\u003eNuovo Movimento\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona la causale \u003cb\u003eVersamento in Banca (Giroconto)\u003c/b\u003e."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Indica l\u0027importo: il sistema scalerà i contanti e accrediterà il conto bancario selezionato."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "spese-fornitori",
+                                               "title":  "Spese Fornitori e Piano dei Conti",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Registrazione fatture di acquisto, conti e sottoconti di spesa, scadenziario pagamenti fornitori.",
+                                               "overview":  "\u003cp\u003eGestione acquisti e costi di gestione dello studio, con import automatico delle fatture passive da SDI.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come registro il pagamento di una spesa fornitore?",
+                                                                "tags":  [
+                                                                             "fornitori",
+                                                                             "spese",
+                                                                             "fattura passiva",
+                                                                             "pagamento fornitore",
+                                                                             "conti"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri \u003cb\u003eContabilità \u0026rarr; Spese Fornitori\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona la fattura del fornitore e premi \u003cb\u003eRegistra Pagamento\u003c/b\u003e."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Scegli il conto di addebito (es. \u003ci\u003eBonifico Banca\u003c/i\u003e) e salva."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🧾"
+                       },
+                       {
+                           "id":  "agenda",
+                           "name":  "Agenda",
+                           "icon":  "clock",
+                           "accent":  "magenta",
+                           "desc":  "Appuntamenti, sincronizzazione Google Calendar/Smartphone, promemoria SMS/WhatsApp e prenotazioni online.",
+                           "manuals":  [
+                                           {
+                                               "id":  "gestione-appuntamenti",
+                                               "title":  "Prendere, Modificare e Spostare un Appuntamento",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Come fissare visite, gestire le poltrone, modificare orari o trascinare appuntamenti (drag \u0026 drop).",
+                                               "overview":  "\u003cp\u003eL\u0027agenda consente di organizzare il calendario dello studio per medico, poltrona o branca specialistica con visualizzazione giornaliera, settimanale e mensile.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come fisso un nuovo appuntamento in agenda?",
+                                                                "tags":  [
+                                                                             "appuntamento",
+                                                                             "agenda",
+                                                                             "visita",
+                                                                             "poltrona",
+                                                                             "orario"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Fai doppio click sullo slot orario e sulla colonna del medico desiderato.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Cerca il paziente e seleziona la prestazione da eseguire (la durata si imposta in automatico)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Conferma per salvare l\u0027appuntamento sul calendario."
+                                                                              }
+                                                                          ]
+                                                            },
+                                                            {
+                                                                "q":  "Come sposto o copio un appuntamento in un\u0027altra data?",
+                                                                "tags":  [
+                                                                             "sposta",
+                                                                             "copia",
+                                                                             "trascina",
+                                                                             "drag drop"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Trascina direttamente il blocco dell\u0027appuntamento sulla nuova ora o poltrona (Drag \u0026 Drop).",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "In alternativa, clicca col tasto destro e scegli \u003cb\u003eTaglia / Sposta\u003c/b\u003e, poi incolla nella nuova data sul calendario."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "sincronizzazione-smartphone",
+                                               "title":  "Sincronizzare i Dati con Smartphone \u0026 Google Calendar",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Integrazione bidirezionale con i telefoni dei medici, Google Calendar e QE Pocket.",
+                                               "overview":  "\u003cp\u003eSincronizzazione in tempo reale per consultare gli appuntamenti dello studio direttamente sul proprio iPhone o smartphone Android.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come sincronizzo l\u0027agenda con Google Calendar o il cellulare?",
+                                                                "tags":  [
+                                                                             "google calendar",
+                                                                             "smartphone",
+                                                                             "cellulare",
+                                                                             "sincronizzazione",
+                                                                             "pocket"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eServizi \u0026rarr; Sincronizzatore Google Calendar\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Associa l\u0027account Google del medico al rispettivo calendario di studio."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Gli appuntamenti compariranno automaticamente sull\u0027applicazione Calendario dello smartphone."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "promemoria-sms-whatsapp",
+                                               "title":  "Inviare SMS, E-mail e WhatsApp come Promemoria Appuntamenti",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Invio automatico promemoria 24h/48h prima della visita per ridurre i no-show.",
+                                               "overview":  "\u003cp\u003eSistema automatizzato di notifica ai pazienti con richiesta di conferma presenza via SMS bidirezionale o WhatsApp.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come invio il promemoria ai pazienti del giorno dopo?",
+                                                                "tags":  [
+                                                                             "sms",
+                                                                             "whatsapp",
+                                                                             "promemoria",
+                                                                             "notifica",
+                                                                             "conferma appuntamento"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dall\u0027agenda clicca sul pulsante \u003cb\u003eInvia Promemoria Giornalieri\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Verifica l\u0027elenco dei pazienti con numero di cellulare valido."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eInvia a tutti\u003c/b\u003e per recapitare il messaggio con data e ora dell\u0027appuntamento."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "prenotazioni-online",
+                                               "title":  "Abilitare Acquisizione Appuntamenti da Sito Web (Prenotazioni Online)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Integrazione con portali web (Doctolib, MioDottore, Centro Prenotazioni Studio).",
+                                               "overview":  "\u003cp\u003eRicezione automatica delle richieste di visita dal sito web dello studio o dai principali portali medici direttamente in agenda.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come collego le prenotazioni online all\u0027agenda?",
+                                                                "tags":  [
+                                                                             "prenotazioni online",
+                                                                             "sito web",
+                                                                             "doctolib",
+                                                                             "miodottore",
+                                                                             "portale"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eConfigurazioni \u0026rarr; Modulo Prenotazioni Online\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Definisci gli slot di disponibilità pubblica per prime visite e controlli."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Le richieste approvate appariranno automaticamente con una notifica visiva in agenda."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "📅"
+                       },
+                       {
+                           "id":  "magazzino",
+                           "name":  "Magazzino",
+                           "icon":  "box",
+                           "accent":  "blue",
+                           "desc":  "Articoli, carichi/scarichi, lotti e scadenze, codice a barre / QR e gestione UDI.",
+                           "manuals":  [
+                                           {
+                                               "id":  "carichi-scarichi-magazzino",
+                                               "title":  "Gestione Carichi e Scarichi Materiali",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Registrazione carichi da DDT fornitore, scarico automatico da odontogramma e inventario.",
+                                               "overview":  "\u003cp\u003eTracciamento delle giacenze in tempo reale con avviso scorte sottosoglia e riordino fornitore.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come effettuo un carico di materiale a magazzino?",
+                                                                "tags":  [
+                                                                             "magazzino",
+                                                                             "carico",
+                                                                             "scarico",
+                                                                             "ddt",
+                                                                             "giacenza",
+                                                                             "articoli"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Accedi a \u003cb\u003eMagazzino \u0026rarr; Nuovo Carico\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona il fornitore e il numero del documento di trasporto (DDT)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci le quantità degli articoli ricevuti e salva per aggiornare le giacenze."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "scadenze-barcode-udi",
+                                               "title":  "Controllo Scadenze, Codici a Barre / QR e Gestione UDI",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Tracciabilità dispositivi medici (MDR 2017/745), scansione codici a barre e allarmi prodotti scaduti.",
+                                               "overview":  "\u003cp\u003eGestione conforme agli standard UDI per dispositivi medici e biomateriali con lettura ottica tramite barcode o fotocamera.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come registro un dispositivo medico tramite codice a barre UDI?",
+                                                                "tags":  [
+                                                                             "udi",
+                                                                             "barcode",
+                                                                             "qr code",
+                                                                             "scadenza",
+                                                                             "lotto",
+                                                                             "mdr"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Nella scheda dell\u0027intervento clinico premi \u003cb\u003eScansiona UDI\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Punta il lettore barcode sulla confezione dell\u0027impianto o biomateriale."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Il sistema estrae automaticamente codice articolo, lotto di produzione e data di scadenza."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "📦"
+                       },
+                       {
+                           "id":  "firma-elettronica",
+                           "name":  "Firma Elettronica",
+                           "icon":  "receipt",
+                           "accent":  "magenta",
+                           "desc":  "Firma grafometrica su tablet Wi-Fi, validità legale, importazione e firma di documenti PDF e Word.",
+                           "manuals":  [
+                                           {
+                                               "id":  "firma-wifi-tablet",
+                                               "title":  "Abilitare Tablet a Firma Wi-Fi e Firmare Documenti",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Configurazione dell\u0027applicazione tablet per la raccolta consensi e firme elettroniche senza carta.",
+                                               "overview":  "\u003cp\u003eSoluzione paperless per far apporre la firma ai pazienti direttamente su tablet con valore legale conforme al regolamento eIDAS.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come invio un consenso al tablet per farlo firmare al paziente?",
+                                                                "tags":  [
+                                                                             "firma",
+                                                                             "tablet",
+                                                                             "wifi",
+                                                                             "digitale",
+                                                                             "privacy",
+                                                                             "senza carta"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dal documento aperto clicca sul pulsante \u003cb\u003eInvia a Tablet Wi-Fi\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Il paziente legge il testo sul tablet e firma con l\u0027apposito pennino capacitivo."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Alla conferma, il PDF sigillato con timestamp viene salvato direttamente nella cartella del paziente."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "✍️"
+                       },
+                       {
+                           "id":  "onorario",
+                           "name":  "Onorario \u0026 Listini",
+                           "icon":  "quote",
+                           "accent":  "blue",
+                           "desc":  "Personalizzazione listini, inserimento prestazioni, modelli raggruppati e calcolo ISA / Studi di settore.",
+                           "manuals":  [
+                                           {
+                                               "id":  "gestione-listini-onorario",
+                                               "title":  "Personalizzare il Listino e Aggiungere Nuove Voci",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Modifica prezzi, aggiunta branche specialistiche, listini convenzioni (FASI, Unisalute) e calcolo ISA.",
+                                               "overview":  "\u003cp\u003eConfigurazione del tariffario dello studio con supporto a listini multipli differenziati per convenzione o sede operativa.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come aggiungo o modifico una prestazione nel listino dello studio?",
+                                                                "tags":  [
+                                                                             "listino",
+                                                                             "prezzi",
+                                                                             "onorario",
+                                                                             "prestazione",
+                                                                             "convenzioni",
+                                                                             "isa"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eConfigurazioni \u0026rarr; Gestione Onorario \u0026 Listini\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona la categoria (es. \u003ci\u003eIgiene\u003c/i\u003e o \u003ci\u003eConservativa\u003c/i\u003e) e clicca \u003cb\u003eNuova Voce\u003c/b\u003e."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Imposta descrizione, prezzo predefinito, tempi stimati e codice IVA."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🏷️"
+                       },
+                       {
+                           "id":  "utilizzatori",
+                           "name":  "Utilizzatori \u0026 Permessi",
+                           "icon":  "users",
+                           "accent":  "magenta",
+                           "desc":  "Medici, igienisti, assistenti, password d\u0027accesso, restrizioni di sicurezza e calcolo compensi.",
+                           "manuals":  [
+                                           {
+                                               "id":  "gestione-operatori-permessi",
+                                               "title":  "Inserire Nuovi Operatori e Configurare i Permessi",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Creazione profili per medici e assistenti, password personali, restrizioni alla contabilità e compensi collaboratori.",
+                                               "overview":  "\u003cp\u003eGestione del personale dello studio nel rispetto del GDPR con tracciamento degli accessi e limitazioni selettive ai dati sensibili.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come inserisco un nuovo medico o assistente e ne limito i permessi?",
+                                                                "tags":  [
+                                                                             "operatori",
+                                                                             "medici",
+                                                                             "assistenti",
+                                                                             "permessi",
+                                                                             "password",
+                                                                             "compensi"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Accedi a \u003cb\u003eConfigurazioni \u0026rarr; Utilizzatori \u0026 Operatori\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eNuovo Operatore\u003c/b\u003e, inserisci nome, credenziali e numero di iscrizione all\u0027albo."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Nella scheda \u003cb\u003ePermessi\u003c/b\u003e seleziona le sezioni autorizzate (es. disabilita visualizzazione fatturato per gli operatori clinici)."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🔐"
+                       },
+                       {
+                           "id":  "configurazioni",
+                           "name":  "Configurazioni",
+                           "icon":  "box",
+                           "accent":  "blue",
+                           "desc":  "Domande di anamnesi, consensi personalizzati, configurazione e-mail dello studio e gestione banche.",
+                           "manuals":  [
+                                           {
+                                               "id":  "impostazioni-generali-studio",
+                                               "title":  "Personalizzazione Domande Anamnesi, E-Mail e Banche",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Guida alle impostazioni generali dello studio: server SMTP posta, coordinate IBAN bancarie e questionari anamnestici.",
+                                               "overview":  "\u003cp\u003ePannello di controllo per adattare il programma alle specifiche esigenze organizzative della struttura sanitaria.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come configuro l\u0027indirizzo email dello studio per l\u0027invio documenti?",
+                                                                "tags":  [
+                                                                             "email",
+                                                                             "smtp",
+                                                                             "posta",
+                                                                             "configurazione",
+                                                                             "iban",
+                                                                             "banche"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eConfigurazioni \u0026rarr; Impostazioni Posta E-mail\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci i parametri del tuo gestore (Server SMTP, Porta, Nome Utente e Password)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca \u003cb\u003eTest Invio\u003c/b\u003e per ricevere un\u0027email di verifica sul tuo indirizzo."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "⚙️"
+                       },
+                       {
+                           "id":  "comunicazioni",
+                           "name":  "Comunicazioni \u0026 CRM",
+                           "icon":  "truck",
+                           "accent":  "magenta",
+                           "desc":  "Frasi promemoria SMS, mittente personalizzato (Alias), auguri di compleanno e riconoscimento telefonico (Chi è).",
+                           "manuals":  [
+                                           {
+                                               "id":  "comunicazioni-pazienti-crm",
+                                               "title":  "Gestione Comunicazioni, SMS, Auguri e Riconoscimento Chiamate",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Come impostare l\u0027alias del mittente SMS, inviare auguri di compleanno automatici e collegare il centralino telefonico.",
+                                               "overview":  "\u003cp\u003eStrumenti di fidelizzazione e comunicazione multicanale per migliorare l\u0027esperienza del paziente e il servizio di segreteria.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come personalizzo il nome del mittente degli SMS dello studio?",
+                                                                "tags":  [
+                                                                             "sms",
+                                                                             "mittente",
+                                                                             "alias",
+                                                                             "auguri",
+                                                                             "chi e",
+                                                                             "telefono"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eComunicazioni \u0026rarr; Impostazioni SMS\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Compila il campo \u003cb\u003eNome Mittente (Alias)\u003c/b\u003e con la denominazione dello studio."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Personalizza il testo dei messaggi standard con i tag dinamici per orario e data."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "💬"
+                       },
+                       {
+                           "id":  "gestione-preferenze",
+                           "name":  "Gestione \u0026 Preferenze",
+                           "icon":  "box",
+                           "accent":  "blue",
+                           "desc":  "Backup dati (chiavetta USB/Cloud), aggiornamenti software, licenze, risoluzione rete e lettore TS/CIE.",
+                           "manuals":  [
+                                           {
+                                               "id":  "backup-aggiornamenti-licenza",
+                                               "title":  "Effettuare il Backup, Aggiornare QE e Gestire la Licenza",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Procedure di salvataggio dei dati su disco esterno o cloud, installazione aggiornamenti e verifica stato canone.",
+                                               "overview":  "\u003cp\u003eLinee guida per la sicurezza del database, la continuità operativa dello studio e il recupero dati in caso di emergenza.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come eseguo il backup manuale su chiavetta USB?",
+                                                                "tags":  [
+                                                                             "backup",
+                                                                             "usb",
+                                                                             "salvataggio",
+                                                                             "aggiornamento",
+                                                                             "licenza",
+                                                                             "sicurezza"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Inserisci la chiavetta USB nel computer server.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eUtilità \u0026rarr; Esegui Backup\u003c/b\u003e e seleziona l\u0027unità della chiavetta."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Attendi il messaggio di conferma di avvenuta copia e verifica del database."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🛠️"
+                       },
+                       {
+                           "id":  "laboratori",
+                           "name":  "Laboratori Odontotecnici",
+                           "icon":  "truck",
+                           "accent":  "magenta",
+                           "desc":  "Anagrafica laboratori, prescrizioni protesiche, prove cliniche e trasmissione prescrizioni online.",
+                           "manuals":  [
+                                           {
+                                               "id":  "prescrizioni-laboratorio",
+                                               "title":  "Creare e Inviare Prescrizioni Odontotecniche Online",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Compilazione della scheda di lavorazione protesica con specifiche materiali, colore e date delle prove cliniche.",
+                                               "overview":  "\u003cp\u003eGestione del flusso di lavoro tra studio e laboratorio con monitoraggio delle date di consegna dei manufatti protesici.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come compilo una prescrizione per il laboratorio?",
+                                                                "tags":  [
+                                                                             "laboratorio",
+                                                                             "odontotecnico",
+                                                                             "prescrizione",
+                                                                             "protesi",
+                                                                             "prove cliniche"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Dall\u0027odontogramma del paziente clicca su \u003cb\u003ePrescrizione Laboratorio \u0026rarr; Nuova\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Seleziona il laboratorio, i denti interessati, il tipo di manufatto e la scala colore."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Fissa le date per le prove (struttura, estetica, consegna finale) e stampa o invia online la scheda."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🔬"
+                       },
+                       {
+                           "id":  "analisi-marketing",
+                           "name":  "Analisi \u0026 Marketing",
+                           "icon":  "quote",
+                           "accent":  "blue",
+                           "desc":  "Campagne CRM, previsione di profittabilità, statistiche BEP e cruscotti direzionali (Dashboard).",
+                           "manuals":  [
+                                           {
+                                               "id":  "dashboard-statistiche-profittabilita",
+                                               "title":  "Dashboard di Controllo di Gestione e Profittabilità",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Calcolo del punto di pareggio (BEP), margini orari delle poltrone e monitoraggio degli indicatori di performance (KPI).",
+                                               "overview":  "\u003cp\u003eCruscotto direzionale per i titolari di studio per monitorare ricavi, costi fissi e rendimento delle singole branche odontoiatriche.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come calcolo il Break-Even Point (BEP) e la profittabilità oraria?",
+                                                                "tags":  [
+                                                                             "bep",
+                                                                             "profittabilita",
+                                                                             "statistiche",
+                                                                             "dashboard",
+                                                                             "controllo gestione",
+                                                                             "kpi"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Accedi a \u003cb\u003eStatistiche \u0026rarr; Dashboard Direzionale\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Imposta i costi di struttura orari dello studio."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Visualizza i grafici di redditività per prestazione e per medico collaboratore."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "📊"
+                       },
+                       {
+                           "id":  "extra",
+                           "name":  "Ulteriori Informazioni",
+                           "icon":  "compass",
+                           "accent":  "magenta",
+                           "desc":  "Manutenzione programmata, conformità GDPR studio, radioprotezione, prescrizioni e cicli di sterilizzazione.",
+                           "manuals":  [
+                                           {
+                                               "id":  "sterilizzazione-tracciabilita-gdpr",
+                                               "title":  "Tracciabilità Sterilizzazione, Autoclavi e GDPR Studio",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Registro dei cicli di sterilizzazione delle autoclavi, etichettatura buste e adempimenti normativi per la privacy.",
+                                               "overview":  "\u003cp\u003eRegistro digitale dei lotti di sterilizzazione e storico conformità per controlli ispettivi e sicurezza dei pazienti.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come registro un ciclo di sterilizzazione in autoclave?",
+                                                                "tags":  [
+                                                                             "sterilizzazione",
+                                                                             "autoclave",
+                                                                             "buste",
+                                                                             "gdpr",
+                                                                             "tracciabilita",
+                                                                             "lotto"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Vai su \u003cb\u003eUtilità \u0026rarr; Modulo Sterilizzazione\u003c/b\u003e.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Inserisci il numero del ciclo dell\u0027autoclave, la data e l\u0027esito dei test (Bowie-Dick / Helix Test)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Stampa le etichette con codice a barre da applicare sulle buste degli strumenti imbustati."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "📋"
+                       },
+                       {
+                           "id":  "servizi",
+                           "name":  "Servizi \u0026 Moduli Add-On",
+                           "icon":  "receipt",
+                           "accent":  "blue",
+                           "desc":  "Panoramica di tutti i moduli aggiuntivi integrabili: Firma Wi-Fi, WhatsApp, Mia Assistente, OpenCeph, QE Pocket.",
+                           "manuals":  [
+                                           {
+                                               "id":  "catalogo-servizi-integrati",
+                                               "title":  "Panoramica Moduli Add-On e Servizi Integrati",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Guida alle funzionalità aggiuntive attivabili: Backup in Cloud, sQrivo, Centro Prenotazioni, Interfacce Doctolib/MioDottore e API.",
+                                               "overview":  "\u003cp\u003eCatalogo dei servizi in cloud e delle integrazioni avanzate sviluppate per potenziare le funzionalità dello studio.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come posso richiedere o attivare un modulo in prova?",
+                                                                "tags":  [
+                                                                             "servizi",
+                                                                             "add-on",
+                                                                             "cloud",
+                                                                             "integrazioni",
+                                                                             "moduli",
+                                                                             "prova"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Apri la sezione \u003cb\u003eServizi\u003c/b\u003e nel menu principale del programma.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Scegli il servizio di interesse (es. \u003ci\u003eWhatsApp Studio\u003c/i\u003e o \u003ci\u003eBackup in Cloud\u003c/i\u003e)."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Clicca su \u003cb\u003eRichiedi Attivazione / Prova Gratuita\u003c/b\u003e per metterti in contatto con il supporto tecnico."
+                                                                              }
+                                                                          ]
+                                                            }
+                                                        ]
+                                           }
+                                       ],
+                           "emoji":  "🚀"
+                       }
+                   ],
+    "journey":  {
+                    "intro":  "Benvenuto in Quaderno Elettronico! Segui questo percorso guidato per apprendere le operazioni fondamentali passo dopo passo.",
+                    "steps":  [
+                                  {
+                                      "title":  "1. Comprendere l\u0027interfaccia di lavoro",
+                                      "text":  "Familiarizza con la barra degli strumenti, i menu e le aree di lavoro principali.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "primi-passi",
+                                                  "man":  "interfaccia-quaderno"
+                                              }
+                                  },
+                                  {
+                                      "title":  "2. Configura il listino dello studio",
+                                      "text":  "Personalizza i prezzi e le prestazioni del tuo tariffario.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "onorario",
+                                                  "man":  "gestione-listini-onorario"
+                                              }
+                                  },
+                                  {
+                                      "title":  "3. Inserisci il tuo primo paziente",
+                                      "text":  "Crea la scheda anagrafica e inserisci i dati anagrafici e di contatto.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "pazienti",
+                                                  "man":  "inserire-paziente"
+                                              }
+                                  },
+                                  {
+                                      "title":  "4. Esplora l\u0027Odontogramma",
+                                      "text":  "Visualizza la dentizione grafica e segna la situazione iniziale della bocca.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "odontogramma",
+                                                  "man":  "panoramica-odontogramma"
+                                              }
+                                  },
+                                  {
+                                      "title":  "5. Aggiungi un intervento ed emetti il preventivo",
+                                      "text":  "Pianifica le cure da eseguire e stampa la proposta per il paziente.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "odontogramma",
+                                                  "man":  "inserire-intervento"
+                                              }
+                                  },
+                                  {
+                                      "title":  "6. Fissa l\u0027appuntamento in Agenda",
+                                      "text":  "Inserisci l\u0027appuntamento sul calendario assegnando medico e poltrona.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "agenda",
+                                                  "man":  "gestione-appuntamenti"
+                                              }
+                                  },
+                                  {
+                                      "title":  "7. Emetti la fattura e gestisci il Sistema TS",
+                                      "text":  "Genera il documento fiscale e trasmetti le spese sanitarie per il 730.",
+                                      "ref":  {
+                                                  "type":  "guide",
+                                                  "cat":  "contabilita",
+                                                  "man":  "fatture-pazienti"
+                                              }
+                                  }
+                              ]
+                }
 }
