@@ -7,7 +7,7 @@
 </h1>
 
 <!-- Search bar -->
-<div #homeSearchContainer class="w-full max-w-2xl group relative z-50"
+<div #homeSearchContainer class="w-full max-w-2xl mx-auto group relative z-50"
   [style.opacity]="homeStage === 1 ? 1 : 0"
   [style.transform]="homeStage === 1 ? 'translateY(0)' : 'translateY(30px)'"
   [style.pointer-events]="(isActive && homeStage === 1) ? 'auto' : 'none'"

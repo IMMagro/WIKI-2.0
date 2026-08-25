@@ -9,7 +9,10 @@ import { FaqReadingService } from '../../services/faq-reading.service';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  host: {
+    class: 'w-full max-w-4xl mx-auto flex flex-col items-center justify-center'
+  }
 })
 export class HomeComponent {
   @Input() isActive = false;
