@@ -13,16 +13,24 @@
 - `.mcp.json` lancia l'MCP ufficiale (`ng mcp`) da un'installazione **isolata** della CLI v22:
   `node C:/Users/massimiliano.magrini/.angular-mcp/node_modules/@angular/cli/bin/ng.js mcp`
 - Motivo dell'install isolata: `npx @angular/cli@22 mcp` nel progetto usa la CLI locale v18 (senza `mcp`).
-- Per usarlo: aprire la cartella in Claude Code e **approvare** il server `angular-cli` (verifica con `/mcp`).
+- ⚠️ **BUG risolto (2026-08-25):** anche puntando all'`ng.js` della v22, il launcher Angular
+  fa *bootstrap* alla CLI locale v18 quando gira dentro la cartella del progetto → il comando
+  `mcp` sparisce e il server MCP muore subito (approvato ma senza tool). **Fix:** in `.mcp.json`
+  è impostato `env.NG_DISABLE_VERSION_CHECK=true`, che forza l'uso della v22 invocata direttamente.
+- Per usarlo: aprire la cartella in Claude Code e **approvare/riconnettere** il server `angular-cli`
+  (verifica con `/mcp`). Dopo modifiche a `.mcp.json` va **riconnesso**.
+- `ng mcp` è un comando *nascosto* (non compare in `ng help`); opzioni utili: `--read-only`, `--local-only`.
 - ⚠️ Il path in `.mcp.json` è assoluto e legato a QUESTO PC.
 
 ## Refactoring in corso (a tappe, con commit dopo ognuna)
 Obiettivo: sciogliere il monolite `app.component.{ts,html}` (~1290+1130 righe) in componenti/servizi.
 
 Piano approvato:
-1. **`NewsBlockRenderer` condiviso** — dedup del rendering blocchi (popup pubblico + anteprima admin). ← **IN CORSO**
-   - Creato: `src/app/components/shared/news-block-renderer/` (`.ts` + `.html`). **NON ancora agganciato.**
-   - DA FARE: importarlo in `app.component` (popup `selectedNews`) e in `admin-news` (anteprima), sostituendo il markup canvas duplicato; togliere `canvasHeight`/`canvasH` locali; build + commit.
+1. **`NewsBlockRenderer` condiviso** — dedup del rendering blocchi (popup pubblico + anteprima admin). ← **FATTO (2026-08-25)**
+   - `src/app/components/shared/news-block-renderer/` agganciato in `app.component` (popup `selectedNews`) e in `admin-news` (anteprima); markup canvas duplicato sostituito da `<app-news-block-renderer [blocks] [width]>`.
+   - Rimossi `canvasHeight`/`canvasH` locali (l'altezza è calcolata dal componente condiviso via `minH`).
+   - Bump minore del budget bundle in `angular.json` (600kB → 620kB) per il peso extra del componente.
+   - Build verde (solo i 6 warning CSS preesistenti).
 2. `NewsService` + `ThemeService` (estrarre logica news e dark-mode/animazioni da app.component).
 3. `NewsBellComponent` + `NewsPopupComponent`.
 4. `FaqPageComponent` + `ServiziComponent` + `HomeComponent`.

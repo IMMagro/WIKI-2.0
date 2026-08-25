@@ -7,11 +7,12 @@ import { GuideService } from './services/guide.service';
 import { GuideAdminComponent } from './components/guide/guide-admin.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
+import { NewsBlockRendererComponent } from './components/shared/news-block-renderer/news-block-renderer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBlockRendererComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
@@ -990,12 +991,6 @@ export class AppComponent implements OnInit {
   allNews: any[] = [];
   selectedNews: any = null; // comunicazione aperta a schermo nel popup
   readonly newsCanvasW = 720; // larghezza fissa del canvas libero (stessa dell'editor admin)
-
-  /** Altezza minima del canvas in base ai blocchi (per il popup a schermo). */
-  canvasHeight(blocks: any[]): number {
-    if (!blocks || !blocks.length) return 400;
-    return Math.max(360, ...blocks.map(b => (b.y || 0) + (b.h || 0))) + 24;
-  }
 
   /** News "Generale" pubblicate (le bozze non sono visibili all'utente) — campanella in home. */
   get generalNews(): any[] {

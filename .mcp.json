@@ -5,7 +5,10 @@
       "args": [
         "C:/Users/massimiliano.magrini/.angular-mcp/node_modules/@angular/cli/bin/ng.js",
         "mcp"
-      ]
+      ],
+      "env": {
+        "NG_DISABLE_VERSION_CHECK": "true"
+      }
     }
   }
 }

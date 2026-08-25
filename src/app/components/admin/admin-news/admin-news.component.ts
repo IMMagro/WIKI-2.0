@@ -3,32 +3,27 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
 import { NewsCanvasEditorComponent } from '../news-canvas-editor/news-canvas-editor.component';
+import { NewsBlockRendererComponent } from '../../shared/news-block-renderer/news-block-renderer.component';
 
 @Component({
   selector: 'app-admin-news',
   standalone: true,
-  imports: [CommonModule, FormsModule, NewsCanvasEditorComponent],
+  imports: [CommonModule, FormsModule, NewsCanvasEditorComponent, NewsBlockRendererComponent],
   templateUrl: './admin-news.component.html'
 })
 export class AdminNewsComponent implements OnInit {
   adminNews: any[] = [];
-  
+
   // Modal state
   isModalOpen = false;
   isEditing = false;
   editingIndex: number = -1;
-  
+
   // Preview state
   isPreviewOpen = false;
   previewItem: any = null;
   readonly newsCanvasW = 720;
 
-  /** Altezza minima del canvas per l'anteprima, in base ai blocchi. */
-  canvasH(blocks: any[]): number {
-    if (!blocks || !blocks.length) return 400;
-    return Math.max(360, ...blocks.map(b => (b.y || 0) + (b.h || 0))) + 24;
-  }
-  
   currentNews: any = {
     title: '',
     excerpt: '',
