@@ -24,78 +24,17 @@ import { FaqReadingPanelComponent } from './components/shared/faq-reading-panel/
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  activeFaqCategory: string = 'General';
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
   @ViewChild(ServiziComponent) serviziRef?: ServiziComponent;
-  query = '';
   stage = 0;
   titleVisible = false;
   isSidebarExpanded = false;
   isContactOpen = false;
   isAdminRoute = false;
   isAdminAuthenticated = false;
-  activeAdminTab: 'dashboard' | 'manuals' | 'news' | 'server' | 'users' | 'settings' = 'dashboard';
-  selectedManualStats: any = null;
-  isStatsPanelOpen = false;
   isUploadModalOpen = false;
   adminNotifications: any[] = [];
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_notifications.ashx)
-
-  // -- AUTH --
-  loginEmail = '';
-  loginPassword = '';
-  loginError = '';
-  loginLoading = false;
-  // ----------
-
-  // -- ADMIN FILTERS --
-  adminSearchQuery: string = '';
-  adminCategoryFilter: string = '';
-  adminStatusFilter: string = '';
-  isAdminFilterMenuOpen: boolean = false;
-
-  get filteredAdminDocuments() {
-    let result = this.documents || [];
-    
-    if (this.adminSearchQuery.trim() !== '') {
-      const q = this.adminSearchQuery.toLowerCase();
-      result = result.filter(doc => 
-        (doc.title && doc.title.toLowerCase().includes(q)) || 
-        (doc.id && doc.id.toLowerCase().includes(q)) ||
-        (doc.category && doc.category.toLowerCase().includes(q))
-      );
-    }
-    
-    if (this.adminCategoryFilter !== '') {
-      result = result.filter(doc => doc.category === this.adminCategoryFilter);
-    }
-    
-    if (this.adminStatusFilter !== '') {
-      result = result.filter(doc => {
-        const s = doc.status || 'Pubblicato';
-        return s.toLowerCase() === this.adminStatusFilter.toLowerCase();
-      });
-    }
-    
-    return result;
-  }
-  // -------------------
-
-  openManualStats(title: string) {
-    this.selectedManualStats = {
-      title: title,
-      views: 1245,
-      downloads: 853,
-      avgReadTime: '4m 12s',
-      rating: 4.8
-    };
-    setTimeout(() => this.isStatsPanelOpen = true, 10);
-  }
-
-  closeManualStats() {
-    this.isStatsPanelOpen = false;
-    setTimeout(() => this.selectedManualStats = null, 300);
-  }
 
   openUploadModal() {
     this.isUploadModalOpen = true;
@@ -210,57 +149,13 @@ export class AppComponent implements OnInit {
     }
   }
 
-  loginAdmin() {
-    this.loginError = '';
-    
-    if (!this.loginEmail || !this.loginPassword) {
-      this.loginError = 'Inserisci email e password';
-      return;
-    }
-    
-    this.loginLoading = true;
-    
-    this.http.post<any>('/api/login.ashx', { 
-      email: this.loginEmail, 
-      password: this.loginPassword 
-    }).subscribe({
-      next: (res) => {
-        this.loginLoading = false;
-        if (res.success && res.token) {
-          sessionStorage.setItem('adminToken', res.token);
-          this.isAdminAuthenticated = true;
-          this.loadAdminData();
-        }
-      },
-      error: (err) => {
-        this.loginLoading = false;
-        this.loginError = err.error?.error || 'Credenziali non valide o errore di rete';
-      }
-    });
-  }
   onLoginSuccess() {
     this.isAdminAuthenticated = true;
     this.loadAdminData();
   }
 
-  logoutAdmin() {
-    this.isAdminAuthenticated = false;
-    sessionStorage.removeItem('adminToken');
-    this.loginEmail = '';
-    this.loginPassword = '';
-  }
-
   tags: string[] = [];
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_popular_tags.ashx)
-
-  publicManuals = [
-    { id: 1, title: '🦷 Gestione Pazienti e Cartella Clinica', category: 'Generale', desc: 'Guida completa su come inserire, modificare e cercare pazienti nel database, inclusa la gestione dell\'anamnesi.', featured: true, color: 'from-blue-500 to-sky-400' },
-    { id: 2, title: '💸 Fatturazione Elettronica B2B', category: 'Fatturazione', desc: 'Come emettere fatture, note di credito e gestire l\'invio automatico allo SDI.', featured: false, color: 'from-green-500 to-emerald-400' },
-    { id: 3, title: '📅 Agenda e Appuntamenti', category: 'Setup', desc: 'Configurazione degli orari dello studio, colori delle prestazioni e sincronizzazione con Google Calendar.', featured: false, color: 'from-purple-500 to-fuchsia-400' },
-    { id: 4, title: '⚙️ Configurazione Sistema TS', category: 'Setup', desc: 'Invia con un click gli importi delle spese sanitarie sostenute dai tuoi pazienti.', featured: true, color: 'from-orange-500 to-amber-400' },
-    { id: 5, title: '📸 Modulo Fotomanager', category: 'Generale', desc: 'Importa e gestisci le foto radiografiche direttamente dallo smartphone.', featured: false, color: 'from-rose-500 to-red-400' },
-    { id: 6, title: '🤖 Assistente Virtuale Mia', category: 'Premium', desc: 'Impostazione delle risposte automatiche per l\'assistente vocale.', featured: false, color: 'from-indigo-500 to-blue-500' }
-  ];
 
   menuItems = [
     { icon: 'home', label: 'QeHome', active: true },
@@ -356,21 +251,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  // --- DOCUMENTI 3D CAROUSEL ---
-  documents: any[] = [];
-  // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_manuals.ashx)
-  loadDocuments() {
-    this.http.get<any[]>('/api/get_manuals.ashx').subscribe({
-      next: (data) => {
-        this.documents = data;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Errore nel caricamento dei manuali:', err);
-      }
-    });
-  }
-
   // TODO: Implementare funzioni per caricare i dati delle altre sezioni Admin
   loadAdminData() {
     const token = sessionStorage.getItem('adminToken');
@@ -403,7 +283,6 @@ export class AppComponent implements OnInit {
   handleAuthError() {
     this.isAdminAuthenticated = false;
     sessionStorage.removeItem('adminToken');
-    this.loginError = 'Sessione scaduta o non valida.';
   }
   
   loadNotifications() {
@@ -416,59 +295,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  docAngleStep = 30; // 360 / 12 items
-  docRadius = 400; // Radius of the cylinder
-  docTargetRotation = 0;
-  docCurrentRotation = 0;
-  docActiveIndex = 0;
-  docAnimationId: number | null = null;
-  hoveredDocIndex: number | null = null;
-  isReadingMode: boolean = false;
-  
-  documentSearchQuery: string = '';
-  isSearchExpanded: boolean = false;
-  docTitleLetters = 'Manuali'.split('');
-  docEntranceStage: 'center' | 'moving' | 'content' = 'center';
-
-  toggleSearch() {
-    this.isSearchExpanded = true;
-    // Timeout needed to allow the input to render before focusing
-    setTimeout(() => {
-      const input = document.getElementById('docSearchInput');
-      if (input) input.focus();
-    }, 100);
-  }
-
-  closeSearch() {
-    if (!this.documentSearchQuery.trim()) {
-      this.isSearchExpanded = false;
-    }
-  }
-
-  onDocumentSearch() {
-    if (!this.documentSearchQuery.trim()) return;
-    
-    const query = this.documentSearchQuery.toLowerCase();
-    const matchIndex = this.documents.findIndex(d => 
-      d.title.toLowerCase().includes(query) || d.desc.toLowerCase().includes(query)
-    );
-
-    if (matchIndex !== -1 && matchIndex !== this.docActiveIndex) {
-      // Calcoliamo lo scostamento circolare più breve
-      const diff = matchIndex - this.docActiveIndex;
-      let rotationsToMove = diff;
-      
-      // Se è più veloce girare dall'altra parte
-      if (Math.abs(diff) > this.documents.length / 2) {
-        rotationsToMove = diff > 0 ? diff - this.documents.length : diff + this.documents.length;
-      }
-      
-      this.docTargetRotation -= rotationsToMove * this.docAngleStep;
-      this.updateDocActiveIndex();
-      this.startDocAnimation();
-    }
-  }
-  // -----------------------------
   nextProgram() {
     this.activeProgramIndex = (this.activeProgramIndex + 1) % this.programs.length;
     this.triggerColorChange();
@@ -616,8 +442,6 @@ export class AppComponent implements OnInit {
         this.animatingDirection = 0;
       } else if (prevLabel === 'FAQ' && this.activeIndex !== 1) {
         this.manualiStage = 'center';
-      } else if (prevLabel === 'Guide' && this.activeIndex !== 3) {
-        this.docEntranceStage = 'center';
       } else if (prevLabel === 'News' && this.activeIndex !== 4) {
         this.newsStage = 'title-black';
       }
@@ -638,18 +462,6 @@ export class AppComponent implements OnInit {
     } else if (selectedItem.label === 'Servizi') {
       this.serviziStage = 'title-black';
       this.animatingDirection = 0;
-    } else if (selectedItem.label === 'Guide') {
-      if (!this.themeService.globalAnimationsEnabled) {
-        this.docEntranceStage = 'content';
-      } else {
-        this.docEntranceStage = 'center';
-        setTimeout(() => {
-          this.docEntranceStage = 'moving';
-          setTimeout(() => {
-            this.docEntranceStage = 'content';
-          }, 800);
-        }, 1200);
-      }
     } else if (selectedItem.label === 'News') {
       this.newsStage = 'title-black';
       this.newsBaseColor = null;
@@ -815,19 +627,6 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:wheel', ['$event'])
   onWheel(event: WheelEvent) {
-    if (this.activeIndex === 3) {
-      if (this.isReadingMode) {
-        // If reading, allow native scroll inside the expanded popup
-        return;
-      }
-      event.preventDefault();
-      // Increase/decrease target rotation based on scroll direction
-      this.docTargetRotation += event.deltaY > 0 ? -this.docAngleStep : this.docAngleStep;
-      this.updateDocActiveIndex();
-      this.startDocAnimation();
-      return;
-    }
-
     if (!(this.activeIndex === 2 && this.serviziStage === 'cards') && !(this.activeIndex === 4 && this.newsStage === 'detail')) return;
     
     event.preventDefault();
@@ -851,75 +650,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  updateDocActiveIndex() {
-    let rotations = Math.round(this.docTargetRotation / this.docAngleStep);
-    let idx = (-rotations) % this.documents.length;
-    if (idx < 0) idx += this.documents.length;
-    this.docActiveIndex = idx;
-  }
-
-  docPopupStage = 2; // 0: hidden, 1: drawing line, 2: popup visible
-  private docPopupTimeout: any = null;
-
-  startDocAnimation() {
-    // Hide popup and line when wheel starts moving
-    this.docPopupStage = 0;
-    if (this.docPopupTimeout) {
-      clearTimeout(this.docPopupTimeout);
-    }
-
-    if (!this.docAnimationId) {
-      const animate = () => {
-        const diff = this.docTargetRotation - this.docCurrentRotation;
-        if (Math.abs(diff) < 0.1) {
-          this.docCurrentRotation = this.docTargetRotation;
-          this.docAnimationId = null;
-          
-          // When rotation finishes, trigger the line drawing
-          this.docPopupStage = 1;
-          this.docPopupTimeout = setTimeout(() => {
-            // After 300ms (line drawing duration), show the popup
-            this.docPopupStage = 2;
-          }, 400);
-
-        } else {
-          this.docCurrentRotation += diff * 0.12; // Smooth lerp
-          this.docAnimationId = requestAnimationFrame(animate);
-        }
-      };
-      this.docAnimationId = requestAnimationFrame(animate);
-    }
-  }
-
-  getDocTransform(i: number): string {
-    const angle = i * this.docAngleStep + this.docCurrentRotation;
-    return `rotateX(${angle}deg) translateZ(${this.docRadius}px)`;
-  }
-
-  toggleReadingMode() {
-    this.isReadingMode = !this.isReadingMode;
-  }
-
-  getDocStyles(index: number) {
-    // Calculate the shortest distance on the cylinder
-    let distance = Math.abs(index - this.docActiveIndex);
-    if (distance > this.documents.length / 2) {
-      distance = this.documents.length - distance;
-    }
-    
-    if (distance === 0) {
-      return { 'opacity': '1', 'filter': 'none' };
-    } else if (distance === 1) {
-      return { 'opacity': '0.6', 'filter': 'blur(2px)' };
-    } else {
-      return { 'opacity': '0.15', 'filter': 'blur(5px)' };
-    }
-  }
-
-
   ngOnInit() {
     this.loadNews();
-    this.loadDocuments();
     this.loadServices();
     this.loadTags();
 
