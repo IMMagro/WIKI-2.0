@@ -1,6 +1,6 @@
 <!-- FOR AI AGENTS - Human readability is a side effect, not a goal -->
 <!-- Managed by agent: keep sections and order; edit content, not structure -->
-<!-- Last updated: 2026-08-15 | Last verified: 2026-08-15 -->
+<!-- Last updated: 2026-08-25 | Last verified: 2026-08-25 -->
 
 # AGENTS.md
 
@@ -13,13 +13,13 @@
 | Task | Command | ~Time |
 |------|---------|-------|
 | Dev server | `npm start` | — |
-| Build | `npm run build` | ~30s |
+| Build | `npm run build` | ~20s |
 | Watch build | `npm run watch` | — |
 
 > NB: `lint`, `format` e `test` non sono attualmente configurati in `package.json`. La verifica di riferimento è `npm run build` (vedi "Angular Build Checker"). Aggiungerli richiede installare il tooling relativo (ESLint/Prettier/Karma).
 <!-- AGENTS-GENERATED:END commands -->
 
-> If commands fail, verify against Makefile/package.json/composer.json or ask user to update.
+> If commands fail, verify against package.json or ask user to update.
 
 ## Response Style
 - Answer first, elaborate only if needed. No sycophantic openers.
@@ -29,28 +29,24 @@
 ## Custom Agent Rules (Concrete Actions)
 
 - **Proactive Orchestration**: Before executing a request, evaluate the full scope. If working on UI, proactively READ design systems and animation guidelines before writing code. If working on backend, proactively check architecture and security patterns.
-- **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format, you can also use `.agents/skills/auto-git-commit/SKILL_git.md` as a reference skill to generate a git commit message.
-- **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules to ensure color palette and design system consistency for the Wiki.
-- **Webapp Testing**: Whenever you finish frontend changes, you MUST RUN the relevant test commands (e.g., `npm run test`) to verify UI functionality and catch regressions.
-- **Frontend Design**: Before creating new layouts, align with standard Angular best practices.
-- **Animation Guidelines**: When implementing UI animations or transitions, proactively READ the corresponding local documentation/files in the .agents/skills/animation/ folder (e.g. gsap-web, micro-interaction, or svg-animation) to ensure 60fps performance.
-- **Angular Build Checker**: Whenever you modify frontend code, you MUST RUN `npm run build` or the appropriate start command to ensure the app compiles. If startup errors occur, you MUST auto-fix the code and retry automatically before notifying the user.
-- **UI Layout Adjustments**: You are "blind" to the visual render. When asked to fix overlapping, cut-off, or spacing issues, DO NOT make micro-adjustments (e.g., changing 20px to 15px). Make significant, bold changes to ensure the issue is resolved visually. Always verify parent container properties like overflow, flex-wrap, or fixed height that might be causing child elements to be cut off.
-- **Visual testing**: When asked to fix visual issues, make sure to test the changes if necessary using `.agents/skills/webapp-testing/SKILL_testing.md` and verify that the issue is resolved. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting the terminal output. 
-- **ui-ux-pro-max**: Whenever designing, building, reviewing, or fixing UI/UX interfaces, you must proactively invoke the `ui-ux-pro-max` skill to leverage its local UX guidelines and palettes.
-- **ui-styling**: When styling components or implementing layouts, you must invoke the `ui-styling` skill to ensure accessible patterns and Tailwind best practices.
-- **design-system**: Whenever you create or modify UI components, you must consult the `design-system` skill to maintain token architecture and typography scales.
-- **brand**: Whenever you create or update marketing assets, messaging, or branded content, you must use the `brand` skill to ensure brand compliance and consistent voice.
-- **ui-tester**: Whenever you modify Angular templates or want to verify UI interactions (buttons, modals, links), you must use the `.agents/skills/ui-tester/SKILL.md` skill to run visual and logical checks.
-- **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), you must use the `.agents/skills/api-generator/SKILL.md` skill to ensure it follows standard C# JSON-handling patterns.
-- **mock-data-cleaner**: Whenever you need to prepare the frontend for real HTTP integration, use the `.agents/skills/mock-data-cleaner/SKILL.md` skill to strip out hardcoded mock data cleanly.
-- **manual-generator**: Whenever you need to create, format, or write a manual (wiki guide) for the user, you MUST proactively use the `.agents/skills/manual-generator/SKILL.md` skill to ensure the output respects the required MDX structure, HTML formatting, and UI tags.
-- **Console Check**: Whenever you finish any code modifications, you MUST check the terminal output (e.g., `ng serve`) or the browser console (if accessible) to ensure there are no errors (like `TypeError` or `HttpErrorResponse`) before considering the task complete.
+- **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format. Reference `.agents/skills/auto-git-commit/SKILL_git.md` for message format.
+- **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules. Palette: qe-blue `#377DFF`, magenta `#F80086`, bg `#F8FAFD`, testo `#1E2022`, font Poppins.
+- **Frontend Design**: Before creating new layouts, align with standard Angular 18 standalone component best practices. Reference `.agents/skills/frontend-design/` and `.agents/skills/frontend_checklist/`.
+- **Animation Guidelines**: When implementing UI animations or transitions, proactively READ the corresponding files in `.agents/skills/animation/` (e.g. gsap-web, micro-interaction, svg-animation) to ensure 60fps performance.
+- **Angular Build Checker**: Whenever you modify frontend code, you MUST RUN `npm run build` to ensure the app compiles. The 6 CSS `::view-transition` warnings are preexisting and harmless. If errors occur, auto-fix and retry before notifying the user.
+- **UI Layout Adjustments**: You are "blind" to the visual render. When asked to fix overlapping, cut-off, or spacing issues, make significant, bold changes. Always verify parent container properties like overflow, flex-wrap, or fixed height.
+- **Visual testing**: When asked to fix visual issues, use `.agents/skills/webapp-testing/SKILL_testing.md` to verify. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting terminal output.
+- **ui-ux-pro**: Whenever designing, building, reviewing, or fixing UI/UX interfaces, invoke the `ui-ux-pro` skill (`.agents/skills/ui-ux-pro/`) for UX guidelines, palettes, and design tokens.
+- **ui-tester**: Whenever you modify Angular templates or want to verify UI interactions (buttons, modals, links), use `.agents/skills/ui-tester/SKILL.md` to run visual and logical checks.
+- **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), use `.agents/skills/api-generator/SKILL.md` to follow standard C# JSON-handling patterns.
+- **mock-data-cleaner**: Whenever you need to prepare the frontend for real HTTP integration, use `.agents/skills/mock-data-cleaner/SKILL.md` to strip out hardcoded mock data cleanly.
+- **manual-generator**: Whenever you need to create, format, or write a manual (wiki guide), use `.agents/skills/manual-generator/SKILL.md` to ensure the output respects the required MDX structure, HTML formatting, and UI tags.
+- **Console Check**: After any code modifications, check the terminal output (`ng serve` / `npm run build`) to ensure there are no errors (`TypeError`, `HttpErrorResponse`, etc.) before considering the task complete.
+
 ## Boundaries
 
 ### Always Do
-- Run pre-commit checks before committing.
-- Add tests for new code paths.
+- Run `npm run build` before committing (pre-commit check).
 - Use conventional commit format: `type(scope): subject`.
 - Use **atomic commits** (one logical change per commit).
 - **Show test output as evidence before claiming work is complete** — never say "tested" or "verified" without pasting the terminal output.
@@ -77,4 +73,4 @@
 > **Agents**: When working in a listed directory, you MUST load its AGENTS.md first.
 
 ## CRITICAL GIT RULE
-Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to the CURRENT working branch. You should use the `main` branch as the primary branch, and it is permitted to push directly to `main` unless the user specifies otherwise.
+Every time the user accepts or confirms a code modification, you MUST automatically commit and push the changes to the CURRENT working branch (`master`). It is permitted to push directly to `master` unless the user specifies otherwise.
