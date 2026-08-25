@@ -13,17 +13,18 @@ import { ThemeService } from './services/theme.service';
 import { NewsService } from './services/news.service';
 import { FaqReadingService } from './services/faq-reading.service';
 import { HomeComponent } from './components/home/home.component';
+import { ServiziComponent } from './components/servizi/servizi.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent],
+  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   activeFaqCategory: string = 'General';
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
-  @ViewChild('serviziTitle') serviziTitle!: ElementRef;
+  @ViewChild(ServiziComponent) serviziRef?: ServiziComponent;
   query = '';
   stage = 0;
   titleVisible = false;
@@ -751,50 +752,35 @@ export class AppComponent implements OnInit {
         this.serviziStage = 'title-blue';
         
         // Step 2: Move to top left after 500ms using JS FLIP for 60fps
+        // (misura/muta/misura/anima delegati a ServiziComponent, che possiede il DOM del titolo)
         setTimeout(() => {
           if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
-          
+
           // First (measure)
-          const el = this.serviziTitle?.nativeElement;
-          if (!el) {
+          const first = this.serviziRef?.getTitleRect();
+          if (!first) {
             this.serviziStage = 'moving';
             setTimeout(() => { if (this.activeIndex === 2 && this.animationId === currentAnimId) this.serviziStage = 'cards'; }, 800);
             return;
           }
-          
-          const first = el.getBoundingClientRect();
-          
+
           // Mutate (change layout class)
           this.serviziStage = 'moving';
-          
+
           // Wait for Angular to update the DOM
           setTimeout(() => {
             if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
-            
-            // Last (measure new layout)
-            const last = el.getBoundingClientRect();
-            
-            // Invert & Play
-            const dx = first.left - last.left;
-            const dy = first.top - last.top;
-            const sx = first.width / last.width;
-            const sy = first.height / last.height;
-            
-            el.animate([
-              { transformOrigin: 'top left', transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})` },
-              { transformOrigin: 'top left', transform: 'none' }
-            ], {
-              duration: 800,
-              easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
-            }).onfinish = () => {
+
+            // Last (measure new layout) + Invert & Play
+            this.serviziRef?.animateTitleFlip(first, () => {
               setTimeout(() => {
                 if (this.activeIndex === 2 && this.animationId === currentAnimId) {
                   this.serviziStage = 'cards';
                   this.cdr.detectChanges();
                 }
               });
-            };
-            
+            });
+
           }, 0);
         }, 500);
       }, 800);
@@ -839,32 +825,6 @@ export class AppComponent implements OnInit {
   prevServicePage() {
     if (this.isChangingPage || this.scrollLock) return;
     this.changePage(-1);
-  }
-
-  getCardAnimation(index: number): string {
-    if (this.activeIndex !== 2 || this.serviziStage !== 'cards') return 'none';
-    
-    const baseDuration = '0.7s';
-    const easing = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
-    const delay = (index * 40) + 'ms';
-    const forwards = 'forwards';
-
-    if (this.isChangingPage) {
-      if (this.animatingDirection === 1) {
-        return `fadeLeftOut ${baseDuration} ${easing} ${delay} ${forwards}`;
-      } else {
-        return `fadeRightOut ${baseDuration} ${easing} ${delay} ${forwards}`;
-      }
-    } else {
-      if (this.animatingDirection === 1) {
-        return `fadeRightIn ${baseDuration} ${easing} ${delay} ${forwards}`;
-      } else if (this.animatingDirection === -1) {
-        return `fadeLeftIn ${baseDuration} ${easing} ${delay} ${forwards}`;
-      } else {
-        // Default entrance (animatingDirection === 0)
-        return `fadeUpCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) ${(index * 40)}ms forwards`;
-      }
-    }
   }
 
   private changePage(direction: number) {

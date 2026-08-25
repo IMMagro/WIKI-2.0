@@ -1,0 +1,91 @@
+<div class="w-full h-full max-w-7xl mx-auto relative flex flex-col justify-start">
+
+  <!-- Animated Title (Always Present) -->
+  <div #serviziTitle class="absolute z-20 flex items-center origin-left pointer-events-none"
+       [ngClass]="(stage === 'title-black' || stage === 'title-blue')
+                  ? 'top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[2.2]'
+                  : 'top-0 left-2 translate-x-0 translate-y-0 scale-100'">
+    <h2 class="text-3xl font-bold flex items-center m-0 tracking-tight" style="text-shadow: 0 4px 30px rgba(0,0,0,0.1);">
+      <span class="text-qe-text dark:text-white transition-all duration-[1500ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden whitespace-nowrap"
+            [class.transition-none]="!themeService.globalAnimationsEnabled"
+            [ngStyle]="{
+              'opacity': stage === 'cards' ? '1' : '0',
+              'max-width': stage === 'cards' ? '150px' : '0px',
+              'margin-right': stage === 'cards' ? '6px' : '0px'
+            }">Tutti i</span>
+
+      <span class="transition-colors duration-[500ms]"
+            [ngClass]="stage === 'title-black' ? 'text-qe-text dark:text-slate-100' : 'text-qe-blue'">
+        <span class="relative inline-block">
+          <span class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-bottom-left absolute left-0 bottom-0 pointer-events-none"
+                [ngStyle]="{
+                  'opacity': stage === 'title-black' ? '1' : '0',
+                  'transform': stage === 'title-black' ? 'scale(1)' : 'scale(0.7) translateY(10%)'
+                }">S</span>
+          <span class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-bottom-left inline-block"
+                [ngStyle]="{
+                  'opacity': stage === 'title-black' ? '0' : '1',
+                  'transform': stage === 'title-black' ? 'scale(1.3) translateY(-5%)' : 'scale(1) translateY(0)'
+                }">s</span>
+        </span>
+        <span>ervizi</span>
+      </span>
+    </h2>
+  </div>
+
+  <!-- Fase 2: Griglia Servizi (Carosello 4 card) -->
+  <div class="flex-1 min-h-0 w-full pb-2 pt-14 transition-all duration-1000 delay-100"
+       (wheel)="wheelScroll.emit($event)"
+       [style.opacity]="stage === 'cards' ? 1 : 0"
+       [style.pointer-events]="(isActive && stage === 'cards') ? 'auto' : 'none'"
+       [style.transform]="stage === 'cards' ? 'translateY(0)' : 'translateY(40px)'">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 grid-rows-2 gap-4 xl:gap-6 h-full">
+      <!-- Empty State -->
+      <div *ngIf="services.length === 0" class="col-span-full flex flex-col items-center justify-center p-12 text-slate-400 dark:text-slate-500">
+        <svg class="w-12 h-12 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+        <p class="text-lg font-medium">Nessun servizio disponibile</p>
+        <p class="text-sm mt-1">I servizi verranno caricati a breve dal server.</p>
+      </div>
+      <!-- Services -->
+      <a *ngFor="let service of (services | slice:(currentServicePage * 8):((currentServicePage + 1) * 8)); let i = index"
+         [href]="service.link" target="_blank"
+         class="group relative flex flex-col bg-white dark:bg-slate-800 rounded-2xl xl:rounded-3xl p-4 xl:p-6 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:-translate-y-2 hover:scale-[1.02] transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] overflow-hidden min-h-0"
+       [style.animation]="getCardAnimation(i)"
+       style="opacity: 0; will-change: transform, opacity;">
+
+      <!-- GPU-accelerated Hover Shadow -->
+      <div class="absolute inset-0 rounded-2xl xl:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none shadow-[0_20px_40px_-10px_rgba(55,125,255,0.15)] dark:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"></div>
+
+      <!-- Subtle Background Gradient that deepens on hover -->
+      <div class="absolute inset-0 bg-gradient-to-br opacity-[0.03] dark:opacity-[0.05] rounded-2xl xl:rounded-3xl transition-opacity duration-500 group-hover:opacity-[0.12]"
+           [ngClass]="service.color || 'from-slate-200 to-slate-100'"></div>
+
+      <div class="relative z-10 flex flex-col h-full items-center text-center justify-center">
+        <!-- Icon Container -->
+        <div class="w-14 h-14 xl:w-20 xl:h-20 mb-3 xl:mb-5 shrink-0 flex items-center justify-center bg-slate-50 dark:bg-slate-700/30 rounded-2xl p-3 xl:p-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-md">
+          <img [src]="service.image" [alt]="service.title" class="w-full h-full object-contain filter dark:brightness-110 transition-transform duration-500 group-hover:rotate-3" />
+        </div>
+        <!-- Testi -->
+        <h3 class="text-[15px] xl:text-[17px] font-bold text-slate-800 dark:text-slate-100 mb-2 xl:mb-3 leading-tight group-hover:text-qe-blue dark:group-hover:text-qe-blue transition-colors duration-300">
+          {{ service.title }}
+        </h3>
+        <p class="text-[12px] xl:text-[13.5px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium transition-colors duration-300 group-hover:text-slate-600 dark:group-hover:text-slate-300 line-clamp-3 xl:line-clamp-4 overflow-hidden">
+          {{ service.description }}
+        </p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Mouse Scroll Indicator -->
+  <div class="mt-auto shrink-0 flex flex-row items-center justify-center gap-2.5 text-slate-400 dark:text-slate-500 group cursor-pointer pb-2"
+       (click)="nextPage.emit()">
+    <!-- Mouse Icon -->
+    <div class="w-[16px] h-[26px] rounded-full border-[1.5px] border-slate-300 dark:border-slate-600 flex justify-center pt-[3px] group-hover:border-qe-blue dark:group-hover:border-qe-blue transition-colors duration-300">
+      <div class="w-[3px] h-[4px] bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce group-hover:bg-qe-blue dark:group-hover:bg-qe-blue transition-colors duration-300" style="animation-duration: 1.5s;"></div>
+    </div>
+    <span class="text-[10px] font-bold uppercase tracking-wider group-hover:text-qe-blue transition-colors duration-300">
+      Ulteriori servizi
+    </span>
+  </div>
+  </div>
+</div>
