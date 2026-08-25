@@ -1,0 +1,19 @@
+<div class="relative mx-auto" [style.width.px]="width" [style.minHeight.px]="minH">
+  <ng-container *ngFor="let b of blocks">
+    <div *ngIf="b.type === 'box'" class="absolute"
+         [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="b.w" [style.height.px]="b.h"
+         [style.background]="b.bg || '#F1F5F9'" [style.borderRadius.px]="b.radius != null ? b.radius : 12"></div>
+    <div *ngIf="b.type === 'text'" class="absolute whitespace-pre-wrap break-words leading-snug"
+         [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="b.w"
+         [style.color]="b.color || '#1E2022'" [style.fontSize.px]="b.fontSize || 16"
+         [style.fontWeight]="b.bold ? 700 : 400" [style.textAlign]="b.align || 'left'"
+         [innerHTML]="b.content"></div>
+    <img *ngIf="b.type === 'image' && b.content" class="absolute object-cover rounded-xl"
+         [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="b.w" [style.height.px]="b.h"
+         [src]="b.content" alt=""/>
+    <a *ngIf="b.type === 'link'" target="_blank" rel="noopener"
+       class="absolute inline-flex items-center justify-center rounded-xl bg-[#377DFF] text-white font-semibold text-sm px-4 hover:bg-[#377DFF]/90 transition-colors no-underline"
+       [style.left.px]="b.x" [style.top.px]="b.y" [style.width.px]="b.w" [style.height.px]="b.h"
+       [href]="b.href || '#'">{{ b.content || 'Apri' }}</a>
+  </ng-container>
+</div>

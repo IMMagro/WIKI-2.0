@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "angular-cli": {
+      "command": "node",
+      "args": [
+        "C:/Users/massimiliano.magrini/.angular-mcp/node_modules/@angular/cli/bin/ng.js",
+        "mcp"
+      ]
+    }
+  }
+}
