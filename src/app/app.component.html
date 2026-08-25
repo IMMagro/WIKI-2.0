@@ -52,14 +52,48 @@
       <!-- Top nav bar -->
       <div class="relative flex items-center justify-end gap-4 px-8 py-6" style="animation: fadeInPage 1s ease forwards">
 
-        <!-- Iconcina comunicazioni: riapre il popup della news Generale -->
-        <button *ngIf="latestGeneralNews" (click)="openGeneralNewsPopup()" title="Comunicazioni" aria-label="Comunicazioni"
-                class="relative text-qe-textSecondary dark:text-slate-400 hover:text-qe-blue transition-colors duration-300 cursor-pointer bg-transparent outline-none focus:outline-none">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-          </svg>
-          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-magenta"></span>
-        </button>
+        <!-- Campanella comunicazioni: raccoglie tutte le news della categoria "Generale" -->
+        <div class="relative z-50" #notificationDropdown>
+          <button (click)="isNotificationOpen = !isNotificationOpen" title="Comunicazioni" aria-label="Comunicazioni"
+                  class="relative text-qe-textSecondary dark:text-slate-400 hover:text-qe-blue transition-colors duration-300 cursor-pointer bg-transparent outline-none focus:outline-none"
+                  [class.text-qe-blue]="isNotificationOpen">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span *ngIf="generalNews.length > 0"
+                  class="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 flex items-center justify-center rounded-full bg-magenta text-white text-[10px] font-bold leading-none shadow-sm">{{ generalNews.length }}</span>
+          </button>
+
+          <!-- Tendina comunicazioni -->
+          <div [ngClass]="isNotificationOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'"
+               class="absolute right-0 top-full mt-4 w-[360px] bg-white/90 dark:bg-slate-800/90 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-[1.75rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+            <div class="px-5 py-4 border-b border-gray-100/80 dark:border-slate-700/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" class="text-magenta"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <span class="font-bold text-slate-800 dark:text-slate-100 text-sm">Comunicazioni</span>
+              </div>
+              <span *ngIf="generalNews.length > 0" class="text-xs font-semibold text-slate-400">{{ generalNews.length }}</span>
+            </div>
+
+            <div class="max-h-[60vh] overflow-y-auto custom-scrollbar">
+              <!-- Vuoto -->
+              <div *ngIf="generalNews.length === 0" class="px-5 py-10 text-center">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" class="mx-auto text-slate-300 dark:text-slate-600 mb-2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <p class="text-sm text-slate-400 dark:text-slate-500 font-medium">Nessuna comunicazione</p>
+              </div>
+
+              <!-- Elenco news Generale -->
+              <div *ngFor="let n of generalNews" class="px-5 py-4 border-b border-gray-50 dark:border-slate-700/40 last:border-0 hover:bg-slate-50/70 dark:hover:bg-slate-700/30 transition-colors">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-magenta bg-magenta/10 rounded-full px-2 py-0.5">Comunicazione</span>
+                  <span *ngIf="n.date" class="text-[11px] font-semibold text-slate-400">{{ n.date }}</span>
+                </div>
+                <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm leading-snug mb-1">{{ n.title }}</h4>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{{ n.excerpt || n.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="relative z-50" #contactDropdown>
           <button (click)="isContactOpen = !isContactOpen" class="group flex items-center gap-1.5 text-[15px] outline-none focus:outline-none bg-transparent cursor-pointer">

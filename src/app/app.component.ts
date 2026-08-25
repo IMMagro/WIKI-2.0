@@ -997,6 +997,11 @@ export class AppComponent implements OnInit {
   latestGeneralNews: any = null;
   showGeneralNewsPopup: boolean = false;
 
+  /** Tutte le news della categoria "Generale" — contenuto della campanella in home. */
+  get generalNews(): any[] {
+    return (this.allNews || []).filter(n => n && n.category === 'Generale');
+  }
+
   private generalNewsSeenKey(): string {
     return 'seenGeneralNews:' + (this.latestGeneralNews?.title || '');
   }
