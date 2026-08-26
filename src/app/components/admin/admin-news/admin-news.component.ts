@@ -59,15 +59,10 @@ export class AdminNewsComponent implements OnInit {
         this.adminNews = Array.isArray(data) ? data : [];
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Errore caricamento news:', err);
+        this.adminNews = [];
         this.isLoading = false;
-        // Fallback locale di default se il backend è offline o nuovo setup
-        if (this.adminNews.length === 0) {
-          this.adminNews = [
-            { id: '1', title: 'Rilascio QE 2.4.0', excerpt: 'Nuova versione del sistema con ottimizzazioni.', category: 'Generale', date: new Date().toLocaleDateString('it-IT'), author: 'Amministratore', authorInitial: 'AD', status: 'published', blocks: [] },
-            { id: '2', title: 'Manutenzione Server DB', excerpt: 'Pianificata finestra di aggiornamento.', category: 'Sistema', date: new Date().toLocaleDateString('it-IT'), author: 'Amministratore', authorInitial: 'AD', status: 'draft', blocks: [] }
-          ];
-        }
       }
     });
   }

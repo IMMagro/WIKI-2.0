@@ -144,15 +144,6 @@ export class AppComponent implements OnInit {
   updateProgramNews() {
     const programName = this.programs[this.activeProgramIndex].name;
     this.newsItems = this.newsService.newsForProgram(programName);
-    if (this.newsItems.length === 0) {
-      this.newsItems = [
-        {
-          title: `Novità in arrivo per ${programName}`,
-          date: 'Oggi',
-          excerpt: `Stiamo preparando fantastici aggiornamenti per `
-        }
-      ];
-    }
     this.activeNewsItemIndex = 0;
   }
 

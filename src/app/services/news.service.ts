@@ -32,22 +32,13 @@ export class NewsService {
   }
 
   private loadFallbackNews(onLoaded?: () => void) {
-    this.http.get<any[]>('/Data/news.json').subscribe({
+    this.http.get<any[]>('/Data/admin_news.json').subscribe({
       next: (data) => {
-        this.allNews = data || [];
+        this.allNews = Array.isArray(data) ? data : [];
         onLoaded?.();
       },
       error: () => {
-        this.allNews = [
-          {
-            id: 1,
-            title: 'Benvenuti nel nuovo Portale Assistenza QE 2.0',
-            category: 'Generale',
-            date: 'Oggi',
-            excerpt: 'È online il nuovo portale con motore di ricerca istantaneo per manuali, FAQ interattive e visualizzatore a schede.',
-            status: 'published'
-          }
-        ];
+        this.allNews = [];
         onLoaded?.();
       }
     });
