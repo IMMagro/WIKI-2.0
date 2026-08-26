@@ -35,7 +35,8 @@
                                                                               {
                                                                                   "t":  "Ogni schermata aperta mantiene lo stato attivo permettendoti di lavorare in multitasking."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -69,7 +70,8 @@
                                                                               {
                                                                                   "t":  "Premi \u003cb\u003eSalva (F10)\u003c/b\u003e o clicca \u003cb\u003eOK\u003c/b\u003e per registrare le modifiche apportate."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -115,7 +117,8 @@
                                                                               {
                                                                                   "t":  "Premi \u003cb\u003eSalva\u003c/b\u003e per aprire subito la cartella clinica del paziente."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -149,7 +152,8 @@
                                                                               {
                                                                                   "t":  "Seleziona \u003cb\u003eStampa Manuale\u003c/b\u003e per la copia cartacea oppure \u003cb\u003eInvia a Tablet\u003c/b\u003e per la firma digitale."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -182,7 +186,8 @@
                                                                               {
                                                                                   "t":  "Premi \u003cb\u003eStampa\u003c/b\u003e per produrre il foglio cartaceo con data e firma del paziente."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -215,7 +220,8 @@
                                                                               {
                                                                                   "t":  "Seleziona il medico prescrittore e clicca \u003cb\u003eStampa Ricetta\u003c/b\u003e."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -249,7 +255,8 @@
                                                                               {
                                                                                   "t":  "In alternativa, usa \u003cb\u003eImporta file\u003c/b\u003e per caricare radiografie da cartella o supporto esterno."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -283,7 +290,8 @@
                                                                               {
                                                                                   "t":  "Premi \u003cb\u003eInvio\u003c/b\u003e per aprire direttamente la cartella del paziente selezionato."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -316,7 +324,8 @@
                                                                               {
                                                                                   "t":  "Indica il grado di parentela e se uno dei membri è l\u0027intestatario fiscale per le fatture."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -349,7 +358,8 @@
                                                                               {
                                                                                   "t":  "Inserisci il documento di riconoscimento estero per la corretta gestione delle ricevute fiscali."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -381,7 +391,8 @@
                                                                               {
                                                                                   "t":  "Se si tratta della stessa persona, apri la scheda esistente invece di crearne una nuova."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -414,7 +425,8 @@
                                                                               {
                                                                                   "t":  "Usa la funzione \u003cb\u003eInvia Sollecito\u003c/b\u003e per inviare SMS o e-mail di promemoria."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -448,7 +460,8 @@
                                                                               {
                                                                                   "t":  "Genera la lista di invio promemoria multicanale."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -481,7 +494,8 @@
                                                                               {
                                                                                   "t":  "Inserisci i tag dinamici (es. \u003ccode\u003e[NOME_PAZIENTE]\u003c/code\u003e, \u003ccode\u003e[DATA_NASCITA]\u003c/code\u003e) per la compilazione automatica."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -514,7 +528,8 @@
                                                                               {
                                                                                   "t":  "Esporta i dati in Excel o visualizza il grafico riepilogativo."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -557,7 +572,8 @@
                                                                               {
                                                                                   "t":  "Scegli la prestazione dall\u0027elenco a destra per applicarla al dente selezionato."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -589,7 +605,8 @@
                                                                               {
                                                                                   "t":  "Salva lo status: farà da sfondo a tutti i futuri Piani di Trattamento."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -622,7 +639,8 @@
                                                                               {
                                                                                   "t":  "Specifica il medico operatore, l\u0027importo e salva."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -652,7 +670,8 @@
                                                                               {
                                                                                   "t":  "Per scontare l\u0027intero piano, usa la voce \u003cb\u003eSconto Globale\u003c/b\u003e in calce al preventivo."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -685,7 +704,8 @@
                                                                               {
                                                                                   "t":  "Premi \u003cb\u003eStampa\u003c/b\u003e o \u003cb\u003eInvia per E-mail / WhatsApp\u003c/b\u003e al paziente."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -718,7 +738,8 @@
                                                                               {
                                                                                   "t":  "La prestazione cambierà colore nell\u0027odontogramma diventando pronta per la fatturazione."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -750,7 +771,8 @@
                                                                               {
                                                                                   "t":  "Quando il paziente decide, imposta il piano prescelto come \u003cb\u003eAccettato\u003c/b\u003e."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -786,7 +808,8 @@
                                                                               {
                                                                                   "t":  "I dati rimangono storicizzati per i confronti temporali nel corso delle visite successive."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -833,7 +856,8 @@
                                                                               {
                                                                                   "t":  "Seleziona la modalità di pagamento (Tracciabile / Contanti) e premi \u003cb\u003eEmetti\u003c/b\u003e."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             },
                                                             {
                                                                 "q":  "Come emetto una nota di credito a storno di una fattura?",
@@ -855,7 +879,8 @@
                                                                               {
                                                                                   "t":  "Conferma l\u0027emissione e l\u0027invio allo SDI."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -892,7 +917,8 @@
                                                                               {
                                                                                   "t":  "Verifica l\u0027esito della notifica nella colonna \u003cb\u003eStato SDI\u003c/b\u003e (Consegnata / Scartata)."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             },
                                                             {
                                                                 "q":  "Come invio l\u0027archivio XML al commercialista?",
@@ -912,7 +938,8 @@
                                                                                   "t":  "Seleziona il mese o trimestre di riferimento e clicca \u003cb\u003eEsporta Pacchetto XML\u003c/b\u003e o \u003cb\u003eInvia via PEC/Email\u003c/b\u003e.",
                                                                                   "img":  true
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -946,7 +973,8 @@
                                                                               {
                                                                                   "t":  "Incolla la nuova password nel programma e premi \u003cb\u003eProva Connessione\u003c/b\u003e per verificare la riuscita."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             },
                                                             {
                                                                 "q":  "Cosa fare se il paziente si oppone all\u0027invio al Sistema TS?",
@@ -968,7 +996,8 @@
                                                                               {
                                                                                   "t":  "Il documento verrà automaticamente escluso dal flusso telematico inviato all\u0027Agenzia delle Entrate."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1001,7 +1030,8 @@
                                                                               {
                                                                                   "t":  "Indica l\u0027importo: il sistema scalerà i contanti e accrediterà il conto bancario selezionato."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1034,7 +1064,8 @@
                                                                               {
                                                                                   "t":  "Scegli il conto di addebito (es. \u003ci\u003eBonifico Banca\u003c/i\u003e) e salva."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1077,7 +1108,8 @@
                                                                               {
                                                                                   "t":  "Conferma per salvare l\u0027appuntamento sul calendario."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             },
                                                             {
                                                                 "q":  "Come sposto o copio un appuntamento in un\u0027altra data?",
@@ -1096,7 +1128,8 @@
                                                                               {
                                                                                   "t":  "In alternativa, clicca col tasto destro e scegli \u003cb\u003eTaglia / Sposta\u003c/b\u003e, poi incolla nella nuova data sul calendario."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1129,7 +1162,8 @@
                                                                               {
                                                                                   "t":  "Gli appuntamenti compariranno automaticamente sull\u0027applicazione Calendario dello smartphone."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1162,7 +1196,8 @@
                                                                               {
                                                                                   "t":  "Clicca su \u003cb\u003eInvia a tutti\u003c/b\u003e per recapitare il messaggio con data e ora dell\u0027appuntamento."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1195,7 +1230,8 @@
                                                                               {
                                                                                   "t":  "Le richieste approvate appariranno automaticamente con una notifica visiva in agenda."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1239,7 +1275,8 @@
                                                                               {
                                                                                   "t":  "Inserisci le quantità degli articoli ricevuti e salva per aggiornare le giacenze."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            },
@@ -1273,7 +1310,8 @@
                                                                               {
                                                                                   "t":  "Il sistema estrae automaticamente codice articolo, lotto di produzione e data di scadenza."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1317,7 +1355,8 @@
                                                                               {
                                                                                   "t":  "Alla conferma, il PDF sigillato con timestamp viene salvato direttamente nella cartella del paziente."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1361,7 +1400,8 @@
                                                                               {
                                                                                   "t":  "Imposta descrizione, prezzo predefinito, tempi stimati e codice IVA."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1405,7 +1445,8 @@
                                                                               {
                                                                                   "t":  "Nella scheda \u003cb\u003ePermessi\u003c/b\u003e seleziona le sezioni autorizzate (es. disabilita visualizzazione fatturato per gli operatori clinici)."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1449,7 +1490,8 @@
                                                                               {
                                                                                   "t":  "Clicca \u003cb\u003eTest Invio\u003c/b\u003e per ricevere un\u0027email di verifica sul tuo indirizzo."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1493,7 +1535,8 @@
                                                                               {
                                                                                   "t":  "Personalizza il testo dei messaggi standard con i tag dinamici per orario e data."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1537,7 +1580,8 @@
                                                                               {
                                                                                   "t":  "Attendi il messaggio di conferma di avvenuta copia e verifica del database."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1580,7 +1624,8 @@
                                                                               {
                                                                                   "t":  "Fissa le date per le prove (struttura, estetica, consegna finale) e stampa o invia online la scheda."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1624,7 +1669,8 @@
                                                                               {
                                                                                   "t":  "Visualizza i grafici di redditività per prestazione e per medico collaboratore."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1668,7 +1714,8 @@
                                                                               {
                                                                                   "t":  "Stampa le etichette con codice a barre da applicare sulle buste degli strumenti imbustati."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }
@@ -1712,7 +1759,8 @@
                                                                               {
                                                                                   "t":  "Clicca su \u003cb\u003eRichiedi Attivazione / Prova Gratuita\u003c/b\u003e per metterti in contatto con il supporto tecnico."
                                                                               }
-                                                                          ]
+                                                                          ],
+                                                                "extra":  false
                                                             }
                                                         ]
                                            }

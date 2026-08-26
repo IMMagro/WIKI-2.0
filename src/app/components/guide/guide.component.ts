@@ -57,8 +57,18 @@ export class GuideComponent {
   guide(cid: string | null, gid: string | null): Guide | undefined { return this.cat(cid)?.manuals.find(m => m.id === gid); }
   get curCat(): Category | undefined { return this.cat(this.selCat); }
   get curGuide(): Guide | undefined { return this.guide(this.selCat, this.selGuide); }
-  get curFaq(): Faq | undefined { return this.selFaq >= 0 ? this.curGuide?.faqs[this.selFaq] : undefined; }
-  faqTotal(c: Category): number { return c.manuals.reduce((n, m) => n + m.faqs.length, 0); }
+  get extraFaqs(): Faq[] {
+    return (this.curGuide?.faqs || []).filter((f: Faq) => f.extra === true);
+  }
+  get hasExtraFaqs(): boolean {
+    return this.extraFaqs.length > 0;
+  }
+  get curFaq(): Faq | undefined {
+    return this.selFaq >= 0 ? this.extraFaqs[this.selFaq] : undefined;
+  }
+  faqTotal(c: Category): number {
+    return c.manuals.reduce((n, m) => n + (m.faqs || []).filter(f => f.extra === true).length, 0);
+  }
 
   refMeta(r: Ref): { cls: string; icon: string; label: string } {
     if (r.type === 'category') return { cls: 'rc-cat', icon: 'box', label: 'Categoria · ' + (this.cat(r.cat!)?.name || '') };
@@ -82,11 +92,11 @@ export class GuideComponent {
   openGuide(id: string) { this.view = 'read'; this.selGuide = id; this.selFaq = -1; this.hideSvc(); this.play('fwd'); }
 
   openFaq(i: number) {
-    const g = this.curGuide;
-    if (!g || i < -1 || i >= g.faqs.length) return;
-    if (i >= 0) g.faqs[i].read = true;
+    const list = this.extraFaqs;
+    if (i < -1 || i >= list.length) return;
+    if (i >= 0) list[i].read = true;
     this.selFaq = i;
-    if (i >= 0) { const svc = g.faqs[i].service || g.service; if (svc) this.showSvc(svc); else this.hideSvc(); }
+    if (i >= 0) { const svc = list[i].service || this.curGuide?.service; if (svc) this.showSvc(svc); else this.hideSvc(); }
     else this.hideSvc();
   }
 
