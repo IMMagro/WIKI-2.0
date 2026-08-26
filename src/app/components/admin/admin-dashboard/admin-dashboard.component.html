@@ -150,14 +150,14 @@
   <!-- Layout Griglia: Mappa Vettoriale a Sinistra + Stream e Classifica a Destra -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10 mt-2">
     
-    <!-- Colonna Mappa SVG Vettoriale Realistica -->
-    <div class="lg:col-span-7 bg-[#F8FAFD]/90 border border-[#E2E8F0] rounded-3xl p-6 relative overflow-hidden shadow-inner flex flex-col items-center justify-center min-h-[500px]">
+    <!-- Colonna Mappa SVG Vettoriale Realistica Coropletica -->
+    <div class="lg:col-span-7 bg-[#F8FAFD]/90 border border-[#E2E8F0] rounded-3xl p-6 relative overflow-hidden shadow-inner flex flex-col items-center justify-center min-h-[520px]">
       
       <!-- Coordinate / Griglia di sfondo high-tech -->
       <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: linear-gradient(#1E2022 1px, transparent 1px), linear-gradient(90deg, #1E2022 1px, transparent 1px); background-size: 24px 24px;"></div>
       
       <!-- Bussola grafica decorativa -->
-      <div class="absolute top-4 left-4 text-[#A0ABC0] text-[10px] font-mono flex flex-col items-center">
+      <div class="absolute top-4 left-4 text-[#A0ABC0] text-[10px] font-mono flex flex-col items-center select-none pointer-events-none">
         <span>N</span>
         <div class="w-4 h-4 border border-[#CBD5E1] rounded-full flex items-center justify-center my-0.5">
           <div class="w-1.5 h-1.5 bg-[#377DFF] rounded-full"></div>
@@ -166,14 +166,57 @@
       </div>
 
       <!-- Live Radar Pulse Banner in Mappa -->
-      <div *ngIf="activePingNode" class="absolute top-4 right-4 bg-white/90 backdrop-blur-md border border-[#E2E8F0] shadow-sm rounded-xl px-3 py-1.5 flex items-center gap-2 text-xs font-semibold text-[#1E2022] transition-all animate-bounce">
+      <div *ngIf="activePingNode" class="absolute top-4 right-4 bg-white/95 backdrop-blur-md border border-[#E2E8F0] shadow-sm rounded-xl px-3 py-1.5 flex items-center gap-2 text-xs font-semibold text-[#1E2022] transition-all z-20" style="animation: fadeInScale 0.25s ease-out;">
         <span class="w-2 h-2 rounded-full bg-[#377DFF] animate-ping"></span>
-        <span>Accesso in corso da <strong>{{ activePingNode.name }}</strong></span>
+        <span>Accesso live: <strong class="text-[#377DFF]">{{ activePingNode.name }}</strong></span>
       </div>
 
-      <!-- SVG MAPPA DETTAGLIATA D'ITALIA -->
-      <div class="relative w-full max-w-[480px]">
-        <svg viewBox="0 0 480 580" class="w-full h-auto drop-shadow-md select-none" preserveAspectRatio="xMidYMid meet">
+      <!-- Tooltip HUD Galleggiante Elegante (Top-Right / Glassmorphism) -->
+      <div *ngIf="hoveredNode" 
+           class="absolute top-14 right-4 bg-white/95 backdrop-blur-2xl border border-[#377DFF]/30 p-4 rounded-2xl shadow-[0_12px_36px_rgba(55,125,255,0.14)] z-30 min-w-[220px] max-w-[250px] pointer-events-none transition-all duration-200"
+           style="animation: fadeInScale 0.2s ease-out;">
+        <div class="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-2 mb-2.5">
+          <div>
+            <h4 class="font-bold text-sm text-[#1E2022] leading-tight">{{ hoveredNode.name }}</h4>
+            <span class="text-[10px] text-[#77838F] font-bold uppercase tracking-wider">{{ hoveredNode.macroArea }}</span>
+          </div>
+          <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-lg text-white shadow-xs" 
+                [ngClass]="hoveredNode.software === 'Poliwin' ? 'bg-[#F80086]' : hoveredNode.software === 'Winodlab' ? 'bg-[#F97316]' : 'bg-[#377DFF]'">
+            {{ hoveredNode.software }}
+          </span>
+        </div>
+        
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-[#77838F] font-medium flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#12B76A] animate-pulse"></span>
+              Sessioni live:
+            </span>
+            <span class="font-bold text-[#12B76A]">{{ hoveredNode.active }} attive</span>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-[#77838F] font-medium">Accessi oggi:</span>
+            <span class="font-bold text-[#1E2022]">{{ hoveredNode.v }} visite</span>
+          </div>
+
+          <div class="pt-1">
+            <div class="flex justify-between text-[9px] text-[#77838F] font-semibold mb-1">
+              <span>Quota di traffico</span>
+              <span class="text-[#377DFF] font-bold">{{ ((hoveredNode.v / accessMapMax) * 100).toFixed(0) }}%</span>
+            </div>
+            <div class="h-1.5 bg-[#F0F5FF] rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-300"
+                   [ngClass]="hoveredNode.software === 'Poliwin' ? 'bg-[#F80086]' : hoveredNode.software === 'Winodlab' ? 'bg-[#F97316]' : 'bg-[#377DFF]'"
+                   [style.width.%]="(hoveredNode.v / accessMapMax) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG MAPPA DETTAGLIATA D'ITALIA A TUTTO SPAZIO (VIEWBOX OTTIMIZZATO 28 14 424 544) -->
+      <div class="relative w-full flex items-center justify-center min-h-[460px] max-h-[580px]">
+        <svg viewBox="28 14 424 544" class="w-full max-h-[560px] h-auto drop-shadow-md select-none" preserveAspectRatio="xMidYMid meet">
           <defs>
             <!-- Gradiente per la sagoma d'Italia -->
             <linearGradient id="italyMeshGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -184,7 +227,7 @@
 
             <!-- Filtro glow per la terra -->
             <filter id="mapShadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#377DFF" flood-opacity="0.12"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#377DFF" flood-opacity="0.10"/>
             </filter>
 
             <!-- Glow radiale per i nodi attivi -->
@@ -207,35 +250,38 @@
             </radialGradient>
           </defs>
 
-          <!-- Sagome Vettoriali delle 20 Regioni Italiane (Terraferma, Sicilia, Sardegna) -->
+          <!-- Sagome Vettoriali delle 20 Regioni Italiane (Coropletica Dinamica) -->
           <g id="italy-regions-group">
             <path *ngFor="let reg of italyRegions" 
                   [attr.id]="'reg-' + reg.name"
                   [attr.d]="reg.d" 
                   [attr.data-name]="reg.name"
-                  [ngClass]="{
-                    'opacity-100 fill-[#EBF2FF] stroke-[#93C5FD]': selectedMacroRegion === 'all' || selectedMacroRegion === reg.macro,
-                    'opacity-30 fill-[#F1F5F9] stroke-[#CBD5E1]': selectedMacroRegion !== 'all' && selectedMacroRegion !== reg.macro,
-                    'fill-[#D8E8FF] stroke-[#377DFF] brightness-95': hoveredRegion === reg.name
-                  }"
-                  (mouseenter)="hoveredRegion = reg.name"
-                  (mouseleave)="hoveredRegion = null"
-                  stroke-width="1.1" 
+                  [attr.fill]="getRegionFill(reg.name)"
+                  [attr.stroke]="getRegionStroke(reg.name)"
+                  [attr.stroke-width]="getRegionStrokeWidth(reg.name)"
                   stroke-linejoin="round"
-                  filter="url(#mapShadow)"
+                  stroke-linecap="round"
+                  [ngClass]="{
+                    'opacity-100': selectedMacroRegion === 'all' || selectedMacroRegion === reg.macro,
+                    'opacity-25': selectedMacroRegion !== 'all' && selectedMacroRegion !== reg.macro,
+                    'animate-pulse': activePingNode?.name === reg.name
+                  }"
+                  [style.filter]="hoveredRegion === reg.name ? 'drop-shadow(0 0 6px rgba(55,125,255,0.45)) brightness(1.08)' : (activePingNode?.name === reg.name ? 'drop-shadow(0 0 8px rgba(55,125,255,0.6))' : 'none')"
+                  (mouseenter)="onRegionHover(reg.name)"
+                  (mouseleave)="onRegionLeave()"
                   class="transition-all duration-300 cursor-pointer">
               <title>{{ reg.name }}</title>
             </path>
           </g>
 
           <!-- Linee di connessione a raggi sottili tra le Regioni -->
-          <g opacity="0.25" stroke="#377DFF" stroke-width="0.8" stroke-dasharray="3,3">
-            <line x1="60.0" y1="82.0" x2="72.3" y2="112.2" />
-            <line x1="72.3" y1="112.2" x2="138.0" y2="92.0" />
+          <g opacity="0.18" stroke="#377DFF" stroke-width="0.7" stroke-dasharray="3,3" class="pointer-events-none">
+            <line x1="60.0" y1="82.0" x2="74.0" y2="115.0" />
+            <line x1="74.0" y1="115.0" x2="138.0" y2="92.0" />
             <line x1="138.0" y1="92.0" x2="202.0" y2="54.0" />
             <line x1="202.0" y1="54.0" x2="215.0" y2="92.0" />
             <line x1="215.0" y1="92.0" x2="262.0" y2="68.0" />
-            <line x1="72.3" y1="112.2" x2="105.0" y2="152.0" />
+            <line x1="74.0" y1="115.0" x2="105.0" y2="152.0" />
             <line x1="138.0" y1="92.0" x2="188.0" y2="142.0" />
             <line x1="105.0" y1="152.0" x2="188.0" y2="188.0" />
             <line x1="188.0" y1="142.0" x2="188.0" y2="188.0" />
@@ -256,8 +302,8 @@
 
           <!-- Nodi Regionali Interattivi con Effetti Radar e Pulse -->
           <g *ngFor="let node of filteredMapNodes" 
-             (mouseenter)="hoveredNode = node; hoveredRegion = node.name" 
-             (mouseleave)="hoveredNode = null; hoveredRegion = null"
+             (mouseenter)="onRegionHover(node.name)" 
+             (mouseleave)="onRegionLeave()"
              class="cursor-pointer group">
 
             <!-- Radar Wave Ring animato SOLO su nodo attivo/ping in tempo reale -->
@@ -267,63 +313,34 @@
                     [attr.fill]="node.software === 'Poliwin' ? 'url(#nodeMagentaGlow)' : node.software === 'Winodlab' ? 'url(#nodeOrangeGlow)' : 'url(#nodeBlueGlow)'" 
                     class="animate-ping opacity-75 pointer-events-none"/>
 
-            <!-- Halo di sfondo delicato proporzionato al volume di accessi -->
+            <!-- Halo di sfondo proporzionato al volume di accessi -->
             <circle [attr.cx]="node.x" [attr.cy]="node.y" 
-                    [attr.r]="6 + (node.v / accessMapMax) * 5" 
+                    [attr.r]="5 + (node.v / accessMapMax) * 5" 
                     [attr.fill]="node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF'" 
-                    opacity="0.2" 
-                    class="group-hover:opacity-40 group-hover:scale-150 transition-all duration-300"/>
+                    [attr.opacity]="hoveredRegion === node.name ? 0.35 : 0.18" 
+                    class="transition-all duration-300"/>
 
             <!-- Punto centrale della Regione -->
             <circle [attr.cx]="node.x" [attr.cy]="node.y" 
-                    [attr.r]="activePingNode?.name === node.name ? 5 : 4" 
+                    [attr.r]="activePingNode?.name === node.name ? 5.5 : (hoveredRegion === node.name ? 5 : 3.8)" 
                     [attr.fill]="node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF'" 
                     stroke="#FFFFFF" 
-                    stroke-width="1.8"
-                    class="transition-transform group-hover:scale-125 duration-200"/>
+                    [attr.stroke-width]="hoveredRegion === node.name ? 2 : 1.5"
+                    class="transition-all duration-200 shadow-sm"/>
 
-            <!-- Etichetta Nome Regione con posizionamento e ancoraggio intelligente anti-collisione -->
+            <!-- Etichetta Nome Regione con posizionamento e ancoraggio anti-collisione -->
             <text [attr.x]="node.x + (node.labelDx || 8)" 
                   [attr.y]="node.y + (node.labelDy || 3)" 
                   [attr.text-anchor]="node.textAnchor || 'start'"
                   font-size="8.5" 
-                  font-weight="700" 
-                  fill="#1E2022" 
-                  class="select-none pointer-events-none transition-all group-hover:fill-[#377DFF] group-hover:font-extrabold"
-                  style="text-shadow: 0 1px 2px rgba(255,255,255,0.95), 0 0 5px rgba(255,255,255,0.9);">
+                  [attr.font-weight]="hoveredRegion === node.name ? '800' : '600'" 
+                  [attr.fill]="hoveredRegion === node.name ? '#377DFF' : '#1E2022'" 
+                  class="select-none pointer-events-none transition-all"
+                  style="text-shadow: 0 1px 3px rgba(255,255,255,0.98), 0 0 6px rgba(255,255,255,0.95);">
               {{ node.name }}
             </text>
           </g>
         </svg>
-
-        <!-- Tooltip Galleggiante Elegante su Hover Regione -->
-        <div *ngIf="hoveredNode" 
-             class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl border border-[#377DFF]/30 p-4 rounded-2xl shadow-xl shadow-blue-500/10 z-30 min-w-[220px] transition-all"
-             style="animation: fadeUpCard 0.2s ease-out;">
-          <div class="flex items-center justify-between gap-2 border-b border-[#E2E8F0] pb-2 mb-2">
-            <div>
-              <h4 class="font-bold text-sm text-[#1E2022]">{{ hoveredNode.name }}</h4>
-              <span class="text-[10px] text-[#77838F] font-semibold uppercase tracking-wider">{{ hoveredNode.macroArea }}</span>
-            </div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md text-white" 
-                  [ngClass]="hoveredNode.software === 'Poliwin' ? 'bg-[#F80086]' : hoveredNode.software === 'Winodlab' ? 'bg-[#F97316]' : 'bg-[#377DFF]'">
-              {{ hoveredNode.software }}
-            </span>
-          </div>
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <div>
-              <span class="text-[10px] text-[#77838F] block font-medium">Sessioni Live</span>
-              <span class="font-bold text-[#12B76A] flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#12B76A]"></span>
-                {{ hoveredNode.active }} attive
-              </span>
-            </div>
-            <div>
-              <span class="text-[10px] text-[#77838F] block font-medium">Accessi Totali</span>
-              <span class="font-bold text-[#1E2022]">{{ hoveredNode.v }} visite</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -337,15 +354,17 @@
             <span class="w-2.5 h-2.5 rounded-full bg-[#12B76A] animate-ping"></span>
             <h3 class="font-bold text-sm text-[#1E2022] uppercase tracking-wider">Flusso Accessi in Tempo Reale</h3>
           </div>
-          <span class="text-[10px] font-bold text-[#377DFF] bg-[#377DFF]/10 px-2 py-0.5 rounded-full">Stream Attivo</span>
+          <span class="text-[10px] font-bold text-[#377DFF] bg-[#377DFF]/10 px-2.5 py-0.5 rounded-full">Stream Attivo</span>
         </div>
 
         <div class="space-y-3 max-h-[220px] overflow-y-auto custom-scrollbar pr-1">
           <div *ngFor="let item of liveFeed" 
-               class="p-3 bg-white border border-[#E2E8F0]/70 rounded-2xl flex items-center justify-between gap-3 shadow-xs hover:border-[#377DFF]/40 transition-all group"
+               class="p-3 bg-white border border-[#E2E8F0]/70 rounded-2xl flex items-center justify-between gap-3 shadow-xs hover:border-[#377DFF]/40 transition-all group cursor-pointer"
+               (mouseenter)="onRegionHover(item.region)"
+               (mouseleave)="onRegionLeave()"
                style="animation: fadeUpCard 0.3s ease-out;">
             <div class="flex items-center gap-3 min-w-0">
-              <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-xs shrink-0" 
+              <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-xs" 
                    [style.background]="item.color">
                 {{ item.region.substring(0, 2).toUpperCase() }}
               </div>
@@ -367,26 +386,33 @@
         </div>
       </div>
 
-      <!-- Classifica Regioni più Attive con Barre di Progresso -->
+      <!-- Classifica Top Regioni d'Italia con Barre di Progresso -->
       <div class="bg-[#F8FAFD]/90 border border-[#E2E8F0] rounded-3xl p-6 shadow-sm flex flex-col flex-1">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-bold text-sm text-[#1E2022] uppercase tracking-wider">Top Regioni & Hub Attivi</h3>
-          <span class="text-xs text-[#77838F] font-semibold">{{ filteredMapNodes.length }} regioni</span>
+          <div>
+            <h3 class="font-bold text-sm text-[#1E2022] uppercase tracking-wider">Top Regioni d'Italia</h3>
+            <p class="text-[11px] text-[#77838F] font-medium mt-0.5">Ranking per volume di accessi e sessioni live</p>
+          </div>
+          <span class="text-xs font-bold text-[#377DFF] bg-[#377DFF]/10 px-2.5 py-1 rounded-full">{{ filteredMapNodes.length }} Regioni</span>
         </div>
 
-        <div class="space-y-3 max-h-[220px] overflow-y-auto custom-scrollbar pr-1">
+        <div class="space-y-2.5 max-h-[230px] overflow-y-auto custom-scrollbar pr-1">
           <div *ngIf="accessMapNodesSorted.length === 0" class="text-center py-6 text-xs text-[#77838F]">
             Nessuna regione registrata
           </div>
           <div *ngFor="let node of accessMapNodesSorted.slice(0, 6); let rank = index" 
-               class="flex items-center gap-3 p-2 bg-white/70 rounded-xl border border-[#E2E8F0]/50 hover:bg-white transition-colors cursor-pointer"
-               (mouseenter)="hoveredNode = node; hoveredRegion = node.name"
-               (mouseleave)="hoveredNode = null; hoveredRegion = null">
-            <span class="w-5 text-center font-bold text-xs" [ngClass]="rank === 0 ? 'text-[#F79009]' : 'text-[#77838F]'">#{{ rank + 1 }}</span>
+               class="flex items-center gap-3 p-2.5 bg-white/80 rounded-2xl border border-[#E2E8F0]/60 hover:bg-white hover:border-[#377DFF]/40 hover:shadow-sm transition-all cursor-pointer"
+               [ngClass]="{'border-[#377DFF] bg-white shadow-sm ring-1 ring-[#377DFF]/20': hoveredRegion === node.name}"
+               (mouseenter)="onRegionHover(node.name)"
+               (mouseleave)="onRegionLeave()">
+            <span class="w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0" 
+                  [ngClass]="rank === 0 ? 'bg-[#F79009]/15 text-[#F79009]' : rank === 1 ? 'bg-[#377DFF]/10 text-[#377DFF]' : rank === 2 ? 'bg-[#F80086]/10 text-[#F80086]' : 'bg-[#F0F5FF] text-[#77838F]'">
+              #{{ rank + 1 }}
+            </span>
             <div class="flex-1 min-w-0">
               <div class="flex justify-between items-center text-xs mb-1">
                 <span class="font-bold text-[#1E2022] truncate">{{ node.name }}</span>
-                <span class="font-bold text-[#377DFF]">{{ node.v }} <span class="text-[10px] text-[#77838F]">visite</span></span>
+                <span class="font-bold text-[#377DFF] text-[11px]">{{ node.v }} <span class="text-[10px] text-[#77838F] font-medium">visite</span></span>
               </div>
               <div class="h-2 bg-[#F0F5FF] rounded-full overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-700" 
@@ -394,7 +420,8 @@
                      [style.width.%]="(node.v / accessMapMax) * 100"></div>
               </div>
             </div>
-            <span class="text-[10px] font-bold text-[#12B76A] bg-[#12B76A]/10 px-2 py-0.5 rounded-full shrink-0">
+            <span class="text-[10px] font-bold text-[#12B76A] bg-[#12B76A]/10 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#12B76A]"></span>
               {{ node.active }} online
             </span>
           </div>

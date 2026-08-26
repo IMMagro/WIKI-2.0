@@ -153,13 +153,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
 ];
 
-  // Pre-calculated region coordinates & collision-free label placements for 480x580 viewport
+  // Pre-calculated region coordinates & collision-free label placements for 424x544 viewport
   readonly regionDefaultPositions: Record<string, { x: number; y: number; labelDx: number; labelDy: number; textAnchor: 'start' | 'middle' | 'end' }> = {
-    'Valle d\'Aosta': { x: 60.0, y: 82.0, labelDx: -10, labelDy: -6, textAnchor: 'end' },
-    'Piemonte': { x: 72.3, y: 112.2, labelDx: -10, labelDy: 4, textAnchor: 'end' },
-    'Liguria': { x: 105.0, y: 152.0, labelDx: -10, labelDy: 12, textAnchor: 'end' },
-    'Lombardia': { x: 138.0, y: 92.0, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
-    'Trentino-Alto Adige': { x: 202.0, y: 54.0, labelDx: 10, labelDy: -6, textAnchor: 'start' },
+    'Valle d\'Aosta': { x: 60.0, y: 82.0, labelDx: 8, labelDy: -5, textAnchor: 'start' },
+    'Piemonte': { x: 74.0, y: 115.0, labelDx: -8, labelDy: 4, textAnchor: 'end' },
+    'Liguria': { x: 105.0, y: 152.0, labelDx: -8, labelDy: 10, textAnchor: 'end' },
+    'Lombardia': { x: 138.0, y: 92.0, labelDx: 0, labelDy: -9, textAnchor: 'middle' },
+    'Trentino-Alto Adige': { x: 202.0, y: 54.0, labelDx: 10, labelDy: -5, textAnchor: 'start' },
     'Veneto': { x: 215.0, y: 92.0, labelDx: 10, labelDy: 2, textAnchor: 'start' },
     'Friuli-Venezia Giulia': { x: 262.0, y: 68.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
     'Emilia-Romagna': { x: 188.0, y: 142.0, labelDx: 10, labelDy: 4, textAnchor: 'start' },
@@ -173,7 +173,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     'Puglia': { x: 382.0, y: 305.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
     'Basilicata': { x: 360.0, y: 330.0, labelDx: -10, labelDy: 8, textAnchor: 'end' },
     'Calabria': { x: 370.0, y: 395.0, labelDx: 10, labelDy: 4, textAnchor: 'start' },
-    'Sicilia': { x: 285.0, y: 460.0, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
+    'Sicilia': { x: 285.0, y: 460.0, labelDx: 0, labelDy: -9, textAnchor: 'middle' },
     'Sardegna': { x: 115.0, y: 345.0, labelDx: 12, labelDy: 3, textAnchor: 'start' }
   };
 
@@ -266,7 +266,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         { id: "tos", name: "Toscana", code: "TOS", macroArea: "centro", x: 188.0, y: 188.0, lat: 43.77, lng: 11.25, v: 84, active: 5, software: "Windent" },
         { id: "pie", name: "Piemonte", code: "PIE", macroArea: "nord", x: 72.3, y: 112.2, lat: 45.07, lng: 7.68, v: 78, active: 4, software: "Windent" },
         { id: "sar", name: "Sardegna", code: "SAR", macroArea: "sud", x: 115.0, y: 345.0, lat: 40.12, lng: 9.01, v: 54, active: 3, software: "Windent" },
-        { id: "lig", "name": "Liguria", code: "LIG", macroArea: "nord", x: 105.0, y: 152.0, lat: 44.41, lng: 8.93, v: 45, active: 2, software: "Windent" },
+        { id: "lig", name: "Liguria", code: "LIG", macroArea: "nord", x: 105.0, y: 152.0, lat: 44.41, lng: 8.93, v: 45, active: 2, software: "Windent" },
         { id: "mar", name: "Marche", code: "MAR", macroArea: "centro", x: 260.0, y: 190.0, lat: 43.61, lng: 13.51, v: 42, active: 2, software: "Windent" },
         { id: "cal", name: "Calabria", code: "CAL", macroArea: "sud", x: 370.0, y: 395.0, lat: 38.91, lng: 16.59, v: 38, active: 2, software: "Poliwin" },
         { id: "taa", name: "Trentino-Alto Adige", code: "TAA", macroArea: "nord", x: 202.0, y: 54.0, lat: 46.06, lng: 11.12, v: 36, active: 2, software: "Winodlab" },
@@ -283,30 +283,32 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // ---- Mappa e Nodi Regionali ----
   get accessMapNodes(): MapRegionNode[] {
     const raw: any[] = (this.accessStats && Array.isArray(this.accessStats.mapNodes)) ? this.accessStats.mapNodes : [];
-    return raw.map(n => {
-      const regionName = n.name || n.region || 'Italia';
-      const def = this.regionDefaultPositions[regionName] || { x: n.x || 200, y: n.y || 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
-      const lat = Number(n.lat) || 0;
-      let macro: 'nord' | 'centro' | 'sud' = n.macroArea || 'centro';
-      if (!n.macroArea && lat > 0) {
-        if (lat >= 43.9) macro = 'nord';
-        else if (lat >= 41.5) macro = 'centro';
-        else macro = 'sud';
-      }
+    const mapByName = new Map<string, any>();
+    raw.forEach(n => {
+      const key = (n.name || n.region || '').toLowerCase();
+      if (key) mapByName.set(key, n);
+    });
+
+    return this.italyRegions.map(reg => {
+      const n = mapByName.get(reg.name.toLowerCase()) || {};
+      const def = this.regionDefaultPositions[reg.name] || { x: 200, y: 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
+      const v = n.v !== undefined ? Number(n.v) : 20;
+      const active = n.active !== undefined ? Number(n.active) : Math.max(1, Math.round(v / 15));
+      const software = n.software || (['Lazio', 'Campania', 'Puglia', 'Sicilia', 'Calabria', 'Basilicata', 'Abruzzo', 'Molise'].includes(reg.name) ? 'Poliwin' : ['Emilia-Romagna', 'Veneto', 'Trentino-Alto Adige'].includes(reg.name) ? 'Winodlab' : 'Windent');
 
       return {
-        id: n.id,
-        name: regionName,
-        code: n.code,
-        region: regionName,
+        id: n.id || reg.name.toLowerCase().substring(0, 3),
+        name: reg.name,
+        code: n.code || reg.name.substring(0, 3).toUpperCase(),
+        region: reg.name,
         x: def.x,
         y: def.y,
-        lat: n.lat,
-        lng: n.lng,
-        v: n.v || 0,
-        active: n.active !== undefined ? n.active : Math.max(1, Math.round((n.v || 1) / 15)),
-        software: n.software || (['Lazio', 'Campania', 'Puglia', 'Sicilia', 'Calabria', 'Basilicata', 'Abruzzo', 'Molise'].includes(regionName) ? 'Poliwin' : ['Emilia-Romagna', 'Veneto', 'Trentino-Alto Adige'].includes(regionName) ? 'Winodlab' : 'Windent'),
-        macroArea: macro,
+        lat: n.lat || 0,
+        lng: n.lng || 0,
+        v: v,
+        active: active,
+        software: software,
+        macroArea: reg.macro,
         labelDx: def.labelDx,
         labelDy: def.labelDy,
         textAnchor: def.textAnchor
@@ -343,6 +345,93 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // Retrocompatibilità
   get topCity(): MapRegionNode | null {
     return this.topRegion;
+  }
+
+  // ---- Metodi di supporto Mappa Coropletica & Interazione ----
+  getRegionNode(name: string): MapRegionNode | undefined {
+    return this.accessMapNodes.find(n => n.name.toLowerCase() === name.toLowerCase());
+  }
+
+  getRegionFill(name: string): string {
+    const node = this.getRegionNode(name);
+    if (!node) return '#EAF2FF';
+
+    // Se filtrato per macro area
+    if (this.selectedMacroRegion !== 'all' && node.macroArea !== this.selectedMacroRegion) {
+      return '#F1F5F9';
+    }
+
+    // Hover su regione o nodo
+    if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
+      if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.42)';
+      if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.42)';
+      return 'rgba(55, 125, 255, 0.42)';
+    }
+
+    // Ping attivo live stream
+    if (this.activePingNode?.name === name) {
+      if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.55)';
+      if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.55)';
+      return 'rgba(55, 125, 255, 0.55)';
+    }
+
+    // Calcolo sfumatura coropletica in base a v / accessMapMax
+    const ratio = Math.max(0.08, Math.min(1, (node.v || 0) / this.accessMapMax));
+
+    if (node.software === 'Poliwin') {
+      const alpha = 0.08 + 0.32 * ratio;
+      return `rgba(248, 0, 134, ${alpha.toFixed(2)})`;
+    } else if (node.software === 'Winodlab') {
+      const alpha = 0.08 + 0.32 * ratio;
+      return `rgba(249, 115, 22, ${alpha.toFixed(2)})`;
+    } else {
+      const alpha = 0.08 + 0.34 * ratio;
+      return `rgba(55, 125, 255, ${alpha.toFixed(2)})`;
+    }
+  }
+
+  getRegionStroke(name: string): string {
+    const node = this.getRegionNode(name);
+    if (!node) return '#CBD5E1';
+
+    if (this.selectedMacroRegion !== 'all' && node.macroArea !== this.selectedMacroRegion) {
+      return '#E2E8F0';
+    }
+
+    if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
+      return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
+    }
+
+    if (this.activePingNode?.name === name) {
+      return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
+    }
+
+    if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.35)';
+    if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.35)';
+    return 'rgba(55, 125, 255, 0.35)';
+  }
+
+  getRegionStrokeWidth(name: string): number {
+    if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
+      return 1.8;
+    }
+    if (this.activePingNode?.name === name) {
+      return 2.0;
+    }
+    return 1.1;
+  }
+
+  onRegionHover(name: string) {
+    this.hoveredRegion = name;
+    const node = this.getRegionNode(name);
+    if (node) {
+      this.hoveredNode = node;
+    }
+  }
+
+  onRegionLeave() {
+    this.hoveredRegion = null;
+    this.hoveredNode = null;
   }
 
   // ---- Simulazione Live Stream / Real-time Ping ----
