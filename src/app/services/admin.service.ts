@@ -31,6 +31,7 @@ export class AdminService {
       tap(res => {
         if (res.success && res.token) {
           sessionStorage.setItem('adminToken', res.token);
+          sessionStorage.setItem('adminEmail', email);
           this.isAuthenticatedSubject.next(true);
         }
       })
@@ -39,6 +40,7 @@ export class AdminService {
 
   logout(): void {
     sessionStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminEmail');
     this.isAuthenticatedSubject.next(false);
   }
 

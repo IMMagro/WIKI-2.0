@@ -1,27 +1,2 @@
-{
-  "onlineUsers": 24,
-  "mapNodes": [
-    { "name": "Milano-01", "users": 8, "x": 72, "y": 52, "color": "#377DFF", "gradientId": "#heatBlue", "glowRadius": 6, "pointRadius": 4 },
-    { "name": "Torino-01", "users": 4, "x": 45, "y": 62, "color": "#377DFF", "gradientId": "#heatBlue", "glowRadius": 5, "pointRadius": 4 },
-    { "name": "Venezia-01", "users": 3, "x": 128, "y": 58, "color": "#F80086", "gradientId": "#heatMagenta", "glowRadius": 5, "pointRadius": 4 },
-    { "name": "Firenze-01", "users": 5, "x": 115, "y": 112, "color": "#377DFF", "gradientId": "#heatBlue", "glowRadius": 5, "pointRadius": 4 },
-    { "name": "Roma-02", "users": 6, "x": 140, "y": 165, "color": "#F80086", "gradientId": "#heatMagenta", "glowRadius": 6, "pointRadius": 4 }
-  ],
-  "weeklyAccess": [
-    { "day": "Lun", "x1": 45,  "y1": 85,  "h1": 105, "x2": 65,  "y2": 115, "h2": 75,  "isCurrent": false },
-    { "day": "Mar", "x1": 107, "y1": 107, "h1": 83,  "x2": 127, "y2": 130, "h2": 60,  "isCurrent": false },
-    { "day": "Mer", "x1": 169, "y1": 47,  "h1": 143, "x2": 189, "y2": 77,  "h2": 113, "isCurrent": true },
-    { "day": "Gio", "x1": 231, "y1": 130, "h1": 60,  "x2": 251, "y2": 145, "h2": 45,  "isCurrent": false },
-    { "day": "Ven", "x1": 293, "y1": 62,  "h1": 128, "x2": 313, "y2": 92,  "h2": 98,  "isCurrent": false },
-    { "day": "Sab", "x1": 355, "y1": 145, "h1": 45,  "x2": 375, "y2": 157, "h2": 33,  "isCurrent": false },
-    { "day": "Dom", "x1": 417, "y1": 160, "h1": 30,  "x2": 437, "y2": 167, "h2": 23,  "isCurrent": false }
-  ],
-  "trendlineData": "M53 85 L115 107 L177 47 L239 130 L301 62 L363 145 L425 160",
-  "storageUsage": { "manualsPct": 45, "mediaPct": 35, "totalPct": 80 },
-  "searchStats": {
-    "total": 12.5,
-    "suffix": "k",
-    "trend": 12,
-    "topKeywords": ["Fatturazione", "TS", "Agenda", "Backup"]
-  }
-}
+{}
+

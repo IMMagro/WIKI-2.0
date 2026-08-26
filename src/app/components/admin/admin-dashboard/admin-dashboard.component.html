@@ -45,8 +45,8 @@
     </div>
     
     <div class="flex items-center gap-3 bg-[#FFFFFF] border border-[#E2E8F0] shadow-sm rounded-full pl-2 pr-4 py-1">
-      <img src="https://ui-avatars.com/api/?name=Admin&background=377DFF&color=fff" class="w-8 h-8 rounded-full" alt="User">
-      <span class="text-sm font-semibold text-[#1E2022]">amministratore&#64;qe.com</span>
+      <img [src]="'https://ui-avatars.com/api/?name=' + (currentAdminEmail || 'Admin') + '&background=377DFF&color=fff'" class="w-8 h-8 rounded-full" alt="User">
+      <span class="text-sm font-semibold text-[#1E2022]">{{ currentAdminEmail }}</span>
     </div>
   </div>
 </header>

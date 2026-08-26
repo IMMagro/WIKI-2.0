@@ -60,6 +60,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   accessStats: any = null;
   liveGuides: LiveGuideItem[] = [];
 
+  get currentAdminEmail(): string {
+    return sessionStorage.getItem('adminEmail') || 'amministratore@qe.com';
+  }
+
   get totalLiveViewers(): number {
     return this.liveGuides.reduce((sum, g) => sum + (g.viewersCount || 0), 0);
   }

@@ -1,20 +1,2 @@
-[
-  {
-    "title": "Nuove ricerche sui manuali",
-    "desc": "Picco di ricerche su 'Fatturazione elettronica' nelle ultime 24 ore.",
-    "time": "10 min fa",
-    "icon": "search",
-    "color": "from-blue-500 to-sky-400",
-    "unread": true,
-    "type": "info"
-  },
-  {
-    "title": "Nuovo articolo pubblicato",
-    "desc": "È stato pubblicato l'aggiornamento 'Integrazione Fascicolo Sanitario 2.0'.",
-    "time": "2 ore fa",
-    "icon": "newspaper",
-    "color": "from-fuchsia-500 to-pink-500",
-    "unread": false,
-    "type": "info"
-  }
-]
+[]
+
