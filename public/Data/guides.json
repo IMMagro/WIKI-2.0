@@ -1,84 +1,6 @@
 ﻿{
     "categories":  [
                        {
-                           "id":  "primi-passi",
-                           "name":  "Primi Passi",
-                           "icon":  "compass",
-                           "accent":  "blue",
-                           "desc":  "Panoramica, comandi base e prime operazioni per iniziare a usare il programma.",
-                           "manuals":  [
-                                           {
-                                               "id":  "interfaccia-quaderno",
-                                               "title":  "Comprendere l\u0027Interfaccia (Panoramica Quaderno)",
-                                               "status":  "pub",
-                                               "updated":  "25 ago 2026",
-                                               "desc":  "Guida visiva agli elementi principali: barra degli strumenti, menu laterale, archivi e schede.",
-                                               "overview":  "\u003cp\u003eIl gestionale è organizzato in aree logiche accessibili dalla barra principale e dal menu di navigazione:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eBarra superiore:\u003c/strong\u003e accesso rapido agli archivi principali (Pazienti, Agenda, Fatture, Sistema TS).\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eArea di lavoro centrale:\u003c/strong\u003e visualizzazione della cartella clinica, dell\u0027odontogramma o del planning.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMenu laterale:\u003c/strong\u003e funzioni di configurazione, statistiche, magazzino e strumenti di utilità.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eTutti gli archivi condividono la stessa logica di ricerca e i medesimi pulsanti di azione rapida.\u003c/p\u003e",
-                                               "faqs":  [
-                                                            {
-                                                                "q":  "Come navigo tra le sezioni del programma?",
-                                                                "tags":  [
-                                                                             "interfaccia",
-                                                                             "menu",
-                                                                             "navigazione",
-                                                                             "archivi"
-                                                                         ],
-                                                                "updated":  "25 ago 2026",
-                                                                "steps":  [
-                                                                              {
-                                                                                  "t":  "Usa la \u003cb\u003ebarra degli strumenti in alto\u003c/b\u003e per passare rapidamente da Pazienti ad Agenda o Fatturazione."
-                                                                              },
-                                                                              {
-                                                                                  "t":  "Apri il \u003cb\u003emenu laterale a scomparsa\u003c/b\u003e a sinistra per accedere a Magazzino, Utilità e Configurazioni.",
-                                                                                  "img":  true
-                                                                              },
-                                                                              {
-                                                                                  "t":  "Ogni schermata aperta mantiene lo stato attivo permettendoti di lavorare in multitasking."
-                                                                              }
-                                                                          ],
-                                                                "extra":  false
-                                                            }
-                                                        ]
-                                           },
-                                           {
-                                               "id":  "comandi-base",
-                                               "title":  "Comandi Base (Aggiungere, Modificare, Eliminare)",
-                                               "status":  "pub",
-                                               "updated":  "25 ago 2026",
-                                               "desc":  "Regole generali e scorciatoie per inserire, cercare e modificare record in qualsiasi archivio.",
-                                               "overview":  "\u003cp\u003eIn qualsiasi tabella o elenco del gestionale i comandi mantengono sempre le stesse icone e posizioni:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eNuovo / Aggiungi:\u003c/strong\u003e pulsante con icona \u003cem\u003e+\u003c/em\u003e o \u003cem\u003eNuovo\u003c/em\u003e in alto a sinistra.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eModifica:\u003c/strong\u003e doppio click sulla riga desiderata oppure tasto \u003cem\u003eModifica\u003c/em\u003e.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eElimina / Annulla:\u003c/strong\u003e pulsante con cestino, sempre protetto da richiesta di conferma.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eSalvataggio:\u003c/strong\u003e pulsante \u003cem\u003eSalva\u003c/em\u003e o \u003cem\u003eConferma\u003c/em\u003e in basso a destra.\u003c/li\u003e\u003c/ul\u003e",
-                                               "faqs":  [
-                                                            {
-                                                                "q":  "Quali sono le scorciatoie e i comandi standard?",
-                                                                "tags":  [
-                                                                             "comandi",
-                                                                             "base",
-                                                                             "aggiungi",
-                                                                             "modifica",
-                                                                             "elimina",
-                                                                             "salva"
-                                                                         ],
-                                                                "updated":  "25 ago 2026",
-                                                                "steps":  [
-                                                                              {
-                                                                                  "t":  "Premi \u003cb\u003eNuovo (+)\u003c/b\u003e nella barra superiore dell\u0027archivio per aprire una nuova scheda."
-                                                                              },
-                                                                              {
-                                                                                  "t":  "Fai \u003cb\u003edoppio click\u003c/b\u003e su qualsiasi record per aprirlo in modalità modifica.",
-                                                                                  "img":  true
-                                                                              },
-                                                                              {
-                                                                                  "t":  "Premi \u003cb\u003eSalva (F10)\u003c/b\u003e o clicca \u003cb\u003eOK\u003c/b\u003e per registrare le modifiche apportate."
-                                                                              }
-                                                                          ],
-                                                                "extra":  false
-                                                            }
-                                                        ]
-                                           }
-                                       ],
-                           "emoji":  "🧭"
-                       },
-                       {
                            "id":  "pazienti",
                            "name":  "Pazienti",
                            "icon":  "users",
@@ -1551,6 +1473,74 @@
                            "desc":  "Backup dati (chiavetta USB/Cloud), aggiornamenti software, licenze, risoluzione rete e lettore TS/CIE.",
                            "manuals":  [
                                            {
+                                               "id":  "comandi-base",
+                                               "title":  "Comandi Base (Aggiungere, Modificare, Eliminare)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Regole generali e scorciatoie per inserire, cercare e modificare record in qualsiasi archivio.",
+                                               "overview":  "\u003cp\u003eIn qualsiasi tabella o elenco del gestionale i comandi mantengono sempre le stesse icone e posizioni:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eNuovo / Aggiungi:\u003c/strong\u003e pulsante con icona \u003cem\u003e+\u003c/em\u003e o \u003cem\u003eNuovo\u003c/em\u003e in alto a sinistra.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eModifica:\u003c/strong\u003e doppio click sulla riga desiderata oppure tasto \u003cem\u003eModifica\u003c/em\u003e.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eElimina / Annulla:\u003c/strong\u003e pulsante con cestino, sempre protetto da richiesta di conferma.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eSalvataggio:\u003c/strong\u003e pulsante \u003cem\u003eSalva\u003c/em\u003e o \u003cem\u003eConferma\u003c/em\u003e in basso a destra.\u003c/li\u003e\u003c/ul\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Quali sono le scorciatoie e i comandi standard?",
+                                                                "tags":  [
+                                                                             "comandi",
+                                                                             "base",
+                                                                             "aggiungi",
+                                                                             "modifica",
+                                                                             "elimina",
+                                                                             "salva"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eNuovo (+)\u003c/b\u003e nella barra superiore dell\u0027archivio per aprire una nuova scheda."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Fai \u003cb\u003edoppio click\u003c/b\u003e su qualsiasi record per aprirlo in modalità modifica.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Premi \u003cb\u003eSalva (F10)\u003c/b\u003e o clicca \u003cb\u003eOK\u003c/b\u003e per registrare le modifiche apportate."
+                                                                              }
+                                                                          ],
+                                                                "extra":  false
+                                                            }
+                                                        ]
+                                           },
+                                           {
+                                               "id":  "interfaccia-quaderno",
+                                               "title":  "Comprendere l\u0027Interfaccia (Panoramica Quaderno)",
+                                               "status":  "pub",
+                                               "updated":  "25 ago 2026",
+                                               "desc":  "Guida visiva agli elementi principali: barra degli strumenti, menu laterale, archivi e schede.",
+                                               "overview":  "\u003cp\u003eIl gestionale è organizzato in aree logiche accessibili dalla barra principale e dal menu di navigazione:\u003c/p\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eBarra superiore:\u003c/strong\u003e accesso rapido agli archivi principali (Pazienti, Agenda, Fatture, Sistema TS).\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eArea di lavoro centrale:\u003c/strong\u003e visualizzazione della cartella clinica, dell\u0027odontogramma o del planning.\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMenu laterale:\u003c/strong\u003e funzioni di configurazione, statistiche, magazzino e strumenti di utilità.\u003c/li\u003e\u003c/ul\u003e\u003cp\u003eTutti gli archivi condividono la stessa logica di ricerca e i medesimi pulsanti di azione rapida.\u003c/p\u003e",
+                                               "faqs":  [
+                                                            {
+                                                                "q":  "Come navigo tra le sezioni del programma?",
+                                                                "tags":  [
+                                                                             "interfaccia",
+                                                                             "menu",
+                                                                             "navigazione",
+                                                                             "archivi"
+                                                                         ],
+                                                                "updated":  "25 ago 2026",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "t":  "Usa la \u003cb\u003ebarra degli strumenti in alto\u003c/b\u003e per passare rapidamente da Pazienti ad Agenda o Fatturazione."
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Apri il \u003cb\u003emenu laterale a scomparsa\u003c/b\u003e a sinistra per accedere a Magazzino, Utilità e Configurazioni.",
+                                                                                  "img":  true
+                                                                              },
+                                                                              {
+                                                                                  "t":  "Ogni schermata aperta mantiene lo stato attivo permettendoti di lavorare in multitasking."
+                                                                              }
+                                                                          ],
+                                                                "extra":  false
+                                                            }
+                                                        ]
+                                           },
+                                           {
                                                "id":  "backup-aggiornamenti-licenza",
                                                "title":  "Effettuare il Backup, Aggiornare QE e Gestire la Licenza",
                                                "status":  "pub",
@@ -1776,7 +1766,7 @@
                                       "text":  "Familiarizza con la barra degli strumenti, i menu e le aree di lavoro principali.",
                                       "ref":  {
                                                   "type":  "guide",
-                                                  "cat":  "primi-passi",
+                                                  "cat":  "gestione-preferenze",
                                                   "man":  "interfaccia-quaderno"
                                               }
                                   },
