@@ -100,12 +100,11 @@
       <div class="reader" [class.toc-open]="isTocOpen">
         <!-- Articolo -->
         <article class="article">
-          <!-- Pulsante a linguetta per aprire/chiudere l'indice -->
-          <button class="toc-tab-toggle" (click)="toggleToc()" [attr.aria-label]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'" [title]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'">
-            <svg class="toc-tab-icon" [class.rotated]="isTocOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <!-- Pulsante freccia minimalista per aprire/chiudere l'indice -->
+          <button class="toc-min-toggle" (click)="toggleToc()" [attr.aria-label]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'" [title]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'">
+            <svg class="toc-min-icon" [class.rotated]="isTocOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path>
             </svg>
-            <span class="toc-tab-label">{{ isTocOpen ? 'Chiudi' : 'Indice' }}</span>
           </button>
 
           <!-- Panoramica -->
