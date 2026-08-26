@@ -112,10 +112,14 @@ export class GuideComponent implements OnDestroy {
     this.play(dir);
   }
 
+  isTocOpen = false;
+  toggleToc() { this.isTocOpen = !this.isTocOpen; }
+
   openGuide(id: string) {
     this.view = 'read';
     this.selGuide = id;
     this.selFaq = -1;
+    this.isTocOpen = false;
     this.hideSvc();
     this.play('fwd');
 

@@ -97,9 +97,17 @@
       <div class="eyebrow">{{ curCat?.name }} &middot; Guida</div>
       <h1 class="page sm">{{ g.title }}</h1>
 
-      <div class="reader">
+      <div class="reader" [class.toc-open]="isTocOpen">
         <!-- Articolo -->
         <article class="article">
+          <!-- Pulsante a linguetta per aprire/chiudere l'indice -->
+          <button class="toc-tab-toggle" (click)="toggleToc()" [attr.aria-label]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'" [title]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'">
+            <svg class="toc-tab-icon" [class.rotated]="isTocOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path>
+            </svg>
+            <span class="toc-tab-label">{{ isTocOpen ? 'Chiudi' : 'Indice' }}</span>
+          </button>
+
           <!-- Panoramica -->
           <ng-container *ngIf="selFaq === -1">
             <div class="kick">
@@ -152,9 +160,14 @@
           </ng-container>
         </article>
 
-        <!-- Indice a destra -->
+        <!-- Indice a destra (popup / cassetto retraibile) -->
         <aside class="toc">
-          <h4>Contenuto guida</h4>
+          <div class="toc-head">
+            <h4>Contenuto guida</h4>
+            <button class="toc-close-btn" (click)="toggleToc()" title="Chiudi indice">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['close']"></path></svg>
+            </button>
+          </div>
           <button [class.on]="selFaq === -1" (click)="openFaq(-1)"><span class="dot"></span><span>Panoramica</span></button>
           <ng-container *ngIf="hasExtraFaqs">
             <div class="dv">Casi particolari</div>
