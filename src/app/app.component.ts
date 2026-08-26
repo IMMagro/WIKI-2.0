@@ -82,8 +82,8 @@ export class AppComponent implements OnInit {
 
   menuItems = [
     { icon: 'home', label: 'QeHome', active: true },
-    { icon: 'folder', label: 'Guide', active: false },
-    { icon: 'book-open', label: 'FAQ', active: false },
+    { icon: 'book-open', label: 'Guide', active: false },
+    { icon: 'help-circle', label: 'FAQ', active: false },
     { icon: 'briefcase', label: 'Servizi', active: false },
     { icon: 'newspaper', label: 'News', active: false }
   ];
