@@ -1,0 +1,189 @@
+<div *ngIf="legalService.isViewerOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 animate-fadeIn">
+  
+  <!-- Backdrop con Blur -->
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-md transition-opacity duration-300" (click)="close()"></div>
+
+  <!-- Modal Container -->
+  <div class="relative w-full max-w-4xl max-h-[90vh] bg-[#F8FAFD] dark:bg-[#0F172A] rounded-3xl shadow-2xl border border-white/80 dark:border-slate-800 flex flex-col overflow-hidden z-10 font-sans transition-all duration-300">
+    
+    <!-- Top Gradient Bar -->
+    <div class="h-2 w-full bg-gradient-to-r from-[#377DFF] via-[#5B94FF] to-[#F80086]"></div>
+
+    <!-- Header -->
+    <div class="px-6 py-5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-[#E2E8F0] dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Title & Badges -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-[#377DFF]/10 text-[#377DFF] flex items-center justify-center border border-[#377DFF]/20 shadow-sm">
+          <svg *ngIf="legalService.activeViewerTab === 'privacy'" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <svg *ngIf="legalService.activeViewerTab === 'terms'" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-bold text-[#1E2022] dark:text-white">
+              {{ legalService.activeViewerTab === 'privacy' ? 'Informativa sulla Privacy' : 'Termini e Condizioni di Utilizzo' }}
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#377DFF]/10 text-[#377DFF] dark:bg-[#377DFF]/20 border border-[#377DFF]/20">
+              {{ legalService.activeViewerTab === 'privacy' ? 'GDPR UE 2016/679' : 'Regolamento Wiki' }}
+            </span>
+          </div>
+          <p class="text-xs text-[#77838F] dark:text-slate-400 mt-0.5">
+            Ultimo aggiornamento: <span class="font-medium text-[#1E2022] dark:text-slate-300">{{ legalService.config.lastUpdated }}</span> &bull; {{ legalService.config.companyName }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Procedura Guidata / Configura Button -->
+        <button type="button"
+                (click)="openWizard()"
+                class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#377DFF] bg-[#377DFF]/10 hover:bg-[#377DFF]/20 border border-[#377DFF]/30 transition-all cursor-pointer shadow-sm"
+                title="Personalizza i dati con la Procedura Guidata">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+          <span class="hidden sm:inline">Procedura Guidata</span>
+        </button>
+
+        <!-- Copia Testo -->
+        <button type="button"
+                (click)="copyText()"
+                class="p-2 rounded-xl text-[#77838F] hover:text-[#377DFF] bg-white dark:bg-slate-800 hover:bg-[#F0F5FF] dark:hover:bg-slate-700 border border-[#E2E8F0] dark:border-slate-700 transition-all cursor-pointer shadow-sm"
+                title="Copia testo negli appunti">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+          </svg>
+        </button>
+
+        <!-- Stampa / PDF -->
+        <button type="button"
+                (click)="printDocument()"
+                class="p-2 rounded-xl text-[#77838F] hover:text-[#377DFF] bg-white dark:bg-slate-800 hover:bg-[#F0F5FF] dark:hover:bg-slate-700 border border-[#E2E8F0] dark:border-slate-700 transition-all cursor-pointer shadow-sm"
+                title="Stampa o salva in PDF">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+        </button>
+
+        <!-- Chiudi -->
+        <button type="button"
+                (click)="close()"
+                class="p-2 rounded-xl text-[#77838F] hover:text-rose-500 bg-white dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-900/20 border border-[#E2E8F0] dark:border-slate-700 transition-all cursor-pointer shadow-sm"
+                title="Chiudi">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Sub-Navbar (Tabs & Search) -->
+    <div class="px-6 py-3 bg-[#F0F5FF] dark:bg-slate-800/60 border-b border-[#E2E8F0] dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Tab Switcher -->
+      <div class="flex items-center p-1 bg-white/80 dark:bg-slate-900/80 rounded-2xl border border-[#E2E8F0] dark:border-slate-700 shadow-inner">
+        <button type="button"
+                (click)="setTab('privacy')"
+                [ngClass]="legalService.activeViewerTab === 'privacy' ? 'bg-[#377DFF] text-white shadow-md font-semibold' : 'text-[#77838F] dark:text-slate-400 hover:text-[#1E2022] dark:hover:text-white font-medium'"
+                class="px-4 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Privacy Policy
+        </button>
+        <button type="button"
+                (click)="setTab('terms')"
+                [ngClass]="legalService.activeViewerTab === 'terms' ? 'bg-[#377DFF] text-white shadow-md font-semibold' : 'text-[#77838F] dark:text-slate-400 hover:text-[#1E2022] dark:hover:text-white font-medium'"
+                class="px-4 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Termini e Condizioni
+        </button>
+      </div>
+
+      <!-- Live Search in Content -->
+      <div class="relative flex-1 max-w-xs">
+        <input type="text"
+               [(ngModel)]="searchQuery"
+               placeholder="Cerca clausola o parola chiave..."
+               class="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 rounded-xl focus:outline-none focus:border-[#377DFF] dark:text-white placeholder-[#77838F]">
+        <svg class="w-3.5 h-3.5 text-[#77838F] absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Notification Toast for Copy -->
+    <div *ngIf="copiedNotification" class="px-6 py-2 bg-emerald-500 text-white text-xs font-semibold flex items-center justify-between animate-fadeIn">
+      <span>Testo copiato con successo negli appunti!</span>
+      <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">Pronto per esportazione</span>
+    </div>
+
+    <!-- Body Scrollable Content -->
+    <div class="p-6 overflow-y-auto max-h-[calc(90vh-210px)] custom-scrollbar space-y-6">
+      
+      <!-- Informational banner -->
+      <div class="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-[#E2E8F0] dark:border-slate-700 flex items-start gap-3.5 shadow-sm">
+        <div class="w-8 h-8 rounded-xl bg-[#377DFF]/10 text-[#377DFF] flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="text-xs text-[#77838F] dark:text-slate-300 leading-relaxed">
+          <span class="font-bold text-[#1E2022] dark:text-white">Documento Ufficiale Wiki Quaderno Elettronico:</span>
+          Questi termini e l'informativa privacy sono stati configurati specificamente per l'ecosistema di supporto software ({{ legalService.config.supportedSoftware.join(', ') }}). È possibile modificarli o aggiornarli in qualsiasi momento tramite la procedura guidata dedicata.
+        </div>
+      </div>
+
+      <!-- List of Legal Sections -->
+      <div class="space-y-4">
+        <div *ngFor="let sec of sections" [id]="'legal-sec-' + sec.id" class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 shadow-sm transition-all hover:border-[#377DFF]/40">
+          <div class="flex items-center gap-2.5 mb-3">
+            <div class="w-7 h-7 rounded-lg bg-[#F0F5FF] dark:bg-slate-800 text-[#377DFF] flex items-center justify-center font-bold text-xs">
+              &sect;
+            </div>
+            <h3 class="text-base font-bold text-[#1E2022] dark:text-white">{{ sec.title }}</h3>
+          </div>
+          <div class="text-xs md:text-sm text-[#4B5563] dark:text-slate-300 leading-relaxed" [innerHTML]="formatContent(sec.content)"></div>
+        </div>
+
+        <div *ngIf="sections.length === 0" class="text-center py-12">
+          <p class="text-sm text-[#77838F]">Nessuna clausola trovata per il termine cercato: "{{ searchQuery }}".</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer of Modal -->
+    <div class="px-6 py-4 bg-white/90 dark:bg-slate-900/90 border-t border-[#E2E8F0] dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span *ngIf="accepted" class="inline-flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          Presa visione registrata
+        </span>
+        <span *ngIf="!accepted" class="text-xs text-[#77838F] dark:text-slate-400">
+          La consultazione della Wiki implica l'accettazione dei termini d'uso.
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button *ngIf="!accepted"
+                type="button"
+                (click)="onAccept()"
+                class="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-[#377DFF] hover:bg-[#2868E0] shadow-md shadow-[#377DFF]/20 transition-all cursor-pointer">
+          Ho preso visione e Accetto
+        </button>
+        <button type="button"
+                (click)="close()"
+                class="px-4 py-2 rounded-xl text-xs font-medium text-[#77838F] hover:text-[#1E2022] dark:hover:text-white bg-[#F8FAFD] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 transition-all cursor-pointer">
+          Chiudi
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

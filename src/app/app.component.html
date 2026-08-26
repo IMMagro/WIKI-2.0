@@ -165,8 +165,8 @@
       <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-qe-textSecondary dark:text-slate-500">
         <p>&copy; 2026 <a href="https://www.quadernoelettronico.it" target="_blank" rel="noopener noreferrer" class="font-bold text-qe-text dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue transition-colors">Quaderno Elettronico</a> &bull; Assistenza Clienti</p>
         <div class="flex items-center gap-4">
-          <a href="#" class="hover:text-qe-blue transition-colors">Privacy</a>
-          <a href="#" class="hover:text-qe-blue transition-colors">Termini</a>
+          <button type="button" (click)="legalService.openPrivacy()" class="hover:text-[#377DFF] dark:hover:text-[#377DFF] transition-colors cursor-pointer focus:outline-none">Privacy</button>
+          <button type="button" (click)="legalService.openTerms()" class="hover:text-[#377DFF] dark:hover:text-[#377DFF] transition-colors cursor-pointer focus:outline-none">Termini</button>
         </div>
       </div>
     </footer>
@@ -315,8 +315,14 @@
     </div>
   </div>
 
+  <!-- Modale Visualizzatore Termini & Privacy Policy -->
+  <app-legal-modal></app-legal-modal>
+
+  <!-- Procedura Guidata Wizard Termini & Privacy -->
+  <app-legal-wizard-modal></app-legal-wizard-modal>
 
 </div>
+
 
 
 

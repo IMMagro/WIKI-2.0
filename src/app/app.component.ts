@@ -18,11 +18,30 @@ import { ServiziComponent } from './components/servizi/servizi.component';
 import { FaqPageComponent } from './components/faq-page/faq-page.component';
 import { FaqReadingPanelComponent } from './components/shared/faq-reading-panel/faq-reading-panel.component';
 import { NewsCarouselComponent } from './components/news-carousel/news-carousel.component';
+import { LegalService } from './services/legal.service';
+import { LegalModalComponent } from './components/shared/legal-modal/legal-modal.component';
+import { LegalWizardModalComponent } from './components/shared/legal-wizard-modal/legal-wizard-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, GuideComponent, GuideAdminComponent, AdminLoginComponent, AdminLayoutComponent, NewsBellComponent, NewsPopupComponent, HomeComponent, ServiziComponent, FaqPageComponent, FaqReadingPanelComponent, NewsCarouselComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    GuideComponent,
+    GuideAdminComponent,
+    AdminLoginComponent,
+    AdminLayoutComponent,
+    NewsBellComponent,
+    NewsPopupComponent,
+    HomeComponent,
+    ServiziComponent,
+    FaqPageComponent,
+    FaqReadingPanelComponent,
+    NewsCarouselComponent,
+    LegalModalComponent,
+    LegalWizardModalComponent
+  ],
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
@@ -54,7 +73,8 @@ export class AppComponent implements OnInit {
     public themeService: ThemeService,
     public newsService: NewsService,
     public faqReadingService: FaqReadingService,
-    public guideTracker: GuideTrackerService
+    public guideTracker: GuideTrackerService,
+    public legalService: LegalService
   ) {}
 
   // Uscita dalla modalità admin
