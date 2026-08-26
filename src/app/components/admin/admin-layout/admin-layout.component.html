@@ -180,6 +180,42 @@
           </div>
         </div>
       </div>
+
+      <div class="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm p-8 max-w-4xl mt-8">
+        <h2 class="text-xl font-bold text-[#1E2022] mb-2">Visibilità Voci del Menù</h2>
+        <p class="text-sm text-[#77838F] mb-6">Attiva o disattiva le voci visibili nella barra di navigazione globale (Desktop e Mobile). Le modifiche vengono applicate per tutti gli utenti.</p>
+        
+        <div class="flex flex-col gap-4">
+          <div *ngFor="let item of menuItemsMetadata" class="flex items-center justify-between p-5 bg-[#F8FAFD] rounded-2xl border border-[#E2E8F0] hover:border-[#377DFF]/30 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white shadow-sm border border-[#E2E8F0] flex items-center justify-center text-[#377DFF]">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="item.icon" />
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-bold text-[#1E2022]">{{item.label}}</h3>
+                  <span *ngIf="navigationSettingsService.isItemVisible(item.id)" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#377DFF]/10 text-[#377DFF] uppercase tracking-wider">Visibile</span>
+                  <span *ngIf="!navigationSettingsService.isItemVisible(item.id)" class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E2E8F0] text-[#77838F] uppercase tracking-wider">Nascosta</span>
+                </div>
+                <p class="text-xs text-[#77838F] mt-1">{{item.description}}</p>
+              </div>
+            </div>
+            
+            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+              <input type="checkbox" 
+                     [checked]="navigationSettingsService.isItemVisible(item.id)" 
+                     (change)="navigationSettingsService.toggleItemVisibility(item.id)" 
+                     [attr.aria-label]="'Toggle visibility for ' + item.label"
+                     [attr.aria-checked]="navigationSettingsService.isItemVisible(item.id)"
+                     class="sr-only peer">
+              <div class="w-14 h-7 bg-[#E2E8F0] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#377DFF] shadow-inner"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
     </ng-container>
 
   </main>

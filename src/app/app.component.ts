@@ -21,6 +21,7 @@ import { NewsCarouselComponent } from './components/news-carousel/news-carousel.
 import { LegalService } from './services/legal.service';
 import { LegalModalComponent } from './components/shared/legal-modal/legal-modal.component';
 import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-banner.component';
+import { NavigationSettingsService } from './services/navigation-settings.service';
 
 @Component({
   selector: 'app-root',
@@ -74,7 +75,8 @@ export class AppComponent implements OnInit {
     public newsService: NewsService,
     public faqReadingService: FaqReadingService,
     public guideTracker: GuideTrackerService,
-    public legalService: LegalService
+    public legalService: LegalService,
+    public navSettingsService: NavigationSettingsService
   ) {}
 
   // Uscita dalla modalità admin
@@ -103,11 +105,11 @@ export class AppComponent implements OnInit {
   // TODO: Popolare tramite chiamata HTTP al backend (es. /api/get_popular_tags.ashx)
 
   menuItems = [
-    { icon: 'home', label: 'QeHome', active: true },
-    { icon: 'book-open', label: 'Guide', active: false },
-    { icon: 'help-circle', label: 'FAQ', active: false },
-    { icon: 'briefcase', label: 'Servizi', active: false },
-    { icon: 'newspaper', label: 'News', active: false }
+    { id: 'home', icon: 'home', label: 'QeHome', active: true },
+    { id: 'guide', icon: 'book-open', label: 'Guide', active: false },
+    { id: 'faq', icon: 'help-circle', label: 'FAQ', active: false },
+    { id: 'servizi', icon: 'briefcase', label: 'Servizi', active: false },
+    { id: 'news', icon: 'newspaper', label: 'News', active: false }
   ];
 
   toggleSidebar() {
@@ -482,6 +484,17 @@ export class AppComponent implements OnInit {
     this.loadNews();
     this.loadServices();
     this.loadTags();
+
+    // Protezione/Fallback navigazione
+    this.navSettingsService.settings$.subscribe(() => {
+      const activeItem = this.menuItems[this.activeIndex];
+      if (activeItem && !this.navSettingsService.isItemVisible(activeItem.id)) {
+        const firstVisible = this.menuItems.find(m => this.navSettingsService.isItemVisible(m.id));
+        if (firstVisible) {
+          this.selectMenuItem(firstVisible);
+        }
+      }
+    });
 
     const path = window.location.pathname;
     const hash = window.location.hash;
