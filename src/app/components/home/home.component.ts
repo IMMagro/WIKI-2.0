@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideService } from '../../services/guide.service';
 import { FaqReadingService } from '../../services/faq-reading.service';
+import { HomePill } from '../guide/guide.models';
 
 /** Vista "QeHome": titolo + ricerca spotlight sulle FAQ reali, ricerche frequenti. */
 @Component({
@@ -19,6 +20,15 @@ export class HomeComponent {
   @Input() titleVisible = false;
   @Input() homeStage: 0 | 1 = 0;
   @Input() tags: string[] = [];
+  @Output() pillSelected = new EventEmitter<HomePill>();
+
+  get pills(): HomePill[] {
+    return this.guideService.homePills || [];
+  }
+
+  onPillClick(pill: HomePill) {
+    this.pillSelected.emit(pill);
+  }
 
   homeSearchQuery = '';
   isHomeSearchOpen = false;

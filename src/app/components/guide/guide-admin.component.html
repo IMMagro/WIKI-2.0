@@ -1,12 +1,26 @@
-<header class="flex justify-between items-center mb-8 gap-4 flex-wrap">
+<header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
   <div>
-    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide</span></h1>
-    <p class="text-[#77838F] mt-1 font-medium">Crea e organizza categorie, guide e FAQ (con procedura a step).</p>
+    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide & Pills</span></h1>
+    <p class="text-[#77838F] mt-1 font-medium">Crea e organizza categorie, guide, FAQ e le pill in evidenza nella Home.</p>
+    
+    <!-- Tab Switcher -->
+    <div class="flex items-center gap-2 mt-4">
+      <button (click)="activeTab = 'manuals'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
+              [ngClass]="activeTab === 'manuals' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        📁 Categorie & Guide
+      </button>
+      <button (click)="activeTab = 'pills'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
+              [ngClass]="activeTab === 'pills' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        ✨ Pills Home & Ricerche Frequenti
+        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'pills' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ homePills.length }}</span>
+      </button>
+    </div>
   </div>
+
   <div class="flex items-center gap-3">
     <span *ngIf="saveMsg" class="text-sm font-semibold" [ngClass]="saveOk ? 'text-emerald-600' : 'text-[#FF4757]'">{{ saveMsg }}</span>
     <button (click)="save()" [disabled]="saving"
-            class="flex items-center gap-2 bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-60 text-white px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-medium">
+            class="flex items-center gap-2 bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-60 text-white px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-medium cursor-pointer">
       <svg *ngIf="!saving" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
       <svg *ngIf="saving" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
       {{ saving ? 'Salvataggio…' : 'Salva modifiche' }}
@@ -14,7 +28,8 @@
   </div>
 </header>
 
-<div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
+<!-- ===== TAB 1: MANUALI & GUIDE ===== -->
+<div *ngIf="activeTab === 'manuals'" class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
 
   <!-- ===== ALBERO ===== -->
   <aside class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
@@ -197,4 +212,134 @@
       </div>
     </div>
   </section>
+</div>
+
+<!-- ===== TAB 2: PILLS HOME & RICERCHE FREQUENTI ===== -->
+<div *ngIf="activeTab === 'pills'" class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+  
+  <!-- Colonna Sinistra: Gestione Pills Attive -->
+  <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+      <div>
+        <h3 class="text-base font-bold text-[#1E2022]">Pills Attive nella Home ({{ homePills.length }})</h3>
+        <p class="text-xs text-[#77838F] mt-0.5">I pulsanti rapidi che compaiono sotto la barra di ricerca nella schermata iniziale.</p>
+      </div>
+      <button (click)="addPill()" class="flex items-center gap-1.5 bg-[#377DFF] hover:bg-[#2563EB] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md shadow-blue-500/20 transition-colors cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuova Pill
+      </button>
+    </div>
+
+    <div *ngIf="homePills.length === 0" class="text-center py-12 text-[#A9B4BF] bg-[#F8FAFD]/50 rounded-xl border border-dashed border-[#E2E8F0]">
+      Nessuna pill attiva. Aggiungine una o seleziona un suggerimento dal pannello a destra.
+    </div>
+
+    <!-- Lista pills interattiva -->
+    <div class="space-y-3">
+      <div *ngFor="let pill of homePills; let pi = index"
+           class="p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFD]/60 hover:bg-white hover:shadow-sm transition-all flex flex-col md:flex-row items-start md:items-center gap-4">
+        
+        <!-- Reorder buttons -->
+        <div class="flex items-center gap-1 text-[#A9B4BF]">
+          <span class="w-6 h-6 rounded-md bg-[#EAF1FF] text-[#377DFF] flex items-center justify-center text-xs font-bold">{{ pi + 1 }}</span>
+          <button (click)="movePill(pi, -1)" [disabled]="pi === 0" title="Sposta su" class="p-1 hover:text-[#377DFF] disabled:opacity-30 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+          </button>
+          <button (click)="movePill(pi, 1)" [disabled]="pi === homePills.length - 1" title="Sposta giù" class="p-1 hover:text-[#377DFF] disabled:opacity-30 cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+        </div>
+
+        <!-- Label input -->
+        <div class="flex-1 min-w-[180px]">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block mb-1">Testo della Pill</span>
+          <input type="text" [(ngModel)]="pill.label" placeholder="Es. Sistema TS"
+                 class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-sm font-semibold text-[#1E2022] focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF]">
+        </div>
+
+        <!-- Target Type -->
+        <div class="w-36">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block mb-1">Destinazione</span>
+          <select [(ngModel)]="pill.targetType" (ngModelChange)="onPillTargetTypeChange(pill)"
+                  class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#1E2022] focus:outline-none focus:border-[#377DFF]">
+            <option value="category">📁 Categoria</option>
+            <option value="guide">📖 Guida Specifica</option>
+          </select>
+        </div>
+
+        <!-- Target Selector -->
+        <div class="flex-1 min-w-[200px]">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block mb-1">
+            {{ pill.targetType === 'category' ? 'Categoria collegata' : 'Guida collegata' }}
+          </span>
+          
+          <!-- Se Categoria -->
+          <select *ngIf="pill.targetType === 'category'" [(ngModel)]="pill.targetId"
+                  class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#1E2022] focus:outline-none focus:border-[#377DFF]">
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+
+          <!-- Se Guida -->
+          <select *ngIf="pill.targetType === 'guide'" [ngModel]="pill.targetId" (ngModelChange)="onPillGuideChange(pill, $event)"
+                  class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#1E2022] focus:outline-none focus:border-[#377DFF]">
+            <option *ngFor="let g of getAllGuides()" [value]="g.id">[{{ g.categoryName }}] {{ g.title }}</option>
+          </select>
+        </div>
+
+        <!-- Delete button -->
+        <button (click)="removePill(pi)" title="Elimina Pill" class="p-2 text-[#A9B4BF] hover:text-[#FF4757] transition-colors shrink-0 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Colonna Destra: Suggerimenti Automatici + Anteprima Live -->
+  <div class="space-y-6">
+    
+    <!-- Suggerimenti Automatici -->
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">💡</span>
+        <div>
+          <h4 class="text-sm font-bold text-[#1E2022]">Suggerimenti Automatici</h4>
+          <p class="text-[11px] text-[#77838F]">Argomenti e guide rilevanti non ancora in evidenza.</p>
+        </div>
+      </div>
+
+      <div class="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+        <div *ngFor="let sug of getSuggestions()"
+             class="p-2.5 rounded-xl border border-[#E2E8F0] bg-white hover:border-[#377DFF]/40 transition-all flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-bold text-[#1E2022] truncate">{{ sug.pill.label }}</div>
+            <div class="text-[10px] text-[#77838F] truncate">{{ sug.reason }}</div>
+          </div>
+          <button (click)="addSuggestedPill(sug.pill)"
+                  class="px-2.5 py-1 rounded-lg bg-[#EAF1FF] hover:bg-[#377DFF] text-[#377DFF] hover:text-white text-[11px] font-bold transition-colors shrink-0 cursor-pointer">
+            + Aggiungi
+          </button>
+        </div>
+
+        <div *ngIf="getSuggestions().length === 0" class="text-xs text-[#A9B4BF] text-center py-4">
+          Tutte le guide e categorie principali sono già inserite nelle pills!
+        </div>
+      </div>
+    </div>
+
+    <!-- Anteprima Live Home -->
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-[#A9B4BF] mb-3">Anteprima Live Home</h4>
+      <div class="p-4 rounded-xl bg-gradient-to-b from-[#F8FAFD] to-[#EAF1FF]/40 border border-[#E2E8F0] text-center">
+        <div class="text-xs font-medium text-[#77838F] mb-3">Ricerche frequenti</div>
+        <div class="flex flex-wrap justify-center gap-2">
+          <span *ngFor="let pill of homePills"
+                class="px-3 py-1 rounded-full text-xs font-semibold text-[#1E2022] bg-white border border-[#E2E8F0] shadow-sm">
+            {{ pill.label }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>

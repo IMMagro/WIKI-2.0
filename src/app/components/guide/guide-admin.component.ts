@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
-import { Category, Guide, Faq, Step } from './guide.models';
+import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 
 @Component({
   selector: 'app-guide-admin',
@@ -12,6 +12,8 @@ import { Category, Guide, Faq, Step } from './guide.models';
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
+  activeTab: 'manuals' | 'pills' = 'manuals';
+
   selCat: Category | null = null;
   selGuide: Guide | null = null;
   expanded: Record<string, boolean> = {};
@@ -34,6 +36,7 @@ export class GuideAdminComponent {
   constructor(public guides: GuideService, private http: HttpClient) {}
 
   get categories(): Category[] { return this.guides.categories; }
+  get homePills(): HomePill[] { return this.guides.homePills; }
 
   faqCount(c: Category): number { return c.manuals.reduce((n, g) => n + g.faqs.length, 0); }
 
@@ -99,12 +102,83 @@ export class GuideAdminComponent {
   tagsStr(f: Faq): string { return (f.tags || []).join(', '); }
   setTags(f: Faq, val: string) { f.tags = val.split(',').map(t => t.trim()).filter(Boolean); }
 
+  // ----- Gestione Pills Home -----
+  addPill() {
+    const firstCat = this.categories[0];
+    const newPill: HomePill = {
+      id: 'p-' + Date.now(),
+      label: 'Nuova Pill',
+      targetType: 'category',
+      targetId: firstCat ? firstCat.id : ''
+    };
+    this.guides.homePills.push(newPill);
+  }
+
+  addSuggestedPill(sug: HomePill) {
+    this.guides.homePills.push({
+      ...sug,
+      id: 'p-' + Date.now()
+    });
+  }
+
+  removePill(index: number) {
+    this.guides.homePills.splice(index, 1);
+  }
+
+  movePill(index: number, dir: -1 | 1) {
+    const newIdx = index + dir;
+    if (newIdx < 0 || newIdx >= this.guides.homePills.length) return;
+    const temp = this.guides.homePills[index];
+    this.guides.homePills[index] = this.guides.homePills[newIdx];
+    this.guides.homePills[newIdx] = temp;
+  }
+
+  getAllGuides(): { id: string; title: string; categoryName: string; categoryId: string }[] {
+    const list: { id: string; title: string; categoryName: string; categoryId: string }[] = [];
+    for (const c of this.categories) {
+      for (const g of (c.manuals || [])) {
+        list.push({ id: g.id, title: g.title, categoryName: c.name, categoryId: c.id });
+      }
+    }
+    return list;
+  }
+
+  onPillTargetTypeChange(pill: HomePill) {
+    if (pill.targetType === 'category') {
+      const firstCat = this.categories[0];
+      pill.targetId = firstCat ? firstCat.id : '';
+      pill.categoryId = undefined;
+    } else {
+      const firstGuide = this.getAllGuides()[0];
+      if (firstGuide) {
+        pill.targetId = firstGuide.id;
+        pill.categoryId = firstGuide.categoryId;
+      }
+    }
+  }
+
+  onPillGuideChange(pill: HomePill, guideId: string) {
+    pill.targetId = guideId;
+    const found = this.getAllGuides().find(g => g.id === guideId);
+    if (found) {
+      pill.categoryId = found.categoryId;
+    }
+  }
+
+  getSuggestions(): { pill: HomePill; reason: string }[] {
+    return this.guides.getSuggestedPills();
+  }
+
   // ----- Salvataggio -----
   save() {
     this.saving = true; this.saveMsg = '';
     const token = sessionStorage.getItem('adminToken');
     const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
-    this.http.post('/api/get_guides.ashx', { categories: this.guides.categories, journey: this.guides.journey }, { headers }).subscribe({
+    this.http.post('/api/get_guides.ashx', {
+      categories: this.guides.categories,
+      journey: this.guides.journey,
+      homePills: this.guides.homePills
+    }, { headers }).subscribe({
       next: () => { this.saving = false; this.saveOk = true; this.saveMsg = 'Modifiche salvate'; setTimeout(() => this.saveMsg = '', 3500); },
       error: () => { this.saving = false; this.saveOk = false; this.saveMsg = 'Errore nel salvataggio (serve login admin e ambiente IIS)'; }
     });

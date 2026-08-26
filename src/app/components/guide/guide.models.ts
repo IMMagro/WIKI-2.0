@@ -10,3 +10,13 @@ export interface Journey { intro: string; steps: JourneyStep[]; }
 
 // Risultato di ricerca su una singola FAQ (con contesto per il breadcrumb e la navigazione)
 export interface FaqHit { category: Category; guide: Guide; faqIndex: number; faq: Faq; }
+
+// Pills in evidenza per la Home ("Ricerche frequenti")
+export interface HomePill {
+  id: string;
+  label: string;
+  targetType: 'category' | 'guide';
+  targetId: string;
+  categoryId?: string;
+}
+

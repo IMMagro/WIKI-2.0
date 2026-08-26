@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category, Journey, FaqHit } from '../components/guide/guide.models';
+import { Category, Journey, FaqHit, HomePill } from '../components/guide/guide.models';
 
 @Injectable({ providedIn: 'root' })
 export class GuideService {
@@ -9,6 +9,15 @@ export class GuideService {
   private _categories: Category[] = [];
   private _publicCategories: Category[] = [];
   private _allFaqItems: any[] = [];
+
+  homePills: HomePill[] = [
+    { id: 'p-1', label: 'Sistema TS', targetType: 'guide', targetId: 'sistema-ts', categoryId: 'contabilita' },
+    { id: 'p-2', label: 'Fattura Elettronica', targetType: 'guide', targetId: 'fattura-elettronica', categoryId: 'contabilita' },
+    { id: 'p-3', label: 'Odontogramma', targetType: 'category', targetId: 'odontogramma' },
+    { id: 'p-4', label: 'Pazienti', targetType: 'category', targetId: 'pazienti' },
+    { id: 'p-5', label: 'Agenda', targetType: 'category', targetId: 'agenda' },
+    { id: 'p-6', label: 'Gestione Listini', targetType: 'guide', targetId: 'gestione-listini-onorario', categoryId: 'onorario' }
+  ];
 
   get categories(): Category[] {
     return this._categories;
@@ -75,6 +84,9 @@ export class GuideService {
         if (data && data.journey && Array.isArray(data.journey.steps) && data.journey.steps.length) {
           this.journey = data.journey;
         }
+        if (data && Array.isArray(data.homePills) && data.homePills.length) {
+          this.homePills = data.homePills;
+        }
         this.loaded = true;
       },
       error: () => {
@@ -86,6 +98,9 @@ export class GuideService {
             }
             if (apiData && apiData.journey && Array.isArray(apiData.journey.steps) && apiData.journey.steps.length) {
               this.journey = apiData.journey;
+            }
+            if (apiData && Array.isArray(apiData.homePills) && apiData.homePills.length) {
+              this.homePills = apiData.homePills;
             }
             this.loaded = true;
           },
@@ -99,6 +114,9 @@ export class GuideService {
                 if (rootData && rootData.journey) {
                   this.journey = rootData.journey;
                 }
+                if (rootData && Array.isArray(rootData.homePills)) {
+                  this.homePills = rootData.homePills;
+                }
                 this.loaded = true;
               }
             });
@@ -106,6 +124,49 @@ export class GuideService {
         });
       }
     });
+  }
+
+  getSuggestedPills(): { pill: HomePill; reason: string }[] {
+    const activeTargets = new Set((this.homePills || []).map(p => p.targetType + ':' + p.targetId));
+    const suggestions: { pill: HomePill; reason: string }[] = [];
+
+    // 1. Suggerisci categorie non ancora presenti
+    for (const c of (this.categories || [])) {
+      const key = 'category:' + c.id;
+      if (!activeTargets.has(key) && c.manuals && c.manuals.length > 0) {
+        suggestions.push({
+          pill: {
+            id: 'sug-cat-' + c.id,
+            label: c.name,
+            targetType: 'category',
+            targetId: c.id
+          },
+          reason: `Categoria (${c.manuals.length} guide)`
+        });
+      }
+    }
+
+    // 2. Suggerisci guide rilevanti
+    for (const c of (this.categories || [])) {
+      for (const g of (c.manuals || [])) {
+        const key = 'guide:' + g.id;
+        if (!activeTargets.has(key) && g.status !== 'draft') {
+          const faqCount = (g.faqs || []).length;
+          suggestions.push({
+            pill: {
+              id: 'sug-g-' + g.id,
+              label: g.title,
+              targetType: 'guide',
+              targetId: g.id,
+              categoryId: c.id
+            },
+            reason: `Guida in "${c.name}"${faqCount > 0 ? ' (' + faqCount + ' FAQ)' : ''}`
+          });
+        }
+      }
+    }
+
+    return suggestions;
   }
 
   private recomputeDerived(): void {

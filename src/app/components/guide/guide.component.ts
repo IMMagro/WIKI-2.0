@@ -180,4 +180,22 @@ export class GuideComponent implements OnDestroy {
     this.openGuide(guideId);
     this.openFaq(faqIndex);
   }
+
+  /** Apre una categoria o direttamente una guida partendo da una Pill della Home (Comportamento B) */
+  openFromPill(pill: any): void {
+    if (!pill) return;
+    if (pill.targetType === 'category') {
+      this.openCat(pill.targetId);
+    } else if (pill.targetType === 'guide') {
+      let catId = pill.categoryId;
+      if (!catId) {
+        const foundCat = this.categories.find(c => (c.manuals || []).some(m => m.id === pill.targetId));
+        if (foundCat) catId = foundCat.id;
+      }
+      if (catId) {
+        this.selCat = catId;
+      }
+      this.openGuide(pill.targetId);
+    }
+  }
 }

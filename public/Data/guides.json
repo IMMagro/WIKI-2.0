@@ -1,4 +1,4 @@
-﻿{
+{
     "categories":  [
                        {
                            "id":  "pazienti",
@@ -1824,6 +1824,14 @@
                                                   "man":  "fatture-pazienti"
                                               }
                                   }
-                              ]
+                              ],
+                    "homePills": [
+                        { "id": "p-1", "label": "Sistema TS", "targetType": "guide", "targetId": "sistema-ts", "categoryId": "contabilita" },
+                        { "id": "p-2", "label": "Fattura Elettronica", "targetType": "guide", "targetId": "fattura-elettronica", "categoryId": "contabilita" },
+                        { "id": "p-3", "label": "Odontogramma", "targetType": "category", "targetId": "odontogramma" },
+                        { "id": "p-4", "label": "Pazienti", "targetType": "category", "targetId": "pazienti" },
+                        { "id": "p-5", "label": "Agenda", "targetType": "category", "targetId": "agenda" },
+                        { "id": "p-6", "label": "Gestione Listini", "targetType": "guide", "targetId": "gestione-listini-onorario", "categoryId": "onorario" }
+                    ]
                 }
 }
