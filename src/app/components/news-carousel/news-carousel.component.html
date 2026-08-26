@@ -1,10 +1,13 @@
 <div class="w-full h-full max-w-7xl mx-auto flex flex-col relative justify-between py-2">
 
   <!-- ANIMATED TITLE CONTAINER -->
-  <div class="absolute z-30 flex flex-col pointer-events-none transition-all duration-[1000ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+  <div class="absolute z-30 flex flex-col pointer-events-none ease-[cubic-bezier(0.22,1,0.36,1)]"
+       [class.transition-none]="stage === 'title-black'"
+       [class.transition-all]="stage !== 'title-black'"
+       [class.duration-[1000ms]]="stage !== 'title-black'"
        [ngClass]="{
-         'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[1.3] items-center text-center': stage === 'title-black' || stage === 'title-blue',
-         'top-2 left-1/2 -translate-x-1/2 translate-y-0 scale-100 items-center text-center': stage === 'moving' || stage === 'cards',
+         'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[1.2] sm:scale-[1.3] items-center text-center origin-center': stage === 'title-black' || stage === 'title-blue',
+         'top-2 left-1/2 -translate-x-1/2 translate-y-0 scale-100 items-center text-center origin-center': stage === 'moving' || stage === 'cards',
          'top-2 left-4 md:left-8 translate-x-0 translate-y-0 scale-[0.85] origin-top-left items-start text-left': stage === 'detail'
        }">
     <h1 class="text-qe-text dark:text-slate-100 font-extrabold tracking-tight m-0 flex items-center"

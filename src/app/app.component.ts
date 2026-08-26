@@ -274,12 +274,12 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       if (prevLabel === 'QeHome' && this.activeIndex !== 0) {
         this.homeStage = 0;
-      } else if (prevLabel === 'Servizi' && this.activeIndex !== 2) {
+      } else if (prevLabel === 'FAQ' && this.activeIndex !== 2) {
+        this.manualiStage = 'center';
+      } else if (prevLabel === 'Servizi' && this.activeIndex !== 3) {
         this.serviziStage = 'title-black';
         this.currentServicePage = 0;
         this.animatingDirection = 0;
-      } else if (prevLabel === 'FAQ' && this.activeIndex !== 1) {
-        this.manualiStage = 'center';
       } else if (prevLabel === 'News' && this.activeIndex !== 4) {
         this.newsStage = 'title-black';
       }
