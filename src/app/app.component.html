@@ -18,18 +18,18 @@
 
   <app-news-popup *ngIf="!isAdminRoute"></app-news-popup>
 
-  <!-- Main Content Wrapper (Static padding, non si muove più) -->
-  <div *ngIf="!isAdminRoute" class="absolute inset-0 z-10 flex flex-col">
+  <!-- Main Content Wrapper (Responsive padding per bottom bar su mobile) -->
+  <div *ngIf="!isAdminRoute" class="absolute inset-0 z-10 flex flex-col pb-16 md:pb-0">
     
 
     <header class="relative overflow-hidden flex-1 flex flex-col h-full" style="z-index: 1">
       <!-- Top nav bar -->
-      <div class="relative z-50 flex items-center justify-end gap-4 px-8 py-6" style="animation: fadeInPage 1s ease forwards">
+      <div class="relative z-50 flex items-center justify-end gap-3 sm:gap-4 px-4 py-3 md:px-8 md:py-6" style="animation: fadeInPage 1s ease forwards">
 
         <app-news-bell></app-news-bell>
 
         <div class="relative z-50" #contactDropdown>
-          <button (click)="isContactOpen = !isContactOpen" class="group flex items-center gap-1.5 text-[15px] outline-none focus:outline-none bg-transparent cursor-pointer">
+          <button (click)="isContactOpen = !isContactOpen" class="group flex items-center gap-1.5 text-sm sm:text-[15px] outline-none focus:outline-none bg-transparent cursor-pointer">
             <span class="font-bold text-qe-blue">Hai bisogno?</span>
             <span class="font-semibold transition-colors duration-300 group-hover:text-qe-blue"
                   [class.text-qe-blue]="isContactOpen"
@@ -49,50 +49,50 @@
             </svg>
           </button>
           
-          <!-- Popover Card (Glassmorphism) -->
+          <!-- Popover Card (Glassmorphism & Responsive Mobile Width) -->
           <div [ngClass]="isContactOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'"
-               class="absolute right-0 top-full mt-4 w-[340px] z-[100] bg-white/85 dark:bg-slate-800/85 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-[2rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+               class="absolute right-0 top-full mt-2 sm:mt-4 w-[calc(100vw-2rem)] sm:w-[340px] max-w-[340px] z-[100] bg-white/85 dark:bg-slate-800/85 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
             
             <!-- Intestazione -->
-            <div class="p-6 pb-4 border-b border-gray-100/80 dark:border-slate-700/60 relative">
+            <div class="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-gray-100/80 dark:border-slate-700/60 relative">
                <button (click)="isContactOpen = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                </button>
-               <h3 class="font-extrabold text-qe-text dark:text-slate-100 text-lg text-center mt-1">Quaderno Elettronico</h3>
+               <h3 class="font-extrabold text-qe-text dark:text-slate-100 text-base sm:text-lg text-center mt-1">Quaderno Elettronico</h3>
                <p class="text-xs font-medium text-qe-textSecondary dark:text-slate-400 text-center mt-1">Scegli come metterti in contatto.</p>
             </div>
 
             <!-- Supporto Tecnico -->
-            <div class="p-5 border-b border-gray-100/80 dark:border-slate-700/60 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
-               <div class="flex items-center gap-4">
-                 <div class="w-12 h-12 rounded-2xl bg-qe-blue/10 dark:bg-qe-blue/20 text-qe-blue flex items-center justify-center shrink-0 shadow-sm border border-qe-blue/10 transition-transform group-hover:scale-105">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <div class="p-4 sm:p-5 border-b border-gray-100/80 dark:border-slate-700/60 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
+               <div class="flex items-center gap-3 sm:gap-4">
+                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-qe-blue/10 dark:bg-qe-blue/20 text-qe-blue flex items-center justify-center shrink-0 shadow-sm border border-qe-blue/10 transition-transform group-hover:scale-105">
+                    <svg width="18" height="18" class="sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                  </div>
-                 <div>
-                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-[15px]">Supporto Tecnico</h4>
-                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1.5">Lun-Ven, 8:30 - 18:00</p>
+                 <div class="min-w-0 flex-1">
+                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-sm sm:text-[15px] truncate">Supporto Tecnico</h4>
+                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1">Lun-Ven, 8:30 - 18:00</p>
                    <a href="tel:0559850486" class="block text-xs font-extrabold text-qe-blue hover:underline mb-0.5">055 9850486</a>
-                   <a href="mailto:assistenza@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-qe-blue transition-colors">
-                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                     assistenza&#64;quadernoelettronico.it
+                   <a href="mailto:assistenza@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-qe-blue transition-colors truncate">
+                     <svg width="12" height="12" class="shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                     <span class="truncate">assistenza&#64;quadernoelettronico.it</span>
                    </a>
                  </div>
                </div>
             </div>
 
             <!-- Ufficio Commerciale -->
-            <div class="p-5 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
-               <div class="flex items-center gap-4">
-                 <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-sm border border-purple-100 dark:border-purple-800/50 transition-transform group-hover:scale-105">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <div class="p-4 sm:p-5 hover:bg-white/60 dark:hover:bg-slate-700/40 transition-colors group cursor-default">
+               <div class="flex items-center gap-3 sm:gap-4">
+                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 shadow-sm border border-purple-100 dark:border-purple-800/50 transition-transform group-hover:scale-105">
+                    <svg width="18" height="18" class="sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                  </div>
-                 <div>
-                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-[15px]">Ufficio Commerciale</h4>
-                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1.5">Preventivi e licenze</p>
+                 <div class="min-w-0 flex-1">
+                   <h4 class="font-bold text-qe-text dark:text-slate-100 text-sm sm:text-[15px] truncate">Ufficio Commerciale</h4>
+                   <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1">Preventivi e licenze</p>
                    <a href="tel:055982476" class="block text-xs font-extrabold text-purple-600 dark:text-purple-400 hover:underline mb-0.5">055 982476</a>
-                   <a href="mailto:commerciale@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-purple-500 transition-colors">
-                     <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                     commerciale&#64;quadernoelettronico.it
+                   <a href="mailto:commerciale@quadernoelettronico.it" class="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-purple-500 transition-colors truncate">
+                     <svg width="12" height="12" class="shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                     <span class="truncate">commerciale&#64;quadernoelettronico.it</span>
                    </a>
                  </div>
                </div>
@@ -124,7 +124,7 @@
         </div>
 
         <!-- View 2: FAQ -->
-        <div class="absolute inset-0 flex flex-col py-8 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              [ngClass]="faqReadingService.selectedFaq ? 'overflow-hidden' : 'overflow-y-auto scrollbar-hide'"
              [style.opacity]="activeIndex === 2 ? 1 : 0"
              [style.pointer-events]="activeIndex === 2 ? 'auto' : 'none'"
@@ -133,7 +133,7 @@
         </div>
 
         <!-- View 3: Servizi -->
-        <div class="absolute inset-0 flex flex-col py-8 px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              [style.opacity]="activeIndex === 3 ? 1 : 0"
              [style.pointer-events]="activeIndex === 3 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 3 ? 'translateY(0)' : (3 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
@@ -143,7 +143,7 @@
         </div>
 
         <!-- View 4: News / Aggiornamenti -->
-        <div class="absolute inset-0 flex flex-col items-center pt-8 pb-4 px-4 md:px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col items-center pt-4 md:pt-8 pb-20 md:pb-4 px-4 md:px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
              [style.opacity]="activeIndex === 4 ? 1 : 0"
                [style.pointer-events]="activeIndex === 4 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 4 ? 'translateY(0)' : (4 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
@@ -161,7 +161,7 @@
     </header>
 
     <!-- Footer -->
-    <footer class="bg-transparent px-6 py-4 backdrop-blur-sm relative z-10" style="animation: fadeInPage 1s ease forwards">
+    <footer class="bg-transparent px-4 sm:px-6 py-3 sm:py-4 backdrop-blur-sm relative z-10 pb-6 md:pb-4" style="animation: fadeInPage 1s ease forwards">
 
       <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-qe-textSecondary dark:text-slate-500">
         <p>&copy; 2026 <a href="https://www.quadernoelettronico.it" target="_blank" rel="noopener noreferrer" class="font-bold text-qe-text dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue transition-colors">Quaderno Elettronico</a> &bull; Assistenza Clienti</p>
@@ -173,8 +173,8 @@
     </footer>
   </div>
 
-  <!-- Sidebar Floating (Modern) -->
-  <aside *ngIf="!isAdminRoute" class="absolute left-0 top-1/2 -translate-y-1/2 z-50 flex flex-col items-start gap-2">
+  <!-- Sidebar Floating (Desktop: md:flex) -->
+  <aside *ngIf="!isAdminRoute" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 flex-col items-start gap-2">
       
       <!-- Area Menu (Trigger dell'hover) -->
       <div class="relative flex flex-col transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] py-2"
@@ -229,7 +229,7 @@
            </nav>
       </div>
 
-      <!-- Footer Theme & Admin Toggle -->
+      <!-- Footer Theme & Admin Toggle (Desktop) -->
       <div class="w-24 flex flex-col justify-center items-center py-4 gap-4 z-10 relative">
          <button *ngIf="isLocalhost" (click)="goToAdmin()" title="Accedi come Admin (Solo Localhost)"
                  class="w-12 h-12 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
@@ -245,50 +245,92 @@
       </div>
   </aside>
 
+  <!-- Mobile Bottom Navigation Bar (< md) -->
+  <nav *ngIf="!isAdminRoute" class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl border-t border-slate-200/50 dark:border-slate-800/50 shadow-lg shadow-black/5 px-2 py-1.5 flex items-center justify-around">
+    <button *ngFor="let item of menuItems"
+            (click)="selectMenuItem(item)"
+            class="flex-1 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center py-1 px-1 rounded-xl transition-all duration-200 active:scale-95 relative cursor-pointer"
+            [ngClass]="item.active ? 'text-qe-blue bg-qe-blue/10 dark:bg-qe-blue/20 font-semibold' : 'text-slate-500 dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue'">
+      
+      <!-- Active Indicator Bar -->
+      <span *ngIf="item.active" class="absolute top-0 w-6 h-0.5 bg-qe-blue rounded-full"></span>
+
+      <!-- Icon -->
+      <svg class="w-5 h-5 flex-shrink-0 transition-colors"
+           [ngClass]="item.active ? 'text-qe-blue' : 'text-slate-500 dark:text-slate-400'"
+           fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path *ngIf="item.icon === 'home'" stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        <path *ngIf="item.icon === 'help-circle' || item.icon === 'question' || item.icon === 'question-mark-circle'" stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+        <path *ngIf="item.icon === 'book-open'" stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        <path *ngIf="item.icon === 'briefcase'" stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        <path *ngIf="item.icon === 'newspaper'" stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+      </svg>
+      <span class="text-[10px] tracking-tight mt-0.5 truncate max-w-full">{{ item.label }}</span>
+    </button>
+
+    <!-- Divider -->
+    <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700/60 mx-1"></div>
+
+    <!-- Admin (Localhost only) -->
+    <button *ngIf="isLocalhost" (click)="goToAdmin()" title="Accedi come Admin"
+            class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center py-1 px-1 rounded-xl text-slate-400 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 active:scale-95 transition-all cursor-pointer">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+      <span class="text-[10px] tracking-tight mt-0.5">Admin</span>
+    </button>
+
+    <!-- Theme Toggle Button -->
+    <button (click)="themeService.toggleTheme($event)" title="Cambia tema"
+            class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center py-1 px-1 rounded-xl text-slate-500 dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue active:scale-95 transition-all cursor-pointer">
+      <svg *ngIf="!themeService.isDarkMode" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+      <svg *ngIf="themeService.isDarkMode" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+      <span class="text-[10px] tracking-tight mt-0.5">{{ themeService.isDarkMode ? 'Scuro' : 'Chiaro' }}</span>
+    </button>
+  </nav>
+
   <app-faq-reading-panel (categorySelected)="goToCategoryFromFaq($event)"></app-faq-reading-panel>
 
   <!-- Modale Caricamento Manuale -->
-  <div *ngIf="isUploadModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center">
+  <div *ngIf="isUploadModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
     <!-- Backdrop con effetto blur -->
     <div class="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm" (click)="closeUploadModal()"></div>
     
     <!-- Modal Content -->
-    <div class="relative bg-white rounded-3xl shadow-[0_20px_60px_rgb(0,0,0,0.12)] w-full max-w-2xl mx-4 overflow-hidden" style="animation: fadeUpCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards">
+    <div class="relative bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_60px_rgb(0,0,0,0.12)] w-full max-w-2xl max-h-[90vh] flex flex-col mx-auto overflow-hidden border border-slate-100 dark:border-slate-800" style="animation: fadeUpCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards">
       
       <!-- Header Modale -->
-      <div class="px-8 py-6 border-b border-[#E2E8F0] bg-white flex justify-between items-center">
+      <div class="px-4 py-4 md:px-8 md:py-6 border-b border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-between items-center shrink-0">
         <div>
-          <h2 class="text-2xl font-semibold text-[#1E2022]">Carica Manuale</h2>
-          <p class="text-sm text-[#77838F] mt-1">Aggiungi un nuovo documento alla libreria Wiki</p>
+          <h2 class="text-xl md:text-2xl font-semibold text-[#1E2022] dark:text-slate-100">Carica Manuale</h2>
+          <p class="text-xs md:text-sm text-[#77838F] dark:text-slate-400 mt-0.5 md:mt-1">Aggiungi un nuovo documento alla libreria Wiki</p>
         </div>
-        <button (click)="closeUploadModal()" class="w-10 h-10 rounded-xl bg-[#F8FAFD] flex items-center justify-center text-[#77838F] hover:bg-[#F0F5FF] hover:text-[#377DFF] transition-all">
+        <button (click)="closeUploadModal()" class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[#F8FAFD] dark:bg-slate-800 flex items-center justify-center text-[#77838F] dark:text-slate-400 hover:bg-[#F0F5FF] dark:hover:bg-slate-700 hover:text-[#377DFF] transition-all">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
 
       <!-- Body Modale -->
-      <div class="p-8">
+      <div class="p-4 md:p-8 overflow-y-auto flex-1">
         <!-- Area Drag & Drop -->
-        <div class="w-full h-48 border-2 border-dashed border-[#E2E8F0] hover:border-[#377DFF] bg-[#F8FAFD] hover:bg-[#F0F5FF]/50 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all mb-8 group">
-          <div class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center text-[#377DFF] mb-4 group-hover:scale-110 transition-transform">
-            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+        <div class="w-full h-36 md:h-48 border-2 border-dashed border-[#E2E8F0] dark:border-slate-700 hover:border-[#377DFF] bg-[#F8FAFD] dark:bg-slate-800/50 hover:bg-[#F0F5FF]/50 dark:hover:bg-slate-800 rounded-2xl flex flex-col items-center justify-center cursor-pointer transition-all mb-6 md:mb-8 group p-4 text-center">
+          <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white dark:bg-slate-700 shadow-sm flex items-center justify-center text-[#377DFF] mb-2 md:mb-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
           </div>
-          <h3 class="font-semibold text-[#1E2022] mb-1">Trascina qui il file</h3>
-          <p class="text-sm text-[#77838F]">oppure <span class="text-[#377DFF] font-medium">clicca per sfogliare</span></p>
-          <p class="text-xs text-[#A0ABC0] mt-2">Supportati: PDF, Markdown, DOCX (Max 20MB)</p>
+          <h3 class="font-semibold text-sm md:text-base text-[#1E2022] dark:text-slate-200 mb-1">Trascina qui il file</h3>
+          <p class="text-xs md:text-sm text-[#77838F] dark:text-slate-400">oppure <span class="text-[#377DFF] font-medium">clicca per sfogliare</span></p>
+          <p class="text-[11px] md:text-xs text-[#A0ABC0] dark:text-slate-500 mt-1 md:mt-2">Supportati: PDF, Markdown, DOCX (Max 20MB)</p>
           <input type="file" class="hidden" accept=".pdf,.md,.docx" />
         </div>
 
         <!-- Form Dati -->
-        <div class="grid grid-cols-2 gap-6">
-          <div class="col-span-2">
-            <label class="block text-sm font-semibold text-[#1E2022] mb-2">Titolo Manuale</label>
-            <input type="text" placeholder="Es. Manuale Operativo 2026..." class="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div class="col-span-1 md:col-span-2">
+            <label class="block text-sm font-semibold text-[#1E2022] dark:text-slate-200 mb-2">Titolo Manuale</label>
+            <input type="text" placeholder="Es. Manuale Operativo 2026..." class="w-full px-4 py-2.5 md:py-3 bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] dark:text-slate-100">
           </div>
           
           <div>
-            <label class="block text-sm font-semibold text-[#1E2022] mb-2">Categoria</label>
-            <select class="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+            <label class="block text-sm font-semibold text-[#1E2022] dark:text-slate-200 mb-2">Categoria</label>
+            <select class="w-full px-4 py-2.5 md:py-3 bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] dark:text-slate-100">
               <option value="">Seleziona Categoria...</option>
               <option value="generale">Generale</option>
               <option value="motore">Motore</option>
@@ -297,18 +339,18 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-[#1E2022] mb-2">Tag/Parole Chiave</label>
-            <input type="text" placeholder="separati da virgola" class="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022]">
+            <label class="block text-sm font-semibold text-[#1E2022] dark:text-slate-200 mb-2">Tag/Parole Chiave</label>
+            <input type="text" placeholder="separati da virgola" class="w-full px-4 py-2.5 md:py-3 bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] transition-all text-[#1E2022] dark:text-slate-100">
           </div>
         </div>
       </div>
 
       <!-- Footer Modale -->
-      <div class="px-8 py-5 border-t border-[#E2E8F0] bg-[#F8FAFD] flex justify-end gap-3 rounded-b-3xl">
-        <button (click)="closeUploadModal()" class="px-6 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#1E2022] hover:bg-[#F8FAFD] font-medium transition-all">
+      <div class="px-4 py-3 md:px-8 md:py-5 border-t border-[#E2E8F0] dark:border-slate-800 bg-[#F8FAFD] dark:bg-slate-800/80 flex justify-end gap-3 rounded-b-3xl shrink-0">
+        <button (click)="closeUploadModal()" class="px-4 md:px-6 py-2 md:py-2.5 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-white dark:bg-slate-800 text-[#1E2022] dark:text-slate-200 hover:bg-[#F8FAFD] dark:hover:bg-slate-700 font-medium text-sm md:text-base transition-all">
           Annulla
         </button>
-        <button class="px-6 py-2.5 rounded-xl bg-[#377DFF] hover:bg-[#2563EB] text-white font-medium shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+        <button class="px-4 md:px-6 py-2 md:py-2.5 rounded-xl bg-[#377DFF] hover:bg-[#2563EB] text-white font-medium shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2 text-sm md:text-base">
           Carica e Salva
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
         </button>
