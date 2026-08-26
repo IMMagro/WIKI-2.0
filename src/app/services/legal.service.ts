@@ -11,8 +11,16 @@ export interface LegalConfig {
   companyName: string;
   vatNumber: string;
   registeredOffice: string;
+  operativeOffice: string;
+  phoneSupport: string;
+  phoneCommercial: string;
   contactEmail: string;
+  commercialEmail: string;
+  adminEmail: string;
   dpoEmail: string;
+  pec: string;
+  reaNumber: string;
+  shareCapital: string;
   supportedSoftware: string[];
   cookieTypes: {
     technical: boolean;
@@ -50,14 +58,22 @@ export class LegalService {
   // Cookie preferences
   cookiePreferences: CookiePreferences | null = null;
 
-  // Default initial configuration
+  // Dati ufficiali estratti da quadernoelettronico.it
   config: LegalConfig = {
-    companyName: 'Quaderno Elettronico S.r.l. / Windent & Poliwin Support',
-    vatNumber: 'IT01234567890',
-    registeredOffice: 'Via Roma, 100 - 00100 Roma (RM), Italia',
+    companyName: 'Quaderno Elettronico S.r.l.',
+    vatNumber: '02072670512',
+    registeredOffice: 'Via Carlo Cattaneo, 3 - 52025 Montevarchi (AR), Italia',
+    operativeOffice: 'Via Giacomo Leopardi, 31/B - 52025 Montevarchi (AR), Italia',
+    phoneSupport: '055 985 0486',
+    phoneCommercial: '055 982 476',
     contactEmail: 'assistenza@quadernoelettronico.it',
-    dpoEmail: 'privacy@quadernoelettronico.it',
-    supportedSoftware: ['Windent', 'Poliwin', 'Quaderno Elettronico Web', 'Servizi Cloud'],
+    commercialEmail: 'commerciale@quadernoelettronico.it',
+    adminEmail: 'amministrazione@quadernoelettronico.it',
+    dpoEmail: 'info@quadernoelettronico.it',
+    pec: 'gino@pec.quadernoelettronico.it',
+    reaNumber: 'AR - 159691',
+    shareCapital: '€ 10.000 i.v.',
+    supportedSoftware: ['Windent', 'Poliwin', 'Winodlab', 'Quaderno Elettronico Web', 'Servizi Cloud'],
     cookieTypes: {
       technical: true,
       analytics: true,
@@ -65,9 +81,9 @@ export class LegalService {
       thirdParty: false
     },
     dataRetentionMonths: 24,
-    jurisdictionCourt: 'Foro di Roma',
+    jurisdictionCourt: 'Foro di Arezzo',
     lastUpdated: '26 Agosto 2026',
-    customNotes: 'Piattaforma di consultazione manuali tecnici, guide operative e assistenza software per strutture sanitarie e odontoiatriche.'
+    customNotes: 'Piattaforma di consultazione guide, manuali tecnici e assistenza software gestionale per studi dentistici, cliniche polispecialistiche e laboratori odontotecnici.'
   };
 
   constructor() {
@@ -85,7 +101,6 @@ export class LegalService {
         this.cookiePreferences = JSON.parse(saved);
         this.isCookieBannerOpen = false;
       } else {
-        // Prima volta che l'utente entra: mostra il banner
         this.isCookieBannerOpen = true;
       }
     } catch (e) {
@@ -180,17 +195,25 @@ export class LegalService {
   }
 
   /**
-   * Ripristina la configurazione di default
+   * Ripristina la configurazione con i dati ufficiali di quadernoelettronico.it
    */
   resetToDefaults(): void {
     localStorage.removeItem(this.STORAGE_KEY);
     this.config = {
-      companyName: 'Quaderno Elettronico S.r.l. / Windent & Poliwin Support',
-      vatNumber: 'IT01234567890',
-      registeredOffice: 'Via Roma, 100 - 00100 Roma (RM), Italia',
+      companyName: 'Quaderno Elettronico S.r.l.',
+      vatNumber: '02072670512',
+      registeredOffice: 'Via Carlo Cattaneo, 3 - 52025 Montevarchi (AR), Italia',
+      operativeOffice: 'Via Giacomo Leopardi, 31/B - 52025 Montevarchi (AR), Italia',
+      phoneSupport: '055 985 0486',
+      phoneCommercial: '055 982 476',
       contactEmail: 'assistenza@quadernoelettronico.it',
-      dpoEmail: 'privacy@quadernoelettronico.it',
-      supportedSoftware: ['Windent', 'Poliwin', 'Quaderno Elettronico Web', 'Servizi Cloud'],
+      commercialEmail: 'commerciale@quadernoelettronico.it',
+      adminEmail: 'amministrazione@quadernoelettronico.it',
+      dpoEmail: 'info@quadernoelettronico.it',
+      pec: 'gino@pec.quadernoelettronico.it',
+      reaNumber: 'AR - 159691',
+      shareCapital: '€ 10.000 i.v.',
+      supportedSoftware: ['Windent', 'Poliwin', 'Winodlab', 'Quaderno Elettronico Web', 'Servizi Cloud'],
       cookieTypes: {
         technical: true,
         analytics: true,
@@ -198,9 +221,9 @@ export class LegalService {
         thirdParty: false
       },
       dataRetentionMonths: 24,
-      jurisdictionCourt: 'Foro di Roma',
+      jurisdictionCourt: 'Foro di Arezzo',
       lastUpdated: '26 Agosto 2026',
-      customNotes: 'Piattaforma di consultazione manuali tecnici, guide operative e assistenza software per strutture sanitarie e odontoiatriche.'
+      customNotes: 'Piattaforma di consultazione guide, manuali tecnici e assistenza software gestionale per studi dentistici, cliniche polispecialistiche e laboratori odontotecnici.'
     };
   }
 
@@ -256,115 +279,128 @@ export class LegalService {
   }
 
   /**
-   * Genera le sezioni strutturate per la Privacy Policy (GDPR UE 2016/679)
+   * Genera le sezioni strutturate per la Privacy Policy (GDPR UE 2016/679) ufficiali di Quaderno Elettronico
    */
   getPrivacySections(): LegalSection[] {
     const c = this.config;
     return [
       {
         id: 'titolare',
-        title: '1. Titolare del Trattamento e DPO',
+        title: '1. Identità e Dati di Contatto del Titolare del Trattamento',
         icon: 'shield',
-        content: `Il Titolare del trattamento dei dati personali raccolti attraverso questo portale (la "Wiki" e documentazione di supporto per ${c.supportedSoftware.join(', ')}) è **${c.companyName}**, con sede legale in **${c.registeredOffice}**, P.IVA/C.F. **${c.vatNumber}**.\n\nPer qualsiasi chiarimento in materia di protezione dei dati personali, o per contattare il Responsabile della Protezione dei Dati (DPO), è possibile scrivere a: **${c.dpoEmail}** o all'indirizzo generale **${c.contactEmail}**.`
-      },
-      {
-        id: 'dati-trattati',
-        title: '2. Categorie di Dati Personali Trattati',
-        icon: 'database',
-        content: `Durante la navigazione e l'utilizzo dei servizi di documentazione tecnica e assistenza vengono trattate le seguenti categorie di dati:\n\n` +
-          `• **Dati di Navigazione e Log Tecnici**: indirizzo IP (anonimizzato), tipologia di browser, orario di accesso, pagine consultate ed eventuali codici di stato HTTP. Tali dati sono necessari per garantire la sicurezza del sistema e il corretto funzionamento tecnico.\n` +
-          `• **Dati di Autenticazione Personale Autorizzato**: credenziali di accesso (username, token di sessione cifrato) per il personale clinico o di assistenza accreditato ad accedere a guide riservate o funzioni di amministrazione.\n` +
-          `• **Ricerche e Interazioni**: termini di ricerca inseriti per il reperimento di guide e FAQ, elaborati in forma aggregata per ottimizzare la pertinenza dei risultati.`
+        content: `Il Titolare del trattamento dei dati personali ai sensi dell'art. 4 del Regolamento (UE) 2016/679 (GDPR) è:\n\n` +
+          `**${c.companyName}**\n` +
+          `• Sede Legale: ${c.registeredOffice}\n` +
+          `• Sede Operativa: ${c.operativeOffice}\n` +
+          `• Codice Fiscale e Partita IVA: **${c.vatNumber}** (REA: ${c.reaNumber} - Capitale Sociale ${c.shareCapital})\n` +
+          `• Telefono Assistenza: **${c.phoneSupport}** | Telefono Commerciale: **${c.phoneCommercial}**\n` +
+          `• Email Assistenza: **${c.contactEmail}**\n` +
+          `• Email Amministrazione: **${c.adminEmail}**\n` +
+          `• Email Informativa & DPO: **${c.dpoEmail}**\n` +
+          `• Posta Elettronica Certificata (PEC): **${c.pec}**`
       },
       {
         id: 'finalita-basi',
-        title: '3. Finalità del Trattamento e Base Giuridica',
+        title: '2. Finalità del Trattamento e Basi Giuridiche (Art. 6 GDPR)',
         icon: 'check-circle',
-        content: `I dati personali sono trattati esclusivamente in conformità al Regolamento UE 2016/679 (GDPR) per:\n\n` +
-          `1. **Erogazione del Servizio di Assistenza e Documentazione**: consentire la consultazione efficiente dei manuali di **${c.supportedSoftware.join(', ')}** e la ricerca di soluzioni operative (Base giuridica: Esecuzione del contratto o misure precontrattuali - Art. 6.1.b GDPR).\n` +
-          `2. **Sicurezza e Manutenzione dell'Infrastruttura**: prevenzione di accessi non autorizzati, attacchi informatici e monitoraggio della disponibilità dei server (Base giuridica: Legittimo interesse del Titolare - Art. 6.1.f GDPR).\n` +
-          `3. **Adempimenti di Legge**: conformità a obblighi normativi, fiscali o richieste vincolanti delle Autorità di vigilanza (Base giuridica: Obbligo legale - Art. 6.1.c GDPR).\n\n` +
-          `I dati non saranno mai ceduti a terzi né utilizzati a scopo commerciale o di profilazione senza esplicito consenso.`
+        content: `I dati personali forniti in occasione della consultazione della Wiki e dell'uso dei servizi di assistenza per i software **${c.supportedSoftware.join(', ')}** sono trattati per:\n\n` +
+          `1. **Esecuzione di rapporti contrattuali e precontrattuali**: consentire la consultazione delle guide operative, risoluzione di anomalie, gestione ticket di assistenza e fruizione dei moduli software (Base giuridica: Art. 6 co. 1 lett. b GDPR).\n` +
+          `2. **Manutenzione e Sicurezza dei Sistemi**: prevenzione di accessi non autorizzati, attacchi informatici, monitoraggio dell'infrastruttura server (Base giuridica: Legittimo interesse - Art. 6 co. 1 lett. f GDPR).\n` +
+          `3. **Adempimento di Obblighi di Legge**: conformità a normative fiscali, contabili e disposizioni vincolanti delle Autorità di controllo (Base giuridica: Art. 6 co. 1 lett. c GDPR).\n` +
+          `4. **Miglioramento del Servizio**: analisi aggregate ed anonimizzate sulla frequenza di consultazione dei manuali tecnici al fine di ottimizzare la documentazione.`
+      },
+      {
+        id: 'dati-trattati',
+        title: '3. Categorie di Dati Personali Trattati',
+        icon: 'database',
+        content: `Vengono trattate esclusivamente le seguenti categorie di dati:\n\n` +
+          `• **Dati di Navigazione e Log Tecnici**: indirizzi IP (anonimizzati), timestamp di richiesta, URI delle guide consultate, user-agent del browser e codici di stato di risposta del server.\n` +
+          `• **Credenziali di Autenticazione (Area Riservata/Admin)**: identificativo utente e token di sessione protetti da crittografia per il personale abilitato.\n` +
+          `• **Dati di Contatto e Segnalazioni**: indirizzo email o recapito telefonico fornito spontaneamente per richieste di supporto tecnico o chiarimenti sui manuali.`
       },
       {
         id: 'cookie',
-        title: '4. Gestione Cookie e Tecnologie di Tracciamento',
+        title: '4. Informativa Estesa sui Cookie',
         icon: 'cpu',
-        content: `Il portale utilizza una configurazione di cookie essenziale e trasparente:\n\n` +
-          `• **Cookie Tecnici Strettamente Necessari** (${c.cookieTypes.technical ? 'Attivi' : 'Disattivati'}): indispensabili per memorizzare lo stato del tema (Dark/Light mode), la sessione di consultazione e le preferenze dell'interfaccia.\n` +
-          `• **Cookie Analitici Anonimizzati** (${c.cookieTypes.analytics ? 'Attivi con mascheramento IP' : 'Disattivati'}): utilizzati unicamente per metriche aggregate di consultazione delle guide senza profilazione individuale.\n` +
-          `• **Cookie di Preferenze** (${c.cookieTypes.preferences ? 'Attivi' : 'Disattivati'}): memorizzano l'accettazione e filtri di navigazione.\n` +
-          `• **Cookie di Profilazione Terze Parti**: ${c.cookieTypes.thirdParty ? 'Presenti' : 'Non utilizzati. Nessun dato viene ceduto a scopi pubblicitari o commerciali.'}`
+        content: `Il portale Wiki adotta una politica di massima trasparenza e minimizzazione dei dati:\n\n` +
+          `• **Cookie Tecnici Strettamente Necessari** (${c.cookieTypes.technical ? 'Attivi' : 'Disattivati'}): indispensabili per memorizzare la sessione di consultazione, la preferenza di tema (Light/Dark mode) e le scelte di consenso.\n` +
+          `• **Cookie Analitici con Anonimizzazione IP** (${c.cookieTypes.analytics ? 'Attivi' : 'Disattivati'}): metriche aggregate per valutare l'efficacia dei contenuti senza tracciamento dell'identità dell'utente.\n` +
+          `• **Cookie di Terze Parti a Scopo Pubblicitario**: ${c.cookieTypes.thirdParty ? 'Presenti' : 'Non utilizzati. I dati non vengono ceduti a scopi commerciali.'}`
+      },
+      {
+        id: 'destinatari',
+        title: '5. Destinatari dei Dati e Trasferimento Extra UE',
+        icon: 'share-2',
+        content: `I dati personali sono trattati da personale interno di **${c.companyName}** espressamente autorizzato e istruito ai sensi dell'art. 29 del GDPR.\n\n` +
+          `Possono essere comunicati a fornitori di infrastruttura cloud e manutenzione IT nominati Responsabili del Trattamento (Art. 28 GDPR). Tutti i dati risiedono all'interno dell'Unione Europea e non vengono trasferiti verso Paesi terzi privi di adeguate decisioni di adeguatezza o garanzie equivalenti.`
       },
       {
         id: 'conservazione',
-        title: '5. Periodo di Conservazione dei Dati',
+        title: '6. Periodo di Conservazione dei Dati',
         icon: 'clock',
-        content: `I dati di navigazione e i log tecnici vengono conservati per un periodo massimo di **${c.dataRetentionMonths} mesi**, decorsi i quali vengono automaticamente cancellati o anonimizzati in modo irreversibile, salvo eventuali necessità di accertamento di reati da parte dell'Autorità Giudiziaria.`
+        content: `I dati relativi all'assistenza e le interazioni tecniche vengono conservati per tutta la durata del rapporto contrattuale e per i successivi tempi previsti dalla legge (fino a un massimo di 5 anni dall'ultima interazione). I log tecnici di sicurezza vengono conservati per un periodo standard di **${c.dataRetentionMonths} mesi**, al termine dei quali vengono cancellati o anonimizzati in via definitiva.`
       },
       {
         id: 'diritti',
-        title: '6. Diritti dell\'Interessato (Artt. 15-22 GDPR)',
+        title: '7. Diritti dell\'Interessato (Artt. 15-22 GDPR) e Modalità di Esercizio',
         icon: 'user-check',
-        content: `In ogni momento, l'utente può esercitare i propri diritti previsti dal GDPR:\n\n` +
-          `• **Accesso e Rettifica**: ottenere conferma dell'esistenza dei propri dati e richiederne la rettifica o integrazione.\n` +
-          `• **Cancellazione ("Diritto all'Oblio")**: richiedere la cancellazione dei dati non più necessari alle finalità dichiarate.\n` +
-          `• **Limitazione e Opposizione**: richiedere la limitazione del trattamento o opporsi per motivi legittimi.\n` +
-          `• **Portabilità**: ricevere in formato strutturato di uso comune i dati forniti.\n\n` +
-          `Per esercitare tali diritti, è sufficiente inviare un'email all'indirizzo DPO dedicato: **${c.dpoEmail}** o scrivere al Titolare all'indirizzo **${c.contactEmail}**. È altresì fatto salvo il diritto di proporre reclamo al **Garante per la Protezione dei Dati Personali** (www.garanteprivacy.it).`
+        content: `L'interessato ha diritto in qualunque momento di esercitare i diritti garantiti dal Regolamento UE 2016/679:\n\n` +
+          `• **Diritto di Accesso (Art. 15)**: verificare se sia in corso un trattamento e ottenere copia dei propri dati.\n` +
+          `• **Diritto di Rettifica (Art. 16)**: ottenere la correzione di dati inesatti o l'integrazione di quelli incompleti.\n` +
+          `• **Diritto alla Cancellazione (Art. 17)**: richiedere la cancellazione ("diritto all'oblio") nei casi previsti dalla legge.\n` +
+          `• **Diritto di Limitazione (Art. 18)** e **Portabilità dei Dati (Art. 20)**.\n` +
+          `• **Diritto di Opposizione (Art. 21)**.\n\n` +
+          `Per esercitare tali diritti è possibile rivolgersi a **${c.companyName}** inviando un'email a **${c.dpoEmail}** o scrivendo a **${c.registeredOffice}** (all'attenzione del Responsabile Privacy) o tramite PEC a **${c.pec}**.\n\n` +
+          `È sempre fatto salvo il diritto di proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (Piazza Venezia 11, 00187 Roma - www.garanteprivacy.it).`
       }
     ];
   }
 
   /**
-   * Genera le sezioni strutturate per i Termini e Condizioni di Utilizzo
+   * Genera le sezioni strutturate per i Termini e Condizioni di Utilizzo ufficiali
    */
   getTermsSections(): LegalSection[] {
     const c = this.config;
     return [
       {
         id: 'oggetto',
-        title: '1. Oggetto e Ambito di Applicazione',
+        title: '1. Oggetto del Servizio e Accettazione dei Termini',
         icon: 'file-text',
-        content: `I presenti Termini e Condizioni d'Uso disciplinano l'accesso e la consultazione della piattaforma Wiki e knowledge base ufficiale fornita da **${c.companyName}**.\n\n` +
-          `Il servizio è destinato primariamente a professionisti, personale sanitario e studi odontoiatrici utilizzatori dei software gestionali **${c.supportedSoftware.join(', ')}** al fine di fornire manualistica aggiornata, procedure operative e supporto formativo.`
+        content: `I presenti Termini disciplinano l'accesso e la consultazione della Wiki e del portale di documentazione tecnica ufficiale fornito da **${c.companyName}** (${c.registeredOffice}, P.IVA ${c.vatNumber}).\n\n` +
+          `L'utilizzo del portale è riservato all'uso professionale da parte di odontoiatri, medici, igienisti, assistenti, personale di segreteria e odontotecnici operanti con i gestionali **${c.supportedSoftware.join(', ')}**. L'accesso e la navigazione costituiscono piena accettazione dei presenti termini.`
       },
       {
         id: 'proprieta',
-        title: '2. Proprietà Intellettuale e Copyright',
+        title: '2. Proprietà Intellettuale, Marchi e Diritti d\'Autore',
         icon: 'bookmark',
-        content: `Tutti i contenuti presenti su questo portale, compresi a titolo esemplificativo ma non esaustivo: testi delle guide, schermate, diagrammi di flusso, loghi, video tutorial, layout grafico e codice sorgente della piattaforma, sono di esclusiva proprietà di **${c.companyName}** o dei relativi danti causa e sono protetti dalle leggi vigenti sul diritto d'autore e sulla proprietà industriale.\n\n` +
-          `È fatto espresso divieto di riprodurre, distribuire a terzi non autorizzati, modificare, decompilare o sfruttare economicamente in tutto o in parte i contenuti senza preventiva autorizzazione scritta.`
+        content: `I marchi commerciali (**Windent**, **Poliwin**, **Winodlab**, **Quaderno Elettronico**), i loghi grafici, le schermate, i manuali d'uso, i diagrammi procedurali, i video tutorial e i codici sorgente appartengono in via esclusiva a **${c.companyName}** o ai rispettivi aventi diritto.\n\n` +
+          `È severamente vietata qualsiasi attività di estrazione sistematica (scraping), duplicazione non autorizzata, cessione o commercializzazione a terzi delle guide e dei materiali protetti senza espresso consenso scritto della Società.`
       },
       {
         id: 'responsabilita',
-        title: '3. Limitazione di Responsabilità e Accuratezza',
+        title: '3. Limitazioni di Responsabilità e Uso delle Guide',
         icon: 'alert-triangle',
-        content: `Le informazioni tecniche e le guide operative contenute nella Wiki sono redatte e verificate con la massima diligenza professionale. Tuttavia:\n\n` +
-          `• I manuali costituiscono supporto all'uso ordinario del software e non sostituiscono il parere professionale o le prescrizioni di legge in ambito clinico, contabile o fiscale.\n` +
-          `• Il Titolare non potrà essere ritenuto responsabile per interruzioni temporanee del servizio dovute a manutenzione programmata, cause di forza maggiore o anomalie delle reti di telecomunicazione.\n` +
-          `• L'utente è tenuto a verificare sempre la compatibilità delle procedure con la versione specifica del software in uso presso la propria struttura.`
+        content: `Le guide e le indicazioni presenti sulla Wiki hanno natura formativa e di supporto all'uso standard dei programmi gestionali.\n\n` +
+          `• L'utente ha la responsabilità di verificare che la configurazione del proprio ambiente operativo e i dati clinici e contabili inseriti rispondano ai requisiti fiscali, sanitari e normativi applicabili alla propria struttura.\n` +
+          `• La Società garantisce il massimo impegno per mantenere i manuali aggiornati ma non risponde di eventuali ritardi o sospensioni temporanee della consultazione dovuti a manutenzione dell'infrastruttura di rete o cause di forza maggiore.`
       },
       {
         id: 'condotta',
-        title: '4. Regole di Condotta e Accesso alle Aree Riservate',
+        title: '4. Regole di Accesso all\'Area Riservata e Supporto Tecnico',
         icon: 'lock',
-        content: `L'accesso a funzionalità amministrative o a contenuti protetti è riservato agli utenti in possesso di credenziali valide fornite dal Titolare. L'utente si impegna a:\n\n` +
-          `• Custodire con riservatezza le credenziali di accesso e non cederle a terzi.\n` +
-          `• Non tentare di aggirare le misure di sicurezza, né effettuare attività di scansione vulnerabilità o scraping automatizzato non autorizzato.\n` +
-          `• Segnalare tempestivamente qualsiasi anomalia o sospetto abuso di credenziali al supporto: **${c.contactEmail}**.`
+        content: `Gli utenti in possesso di credenziali di accesso al pannello amministrativo o ad aree riservate sono tenuti a custodirle con la massima diligenza e segretezza. In caso di smarrimento, furto o sospetto uso illecito, è obbligatorio darne tempestiva comunicazione al servizio assistenza (${c.contactEmail} - Tel. ${c.phoneSupport}).`
       },
       {
         id: 'modifiche',
-        title: '5. Modifiche ai Termini e al Servizio',
+        title: '5. Aggiornamenti dei Termini',
         icon: 'refresh-cw',
-        content: `**${c.companyName}** si riserva il diritto di aggiornare in qualsiasi momento i presenti Termini e l'Informativa Privacy per riflettere innovazioni funzionali, aggiornamenti normativi o modifiche ai software supportati. Le modifiche avranno efficacia dalla data di pubblicazione indicata in calce ai documenti.`
+        content: `**${c.companyName}** si riserva la facoltà di aggiornare i presenti Termini e l'Informativa Privacy in caso di rilascio di nuove versioni dei software (${c.supportedSoftware.join(', ')}) o per adeguamento a nuove disposizioni legislative. Le modifiche saranno rese pubbliche tramite il portale.`
       },
       {
         id: 'foro',
-        title: '6. Legge Applicabile e Foro Competente',
+        title: '6. Legge Applicabile e Foro Competente Esclusivo',
         icon: 'scale',
-        content: `I presenti Termini sono regolati dalla legge italiana. Per ogni eventuale controversia derivante dall'interpretazione, validità o esecuzione delle presenti condizioni, la competenza territoriale esclusiva è devoluta al **${c.jurisdictionCourt}**, fatti salvi i fori inderogabili previsti dalla normativa a tutela dei consumatori ove applicabili.`
+        content: `I presenti Termini sono interamente regolati dalla Legge Italiana. Per qualsiasi controversia che dovesse insorgere in relazione alla validità, interpretazione, esecuzione o risoluzione dei presenti termini o all'utilizzo del portale Wiki, la competenza esclusiva e inderogabile è attribuita al **${c.jurisdictionCourt}**.`
       }
     ];
   }

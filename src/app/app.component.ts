@@ -249,6 +249,17 @@ export class AppComponent implements OnInit {
     return this.hexToRgba(hex, 0.4);
   }
 
+  onHomePillSelected(pill: any) {
+    if (this.activeIndex !== 1) {
+      this.selectMenuItem(this.menuItems[1]);
+    }
+    setTimeout(() => {
+      if (this.guideRef) {
+        this.guideRef.openFromPill(pill);
+      }
+    }, 120);
+  }
+
   selectMenuItem(selectedItem: any) {
     if (selectedItem.active) return; // Prevent resetting if clicking the same item
 

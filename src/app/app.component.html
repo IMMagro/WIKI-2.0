@@ -112,7 +112,8 @@
              [style.pointer-events]="activeIndex === 0 ? 'auto' : 'none'"
              [style.transform]="activeIndex === 0 ? 'translateY(0)' : (0 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
           <app-home class="w-full max-w-4xl flex flex-col items-center justify-center"
-                    [isActive]="activeIndex === 0" [titleVisible]="titleVisible" [homeStage]="homeStage" [tags]="tags"></app-home>
+                    [isActive]="activeIndex === 0" [titleVisible]="titleVisible" [homeStage]="homeStage" [tags]="tags"
+                    (pillSelected)="onHomePillSelected($event)"></app-home>
         </div>
         <!-- View 1: Guide (Knowledge Base) -->
         <div class="absolute inset-0 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
