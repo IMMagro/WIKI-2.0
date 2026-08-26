@@ -379,12 +379,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return this.accessMapNodes.filter(n => n.macroArea === this.selectedMacroRegion);
   }
 
-  get accessMapNodesRanked(): MapRegionNode[] {
-    return this.filteredMapNodes.filter(n => (n.v || 0) > 0).sort((a, b) => b.v - a.v);
+  get accessMapNodesSorted(): MapRegionNode[] {
+    return this.filteredMapNodes.filter(n => n.v > 0).sort((a, b) => b.v - a.v);
   }
 
-  get accessMapNodesSorted(): MapRegionNode[] {
-    return this.accessMapNodesRanked;
+  get accessMapNodesRanked(): MapRegionNode[] {
+    return this.accessMapNodesSorted;
   }
 
   get accessMapMax(): number {
