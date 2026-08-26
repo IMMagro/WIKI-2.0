@@ -12,6 +12,7 @@ import { NewsPopupComponent } from './components/shared/news-popup/news-popup.co
 import { ThemeService } from './services/theme.service';
 import { NewsService } from './services/news.service';
 import { FaqReadingService } from './services/faq-reading.service';
+import { GuideTrackerService } from './services/guide-tracker.service';
 import { HomeComponent } from './components/home/home.component';
 import { ServiziComponent } from './components/servizi/servizi.component';
 import { FaqPageComponent } from './components/faq-page/faq-page.component';
@@ -52,7 +53,8 @@ export class AppComponent implements OnInit {
     public guideService: GuideService,
     public themeService: ThemeService,
     public newsService: NewsService,
-    public faqReadingService: FaqReadingService
+    public faqReadingService: FaqReadingService,
+    public guideTracker: GuideTrackerService
   ) {}
 
   // Uscita dalla modalità admin
@@ -454,6 +456,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.guideTracker.trackPageView();
     this.loadNews();
     this.loadServices();
     this.loadTags();

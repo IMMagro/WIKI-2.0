@@ -28,12 +28,21 @@ export interface RegionPath {
   d: string;
 }
 
+export interface LiveGuideItem {
+  guideId: string;
+  title: string;
+  category: string;
+  viewersCount: number;
+}
+
 export interface LiveAccessEvent {
   id: string;
   region: string;
   clientName: string;
   software: string;
   action: string;
+  guideTitle?: string;
+  category?: string;
   time: string;
   color: string;
 }
@@ -48,6 +57,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   isNotificationOpen = false;
   adminNotifications: any[] = [];
   accessStats: any = null;
+  liveGuides: LiveGuideItem[] = [];
+
+  get totalLiveViewers(): number {
+    return this.liveGuides.reduce((sum, g) => sum + (g.viewersCount || 0), 0);
+  }
 
   // Accurate SVG Paths for all 20 Italian Regions (High precision, normalized 480x580)
   readonly italyRegions: RegionPath[] = [
@@ -198,8 +212,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.loadAccessStats();
     this.initLiveFeed();
 
-    // Aggiorna periodicamente le statistiche dal server
-    this.pollInterval = setInterval(() => this.loadAccessStats(), 25000);
+    // Aggiorna periodicamente le statistiche in tempo reale dal server ogni 5s
+    this.pollInterval = setInterval(() => this.loadAccessStats(), 5000);
   }
 
   ngOnDestroy() {
@@ -244,6 +258,31 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           this.accessStats = d;
         } else {
           this.seedDefaultNodes();
+        }
+
+        // 1. Aggiorna manuali in consultazione live
+        if (d && Array.isArray(d.liveGuides)) {
+          this.liveGuides = d.liveGuides;
+        } else {
+          this.liveGuides = [];
+        }
+
+        // 2. Aggiorna flusso accessi ed eventi live reali dal backend
+        if (d && Array.isArray(d.recentEvents) && d.recentEvents.length > 0) {
+          this.liveFeed = d.recentEvents.map((ev: any) => {
+            const sw = ev.software || this.getSoftwareByRegion(ev.region);
+            return {
+              id: ev.id || ('ev_' + Math.random()),
+              region: ev.region || 'Italia',
+              clientName: ev.clientName || ('Utente ' + (ev.region || 'Online')),
+              software: sw,
+              action: ev.action || (ev.guideTitle ? ('Apertura guida: ' + ev.guideTitle) : 'Consultazione'),
+              guideTitle: ev.guideTitle || '',
+              category: ev.category || '',
+              time: ev.time || 'Pochi secondi fa',
+              color: ev.color || this.getColorBySoftware(sw)
+            };
+          });
         }
       },
       error: () => {
@@ -434,67 +473,51 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.hoveredNode = null;
   }
 
-  // ---- Simulazione Live Stream / Real-time Ping ----
+  // ---- Helper Software & Colori per Regione ----
+  getSoftwareByRegion(region: string): string {
+    if (!region) return 'Windent';
+    const r = region.toLowerCase();
+    if (['lazio', 'campania', 'puglia', 'sicilia', 'calabria', 'basilicata', 'abruzzo', 'molise'].some(x => r.includes(x))) {
+      return 'Poliwin';
+    }
+    if (['emilia-romagna', 'veneto', 'trentino-alto adige'].some(x => r.includes(x))) {
+      return 'Winodlab';
+    }
+    return 'Windent';
+  }
+
+  getColorBySoftware(software: string): string {
+    if (software === 'Poliwin') return '#F80086';
+    if (software === 'Winodlab') return '#F97316';
+    return '#377DFF';
+  }
+
+  // ---- Live Stream & Radar Ping ----
   private initLiveFeed() {
-    const clients = [
-      { name: 'Studio Dentistico DentalCare', region: 'Lombardia', software: 'Windent', action: 'Apertura cartella clinica', color: '#377DFF' },
-      { name: 'Poliambulatorio San Marco', region: 'Lazio', software: 'Poliwin', action: 'Gestione agenda appuntamenti', color: '#F80086' },
-      { name: 'Lab Odontotecnico F.lli Rossi', region: 'Emilia-Romagna', software: 'Winodlab', action: 'Invio lavorazione CAD/CAM', color: '#F97316' },
-      { name: 'Centro Medico Partenopeo', region: 'Campania', software: 'Poliwin', action: 'Consultazione guida fatturazione', color: '#F80086' },
-      { name: 'Studio Odontoiatrico Dott. Bianchi', region: 'Piemonte', software: 'Windent', action: 'Esecuzione backup cloud', color: '#377DFF' },
-      { name: 'Clinica Villa dei Fiori', region: 'Toscana', software: 'Windent', action: 'Accesso manuale paziente', color: '#377DFF' },
-      { name: 'Studio Associato Adriatico', region: 'Puglia', software: 'Poliwin', action: 'Stampa prescrizioni mediche', color: '#F80086' },
-      { name: 'Centro Odontoiatrico Trinacria', region: 'Sicilia', software: 'Poliwin', action: 'Sincronizzazione cartelle', color: '#F80086' },
-      { name: 'Laboratorio Digitale Sardo', region: 'Sardegna', software: 'Windent', action: 'Ricerca FAQ sistema', color: '#377DFF' },
-      { name: 'Studio Medico San Giorgio', region: 'Liguria', software: 'Windent', action: 'Consultazione listino prestazioni', color: '#377DFF' },
-      { name: 'Poliambulatorio Scaligero', region: 'Veneto', software: 'Winodlab', action: 'Aggiornamento prontuario', color: '#F97316' },
-      { name: 'Clinica Dolomiti Care', region: 'Trentino-Alto Adige', software: 'Winodlab', action: 'Archiviazione radiografie', color: '#F97316' },
-      { name: 'Studio Riviera del Conero', region: 'Marche', software: 'Windent', action: 'Emissione fattura sanitaria', color: '#377DFF' },
-      { name: 'Poliambulatorio Etruria', region: 'Umbria', software: 'Windent', action: 'Controllo diario clinico', color: '#377DFF' },
-      { name: 'Centro Medico Gran Sasso', region: 'Abruzzo', software: 'Poliwin', action: 'Invio promemoria SMS', color: '#F80086' },
-      { name: 'Studio Dentistico Sannita', region: 'Molise', software: 'Poliwin', action: 'Verifica consensi informati', color: '#F80086' },
-      { name: 'Clinica Lucana Salute', region: 'Basilicata', software: 'Poliwin', action: 'Gestione anamnesi', color: '#F80086' },
-      { name: 'Centro Odontoiatrico Magna Grecia', region: 'Calabria', software: 'Poliwin', action: 'Sincronizzazione archivio', color: '#F80086' },
-      { name: 'Studio Alpi Graie', region: 'Valle d\'Aosta', software: 'Windent', action: 'Aggiornamento licenza', color: '#377DFF' },
-      { name: 'Poliambulatorio Friulano', region: 'Friuli-Venezia Giulia', software: 'Windent', action: 'Consultazione manuale', color: '#377DFF' }
-    ];
+    // Se non ci sono ancora eventi dal backend, inizializza un feed di cortesia
+    if (this.liveFeed.length === 0) {
+      const fallbackEvents = [
+        { region: 'Lombardia', clientName: 'Studio Dentistico Milano', software: 'Windent', action: 'Consultazione guida fatturazione', time: '1 min fa', color: '#377DFF' },
+        { region: 'Lazio', clientName: 'Poliambulatorio Roma Centro', software: 'Poliwin', action: 'Apertura cartella clinica', time: '3 min fa', color: '#F80086' },
+        { region: 'Veneto', clientName: 'Laboratorio Digitale Odontotecnico', software: 'Winodlab', action: 'Invio lavorazione CAD/CAM', time: '5 min fa', color: '#F97316' }
+      ];
+      this.liveFeed = fallbackEvents.map((c, i) => ({
+        id: 'f_' + i + '_' + Date.now(),
+        region: c.region,
+        clientName: c.clientName,
+        software: c.software,
+        action: c.action,
+        time: c.time,
+        color: c.color
+      }));
+    }
 
-    // Popola feed iniziale
-    this.liveFeed = clients.slice(0, 4).map((c, i) => ({
-      id: 'f_' + i + '_' + Date.now(),
-      region: c.region,
-      clientName: c.name,
-      software: c.software,
-      action: c.action,
-      time: `${i + 1} min fa`,
-      color: c.color
-    }));
-
-    // Aggiunge un evento live ogni ~3.5 secondi
-    this.feedInterval = setInterval(() => {
-      const sample = clients[Math.floor(Math.random() * clients.length)];
-      const node = this.accessMapNodes.find(n => n.name === sample.region || n.region === sample.region);
-      if (node) {
-        node.v += 1;
-        this.activePingNode = node;
-      }
-
-      const newEvent: LiveAccessEvent = {
-        id: 'f_' + Date.now(),
-        region: sample.region,
-        clientName: sample.name,
-        software: sample.software,
-        action: sample.action,
-        time: 'Pochi secondi fa',
-        color: sample.color
-      };
-
-      this.liveFeed = [newEvent, ...this.liveFeed.slice(0, 5)];
-    }, 3500);
-
-    // Ciclo di animazione radar ping sincrono
+    // Ciclo di animazione radar ping sincrono sulle regioni attive o nodi
     this.pingInterval = setInterval(() => {
-      if (this.accessMapNodes.length > 0) {
+      const activeNodes = this.accessMapNodes.filter(n => (n.active || 0) > 0);
+      if (activeNodes.length > 0) {
+        this.activePingNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
+      } else if (this.accessMapNodes.length > 0) {
         const rnd = this.accessMapNodes[Math.floor(Math.random() * this.accessMapNodes.length)];
         this.activePingNode = rnd;
       }

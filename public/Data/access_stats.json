@@ -29,5 +29,8 @@
     { "id": "bas", "name": "Basilicata", "code": "BAS", "macroArea": "sud", "x": 360.0, "y": 330.0, "lat": 40.64, "lng": 15.80, "v": 22, "active": 1, "software": "Poliwin" },
     { "id": "mol", "name": "Molise", "code": "MOL", "macroArea": "sud", "x": 310.0, "y": 268.0, "lat": 41.56, "lng": 14.66, "v": 19, "active": 1, "software": "Poliwin" },
     { "id": "vda", "name": "Valle d'Aosta", "code": "VDA", "macroArea": "nord", "x": 60.0, "y": 82.0, "lat": 45.73, "lng": 7.32, "v": 18, "active": 1, "software": "Windent" }
-  ]
+  ],
+  "liveGuides": [],
+  "recentEvents": [],
+  "activeSessions": []
 }

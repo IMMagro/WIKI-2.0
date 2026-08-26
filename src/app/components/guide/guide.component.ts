@@ -1,6 +1,7 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GuideService } from '../../services/guide.service';
+import { GuideTrackerService } from '../../services/guide-tracker.service';
 import { Category, Guide, Faq, Service, Ref, JourneyStep, Journey } from './guide.models';
 
 @Component({
@@ -10,7 +11,7 @@ import { Category, Guide, Faq, Service, Ref, JourneyStep, Journey } from './guid
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.css']
 })
-export class GuideComponent {
+export class GuideComponent implements OnDestroy {
   @ViewChild('stage') stage?: ElementRef<HTMLElement>;
 
   // Stato di navigazione (drill-down "a schede")
@@ -86,10 +87,46 @@ export class GuideComponent {
     el.classList.add(dir);
   }
 
-  goHome() { this.view = 'cats'; this.selCat = null; this.selGuide = null; this.selFaq = -1; this.hideSvc(); this.play('back'); }
-  openJourney() { this.view = 'journey'; this.hideSvc(); this.play('fwd'); }
-  openCat(id: string, dir: 'fwd' | 'back' = 'fwd') { this.view = 'guides'; this.selCat = id; this.hideSvc(); this.play(dir); }
-  openGuide(id: string) { this.view = 'read'; this.selGuide = id; this.selFaq = -1; this.hideSvc(); this.play('fwd'); }
+  goHome() {
+    this.guideTracker.trackGuideLeave();
+    this.view = 'cats';
+    this.selCat = null;
+    this.selGuide = null;
+    this.selFaq = -1;
+    this.hideSvc();
+    this.play('back');
+  }
+
+  openJourney() {
+    this.guideTracker.trackGuideLeave();
+    this.view = 'journey';
+    this.hideSvc();
+    this.play('fwd');
+  }
+
+  openCat(id: string, dir: 'fwd' | 'back' = 'fwd') {
+    this.guideTracker.trackGuideLeave();
+    this.view = 'guides';
+    this.selCat = id;
+    this.hideSvc();
+    this.play(dir);
+  }
+
+  openGuide(id: string) {
+    this.view = 'read';
+    this.selGuide = id;
+    this.selFaq = -1;
+    this.hideSvc();
+    this.play('fwd');
+
+    const g = this.curGuide;
+    const cat = this.curCat;
+    this.guideTracker.trackGuideView(
+      g ? g.id : id,
+      g ? g.title : id,
+      cat ? cat.name : ''
+    );
+  }
 
   openFaq(i: number) {
     const list = this.extraFaqs;
@@ -102,10 +139,18 @@ export class GuideComponent {
 
   openRef(step: JourneyStep) {
     const r = step.ref;
-    if (r.type === 'category') { this.openCat(r.cat!); }
-    else if (r.type === 'guide') { this.selCat = r.cat!; this.openGuide(r.man!); }
-    else if (r.type === 'faq') { this.selCat = r.cat!; this.selGuide = r.man!; this.view = 'read'; this.play('fwd'); this.openFaq(r.faq!); }
-    else this.goHome();
+    if (r.type === 'category') {
+      this.openCat(r.cat!);
+    } else if (r.type === 'guide') {
+      this.selCat = r.cat!;
+      this.openGuide(r.man!);
+    } else if (r.type === 'faq') {
+      this.selCat = r.cat!;
+      this.openGuide(r.man!);
+      this.openFaq(r.faq!);
+    } else {
+      this.goHome();
+    }
   }
 
   // ===== Popup servizio =====
@@ -118,14 +163,17 @@ export class GuideComponent {
   }
   hideSvc() { clearTimeout(this.svcTimer); this.svcVisible = false; }
 
-  constructor(private guides: GuideService) {}
+  constructor(private guides: GuideService, private guideTracker: GuideTrackerService) {}
+
+  ngOnDestroy(): void {
+    this.guideTracker.trackGuideLeave();
+    if (this.svcTimer) clearTimeout(this.svcTimer);
+  }
 
   /** Apre una FAQ specifica da navigazione esterna (es. ricerca dalla home). */
   openFaqByRef(catId: string, guideId: string, faqIndex: number): void {
     this.selCat = catId;
-    this.selGuide = guideId;
-    this.view = 'read';
-    this.play('fwd');
+    this.openGuide(guideId);
     this.openFaq(faqIndex);
   }
 }
