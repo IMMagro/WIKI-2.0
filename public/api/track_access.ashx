@@ -382,26 +382,26 @@ public class TrackAccess : IHttpHandler {
 
     private object[] GetDefaultMapNodes() {
         var nodes = new List<Dictionary<string, object>> {
-            CreateNode("lom", "Lombardia", "LOM", "nord", 138.0, 92.0, 45.46, 9.19, 168, 0, "Windent"),
-            CreateNode("laz", "Lazio", "LAZ", "centro", 245.0, 260.0, 41.90, 12.50, 189, 0, "Poliwin"),
-            CreateNode("cam", "Campania", "CAM", "sud", 312.0, 312.0, 40.85, 14.27, 125, 0, "Poliwin"),
-            CreateNode("ven", "Veneto", "VEN", "nord", 215.0, 92.0, 45.44, 12.32, 116, 0, "Winodlab"),
-            CreateNode("emr", "Emilia-Romagna", "EMR", "nord", 188.0, 142.0, 44.49, 11.34, 96, 0, "Winodlab"),
-            CreateNode("pug", "Puglia", "PUG", "sud", 382.0, 305.0, 41.12, 16.87, 92, 0, "Poliwin"),
-            CreateNode("sic", "Sicilia", "SIC", "sud", 285.0, 460.0, 37.50, 14.20, 85, 0, "Poliwin"),
-            CreateNode("tos", "Toscana", "TOS", "centro", 188.0, 188.0, 43.77, 11.25, 84, 0, "Windent"),
-            CreateNode("pie", "Piemonte", "PIE", "nord", 72.3, 112.2, 45.07, 7.68, 78, 0, "Windent"),
-            CreateNode("sar", "Sardegna", "SAR", "sud", 115.0, 345.0, 40.12, 9.01, 54, 0, "Windent"),
-            CreateNode("lig", "Liguria", "LIG", "nord", 105.0, 152.0, 44.41, 8.93, 45, 0, "Windent"),
-            CreateNode("mar", "Marche", "MAR", "centro", 260.0, 190.0, 43.61, 13.51, 42, 0, "Windent"),
-            CreateNode("cal", "Calabria", "CAL", "sud", 370.0, 395.0, 38.91, 16.59, 38, 0, "Poliwin"),
-            CreateNode("taa", "Trentino-Alto Adige", "TAA", "nord", 202.0, 54.0, 46.06, 11.12, 36, 0, "Winodlab"),
-            CreateNode("fvg", "Friuli-Venezia Giulia", "FVG", "nord", 262.0, 68.0, 45.65, 13.77, 35, 0, "Windent"),
-            CreateNode("abr", "Abruzzo", "ABR", "sud", 288.0, 242.0, 42.35, 13.40, 34, 0, "Poliwin"),
-            CreateNode("umb", "Umbria", "UMB", "centro", 238.0, 208.0, 43.11, 12.39, 31, 0, "Windent"),
-            CreateNode("bas", "Basilicata", "BAS", "sud", 360.0, 330.0, 40.64, 15.80, 22, 0, "Poliwin"),
-            CreateNode("mol", "Molise", "MOL", "sud", 310.0, 268.0, 41.56, 14.66, 19, 0, "Poliwin"),
-            CreateNode("vda", "Valle d'Aosta", "VDA", "nord", 60.0, 82.0, 45.73, 7.32, 18, 0, "Windent")
+            CreateNode("lom", "Lombardia", "LOM", "nord", 138.0, 92.0, 45.46, 9.19, 0, 0, "Windent"),
+            CreateNode("laz", "Lazio", "LAZ", "centro", 245.0, 260.0, 41.90, 12.50, 0, 0, "Poliwin"),
+            CreateNode("cam", "Campania", "CAM", "sud", 312.0, 312.0, 40.85, 14.27, 0, 0, "Poliwin"),
+            CreateNode("ven", "Veneto", "VEN", "nord", 215.0, 92.0, 45.44, 12.32, 0, 0, "Winodlab"),
+            CreateNode("emr", "Emilia-Romagna", "EMR", "nord", 188.0, 142.0, 44.49, 11.34, 0, 0, "Winodlab"),
+            CreateNode("pug", "Puglia", "PUG", "sud", 382.0, 305.0, 41.12, 16.87, 0, 0, "Poliwin"),
+            CreateNode("sic", "Sicilia", "SIC", "sud", 285.0, 460.0, 37.50, 14.20, 0, 0, "Poliwin"),
+            CreateNode("tos", "Toscana", "TOS", "centro", 188.0, 188.0, 43.77, 11.25, 0, 0, "Windent"),
+            CreateNode("pie", "Piemonte", "PIE", "nord", 72.3, 112.2, 45.07, 7.68, 0, 0, "Windent"),
+            CreateNode("sar", "Sardegna", "SAR", "sud", 115.0, 345.0, 40.12, 9.01, 0, 0, "Windent"),
+            CreateNode("lig", "Liguria", "LIG", "nord", 105.0, 152.0, 44.41, 8.93, 0, 0, "Windent"),
+            CreateNode("mar", "Marche", "MAR", "centro", 260.0, 190.0, 43.61, 13.51, 0, 0, "Windent"),
+            CreateNode("cal", "Calabria", "CAL", "sud", 370.0, 395.0, 38.91, 16.59, 0, 0, "Poliwin"),
+            CreateNode("taa", "Trentino-Alto Adige", "TAA", "nord", 202.0, 54.0, 46.06, 11.12, 0, 0, "Winodlab"),
+            CreateNode("fvg", "Friuli-Venezia Giulia", "FVG", "nord", 262.0, 68.0, 45.65, 13.77, 0, 0, "Windent"),
+            CreateNode("abr", "Abruzzo", "ABR", "sud", 288.0, 242.0, 42.35, 13.40, 0, 0, "Poliwin"),
+            CreateNode("umb", "Umbria", "UMB", "centro", 238.0, 208.0, 43.11, 12.39, 0, 0, "Windent"),
+            CreateNode("bas", "Basilicata", "BAS", "sud", 360.0, 330.0, 40.64, 15.80, 0, 0, "Poliwin"),
+            CreateNode("mol", "Molise", "MOL", "sud", 310.0, 268.0, 41.56, 14.66, 0, 0, "Poliwin"),
+            CreateNode("vda", "Valle d'Aosta", "VDA", "nord", 60.0, 82.0, 45.73, 7.32, 0, 0, "Windent")
         };
         return nodes.ToArray();
     }

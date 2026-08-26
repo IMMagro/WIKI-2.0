@@ -278,7 +278,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   private loadAccessStats() {
-    this.http.get<any>('/api/get_access_stats.ashx').subscribe({
+    this.http.get<any>(`/api/get_access_stats.ashx?_t=${Date.now()}`).subscribe({
       next: (d) => {
         if (d && typeof d === 'object') {
           this.accessStats = d;

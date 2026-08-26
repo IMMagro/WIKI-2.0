@@ -11,6 +11,11 @@ public class GetAccessStats : IHttpHandler {
     public void ProcessRequest (HttpContext context) {
         context.Response.ContentType = "application/json";
         context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+        context.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        context.Response.Cache.SetNoStore();
+        context.Response.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        context.Response.AddHeader("Pragma", "no-cache");
+        context.Response.AddHeader("Expires", "0");
 
         if (context.Request.HttpMethod == "OPTIONS") {
             context.Response.AddHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
