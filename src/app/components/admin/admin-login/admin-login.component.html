@@ -2,115 +2,113 @@
   <!-- THEME: DEEP SPACE (Dark Mode Glassmorphism) with Subtle Background Glow -->
   <div class="absolute inset-0 flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-[#0B0F19]">
     
-    <!-- Subtle Background Ambient Images -->
-    <div class="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+    <!-- Immagini di sfondo dinamiche dal backend -->
+    <div class="absolute inset-0 w-full h-full">
       <div *ngFor="let bg of backgroundImages; let i = index" 
            class="absolute inset-0 w-full h-full bg-cover bg-no-repeat bg-center transition-opacity duration-1000"
            [style.background-image]="'url(' + bg + ')'"
            [ngClass]="{'opacity-100': currentBgIndex === i, 'opacity-0': currentBgIndex !== i}">
       </div>
-    </div>
-
-    <!-- Soft Glow Orbs -->
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-[#377DFF]/15 rounded-full filter blur-[120px] pointer-events-none animate-pulse"></div>
-      <div class="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-[#F80086]/10 rounded-full filter blur-[100px] pointer-events-none"></div>
+      <!-- Sfondo chiaro e pulito come richiesto -->
     </div>
     
-    <!-- Top-Right Close Button -->
-    <button (click)="exitAdmin()" 
-            class="absolute top-6 right-6 z-[60] flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all border border-white/10 backdrop-blur-md hover:scale-105 active:scale-95 group shadow-lg"
-            title="Torna alla Wiki">
-      <span class="text-xs font-medium text-slate-300 group-hover:text-white hidden sm:inline">Torna alla Wiki</span>
-      <svg class="w-4 h-4 text-slate-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
+    <!-- Chiudi Modale -->
+    <button (click)="exitAdmin()" class="absolute top-8 right-8 z-[60] w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors border border-white/10 backdrop-blur-md">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
 
-    <!-- Centered Glassmorphic Login Card -->
-    <div class="relative z-10 w-full max-w-md p-8 sm:p-10 bg-[#1E293B]/70 border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.6)] rounded-[2.5rem] backdrop-blur-2xl text-[#F8FAFD] animate-fade-up">
+    <!-- Background Orbs (Colori Corporate Soft) -->
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-[#377DFF]/10 rounded-full filter blur-[100px] opacity-80 mix-blend-screen animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full filter blur-[100px] opacity-80 mix-blend-screen animate-pulse" style="animation-delay: 2s;"></div>
+    </div>
+    
+    <div class="relative z-10 flex flex-col md:flex-row items-center gap-6 max-w-5xl w-full p-4 justify-center">
       
-      <!-- Top Badge -->
-      <div class="flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-[#377DFF]/15 border border-[#377DFF]/30 text-[#377DFF] text-[11px] font-bold tracking-wider uppercase mb-6 w-fit mx-auto shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-[#377DFF] animate-pulse"></span>
-        Quaderno Elettronico
-      </div>
-
-      <!-- Title & Subtitle -->
-      <div class="text-center mb-8">
-        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-white mb-2">Area Amministrativa</h2>
-        <p class="text-xs sm:text-sm text-[#94A3B8]">Inserisci le credenziali per accedere al pannello</p>
-      </div>
-
-      <!-- Form Inputs -->
-      <div class="space-y-4">
-        <!-- Email Input -->
-        <div>
-          <label class="block text-xs font-medium text-[#94A3B8] mb-1.5 ml-1">Email</label>
-          <div class="relative flex items-center bg-[#0F172A]/80 border border-white/10 focus-within:border-[#377DFF] focus-within:ring-2 focus-within:ring-[#377DFF]/20 rounded-2xl transition-all px-4 py-3.5 shadow-inner">
-            <div class="mr-3 text-[#377DFF] flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-              </svg>
+      <!-- LEFT COLUMN: Login + Pill -->
+      <div class="flex flex-col gap-4 w-full max-w-sm">
+        
+        <!-- Login Card -->
+        <div class="w-full p-8 bg-[#1E293B]/60 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] rounded-[2.5rem] backdrop-blur-2xl text-[#F8FAFD]" style="animation: fadeUpCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+          <div class="flex justify-between items-center mb-8">
+            <span class="text-xs font-bold tracking-widest text-[#94A3B8] uppercase">Quaderno</span>
+            <span class="text-xs font-bold tracking-widest text-[#F8FAFD] uppercase cursor-pointer hover:opacity-80">Sign up</span>
+          </div>
+          <h2 class="text-4xl font-light tracking-tight mb-8 text-white">Log in</h2>
+          <div class="w-full space-y-4">
+            <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+              <div class="pl-4 pr-3 flex items-center pointer-events-none"><span class="text-[#94A3B8] font-bold">&#64;</span></div>
+              <input type="email" [(ngModel)]="loginEmail" (keyup.enter)="loginAdmin()" placeholder="e-mail address" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
             </div>
-            <input type="email" 
-                   [(ngModel)]="loginEmail" 
-                   (keyup.enter)="loginAdmin()" 
-                   placeholder="admin@example.com" 
-                   class="w-full bg-transparent border-none focus:outline-none text-white placeholder-[#64748B] text-sm font-normal">
+            <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] pr-2">
+              <div class="pl-4 pr-3 flex items-center pointer-events-none">
+                <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+              </div>
+              <input type="password" [(ngModel)]="loginPassword" (keyup.enter)="loginAdmin()" placeholder="password" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              <button class="px-4 py-1.5 bg-[#1E293B] rounded-full text-xs font-bold text-[#94A3B8] shadow-sm hover:text-white transition-colors flex-shrink-0">I forgot</button>
+            </div>
+          </div>
+          
+          <div *ngIf="loginError" class="mt-4 text-xs font-bold text-[#F80086] text-center animate-pulse">
+            {{loginError}}
+          </div>
+
+          <div class="mt-8 flex items-center justify-between">
+            <div class="flex flex-col gap-1">
+              <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Accesso riservato al personale. In caso di problemi contatta l'amministratore.</p>
+              <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Please authenticate!</span>
+            </div>
+            <button [disabled]="loginLoading" (click)="loginAdmin()" class="w-12 h-12 bg-white text-[#0F172A] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95 transition-transform flex-shrink-0 disabled:opacity-50">
+              <svg *ngIf="!loginLoading" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <svg *ngIf="loginLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            </button>
           </div>
         </div>
+        
+        <!-- Dark Pill Info -->
+        <div class="w-full px-8 py-6 bg-[#0F172A]/80 backdrop-blur-xl border border-white/5 rounded-[2rem] flex items-end justify-between shadow-xl" style="animation: fadeUpCard 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+          <div>
+            <h3 class="text-white text-xl font-medium tracking-tight">Wiki 2.0</h3>
+            <p class="text-[#94A3B8] text-sm mt-1">Dashboard Management</p>
+          </div>
+          <span class="text-[#F8FAFD] text-xs font-semibold uppercase tracking-wider">Discover</span>
+        </div>
 
-        <!-- Password Input -->
-        <div>
-          <label class="block text-xs font-medium text-[#94A3B8] mb-1.5 ml-1">Password</label>
-          <div class="relative flex items-center bg-[#0F172A]/80 border border-white/10 focus-within:border-[#377DFF] focus-within:ring-2 focus-within:ring-[#377DFF]/20 rounded-2xl transition-all px-4 py-3.5 shadow-inner">
-            <div class="mr-3 text-[#377DFF] flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+      </div>
+
+      <!-- RIGHT COLUMN: Tall Card -->
+      <div class="hidden md:flex w-full max-w-[320px] h-[520px] bg-white/5 border border-white/10 shadow-2xl rounded-[2.5rem] relative overflow-hidden backdrop-blur-lg" style="animation: fadeUpCard 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+        <!-- Inner split background: left side is frosted white -->
+        <div class="absolute inset-y-0 left-0 w-[45%] bg-white/60 backdrop-blur-2xl z-10 border-r border-white/20"></div>
+        
+        <!-- Soft Blue/White glow instead of fuchsia -->
+        <div class="absolute top-1/2 right-4 -translate-y-1/2 w-48 h-48 bg-gradient-to-br from-white/20 to-[#377DFF]/20 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.1)] z-0 mix-blend-screen"></div>
+
+        <!-- Content overlay -->
+        <div class="absolute inset-0 z-20 flex flex-col justify-between p-8">
+          <div>
+            <h1 class="text-5xl font-light text-[#0F172A] leading-tight mt-4">Aug<br><span class="text-[#94A3B8]">2026</span></h1>
+            <div class="absolute top-12 right-6 text-right">
+              <p class="text-[10px] text-white/80 uppercase tracking-widest font-semibold">Minimalism style</p>
+              <p class="text-[10px] text-white/60">Typography</p>
             </div>
-            <input type="password" 
-                   [(ngModel)]="loginPassword" 
-                   (keyup.enter)="loginAdmin()" 
-                   placeholder="••••••••" 
-                   class="w-full bg-transparent border-none focus:outline-none text-white placeholder-[#64748B] text-sm font-normal">
+          </div>
+          
+          <div class="mt-auto mb-16 text-[#0F172A] max-w-[40%]">
+            <p class="text-[10px] font-bold mb-1">Server Status</p>
+            <p class="text-[10px] text-slate-600 leading-tight">All systems operational</p>
+            <p class="text-[10px] text-slate-800 mt-2 font-bold">Quaderno</p>
+          </div>
+
+          <div class="absolute bottom-8 right-6 w-20 h-8 bg-[#0F172A] rounded-full flex items-center justify-between px-1 shadow-lg cursor-pointer hover:bg-black transition-colors">
+            <span class="text-[8px] text-white font-bold ml-2">Click Here</span>
+            <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Error Alert -->
-      <div *ngIf="loginError" class="mt-4 p-3.5 rounded-xl bg-[#F80086]/10 border border-[#F80086]/20 text-[#F80086] text-xs font-medium flex items-center gap-2.5">
-        <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ loginError }}</span>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="mt-6">
-        <button [disabled]="loginLoading" 
-                (click)="loginAdmin()" 
-                class="w-full py-3.5 px-6 rounded-2xl font-semibold text-sm text-white bg-gradient-to-r from-[#377DFF] to-[#2563eb] hover:from-[#4385ff] hover:to-[#377DFF] shadow-[0_10px_25px_rgba(55,125,255,0.35)] hover:shadow-[0_12px_30px_rgba(55,125,255,0.45)] hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
-          <span *ngIf="!loginLoading" class="flex items-center gap-2">
-            Accedi
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </span>
-          <span *ngIf="loginLoading" class="flex items-center gap-2">
-            <svg class="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Autenticazione in corso...
-          </span>
-        </button>
-      </div>
-
-      <!-- Footer Info -->
-      <p class="text-center text-[11px] text-[#64748B] mt-6">Accesso protetto riservato al personale autorizzato</p>
 
     </div>
-
   </div>
 </div>

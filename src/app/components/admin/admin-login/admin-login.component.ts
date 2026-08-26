@@ -19,18 +19,17 @@ import { AdminService } from '../../../services/admin.service';
         transform: translateY(0) scale(1);
       }
     }
-    .animate-fade-up {
-      animation: fadeUpCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover, 
-    input:-webkit-autofill:focus, 
-    input:-webkit-autofill:active {
-      -webkit-background-clip: text;
+    :host input:-webkit-autofill,
+    :host input:-webkit-autofill:hover, 
+    :host input:-webkit-autofill:focus, 
+    :host input:-webkit-autofill:active {
+      -webkit-background-clip: text !important;
       -webkit-text-fill-color: #ffffff !important;
-      caret-color: #ffffff !important;
-      transition: background-color 5000s ease-in-out 0s;
-      box-shadow: inset 0 0 20px 20px rgba(15, 23, 42, 0.95) !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+      box-shadow: inset 0 0 40px 40px rgba(15, 23, 42, 0.9) !important;
+    }
+    :host input {
+      background-color: transparent !important;
     }
   `]
 })
