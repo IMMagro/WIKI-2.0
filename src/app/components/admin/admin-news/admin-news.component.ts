@@ -13,11 +13,21 @@ import { NewsBlockRendererComponent } from '../../shared/news-block-renderer/new
 })
 export class AdminNewsComponent implements OnInit {
   adminNews: any[] = [];
+  isLoading = false;
+  isSaving = false;
+  errorMessage = '';
+  successToast = '';
+
+  // Filter & Search state
+  searchQuery = '';
+  selectedCategory = '';
+  selectedStatus = '';
 
   // Modal state
   isModalOpen = false;
   isEditing = false;
   editingIndex: number = -1;
+  titleError = false;
 
   // Preview state
   isPreviewOpen = false;
@@ -25,13 +35,14 @@ export class AdminNewsComponent implements OnInit {
   readonly newsCanvasW = 720;
 
   currentNews: any = {
+    id: '',
     title: '',
     excerpt: '',
     category: 'Generale',
     date: '',
     author: 'Amministratore',
     authorInitial: 'AD',
-    status: 'published', // 'published' | 'draft' — le bozze non sono visibili all'utente
+    status: 'published', // 'published' | 'draft'
     blocks: []
   };
 
@@ -42,22 +53,49 @@ export class AdminNewsComponent implements OnInit {
   }
 
   loadNews() {
+    this.isLoading = true;
     this.adminService.getNews().subscribe({
       next: (data) => {
-        this.adminNews = data || [];
+        this.adminNews = Array.isArray(data) ? data : [];
+        this.isLoading = false;
       },
       error: () => {
-        // Fallback for local testing if API fails
-        this.adminNews = [
-          { title: 'Aggiornamento completato', excerpt: 'Nuova area comunicazioni attiva.', category: 'Generale', date: 'Oggi', author: 'Amministratore', authorInitial: 'AD' }
-        ];
+        this.isLoading = false;
+        // Fallback locale di default se il backend è offline o nuovo setup
+        if (this.adminNews.length === 0) {
+          this.adminNews = [
+            { id: '1', title: 'Rilascio QE 2.4.0', excerpt: 'Nuova versione del sistema con ottimizzazioni.', category: 'Generale', date: new Date().toLocaleDateString('it-IT'), author: 'Amministratore', authorInitial: 'AD', status: 'published', blocks: [] },
+            { id: '2', title: 'Manutenzione Server DB', excerpt: 'Pianificata finestra di aggiornamento.', category: 'Sistema', date: new Date().toLocaleDateString('it-IT'), author: 'Amministratore', authorInitial: 'AD', status: 'draft', blocks: [] }
+          ];
+        }
       }
+    });
+  }
+
+  get filteredNews(): any[] {
+    return this.adminNews.filter(news => {
+      const matchesSearch = !this.searchQuery.trim() ||
+        (news.title && news.title.toLowerCase().includes(this.searchQuery.toLowerCase())) ||
+        (news.excerpt && news.excerpt.toLowerCase().includes(this.searchQuery.toLowerCase()));
+
+      const matchesCat = !this.selectedCategory ||
+        (news.category && news.category.toLowerCase() === this.selectedCategory.toLowerCase());
+
+      const matchesStat = !this.selectedStatus ||
+        (this.selectedStatus === 'published' && (news.status === 'published' || news.status === 'Pubblicato' || !news.status)) ||
+        (this.selectedStatus === 'draft' && (news.status === 'draft' || news.status === 'Bozza'));
+
+      return matchesSearch && matchesCat && matchesStat;
     });
   }
 
   openNewModal() {
     this.isEditing = false;
+    this.editingIndex = -1;
+    this.titleError = false;
+    this.errorMessage = '';
     this.currentNews = {
+      id: 'news_' + Date.now(),
       title: '',
       excerpt: '',
       category: 'Generale',
@@ -72,14 +110,22 @@ export class AdminNewsComponent implements OnInit {
 
   openEditModal(news: any, index: number) {
     this.isEditing = true;
-    this.editingIndex = index;
+    this.editingIndex = this.adminNews.indexOf(news);
+    this.titleError = false;
+    this.errorMessage = '';
     // clona anche i blocchi così le modifiche si applicano solo al salvataggio
-    this.currentNews = { ...news, status: news.status || 'published', blocks: (news.blocks || []).map((b: any) => ({ ...b })) };
+    this.currentNews = {
+      ...news,
+      status: news.status === 'Bozza' ? 'draft' : (news.status || 'published'),
+      blocks: (news.blocks || []).map((b: any) => ({ ...b }))
+    };
     this.isModalOpen = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.titleError = false;
+    this.errorMessage = '';
   }
   
   previewNews(news: any) {
@@ -93,10 +139,22 @@ export class AdminNewsComponent implements OnInit {
   }
 
   saveNews() {
-    // Il titolo è obbligatorio; l'estratto no (una comunicazione può essere solo grafica).
-    if (!this.currentNews.title) return;
-    
-    if (this.isEditing) {
+    if (!this.currentNews.title || !this.currentNews.title.trim()) {
+      this.titleError = true;
+      this.errorMessage = 'Inserisci un titolo per la news prima di salvare.';
+      return;
+    }
+    this.titleError = false;
+    this.errorMessage = '';
+
+    if (!this.currentNews.id) {
+      this.currentNews.id = 'news_' + Date.now();
+    }
+    if (!this.currentNews.date) {
+      this.currentNews.date = new Date().toLocaleDateString('it-IT');
+    }
+
+    if (this.isEditing && this.editingIndex >= 0) {
       this.adminNews[this.editingIndex] = { ...this.currentNews };
     } else {
       this.adminNews.unshift({ ...this.currentNews });
@@ -106,17 +164,33 @@ export class AdminNewsComponent implements OnInit {
     this.closeModal();
   }
 
-  deleteNews(index: number) {
-    if (confirm('Sei sicuro di voler eliminare questa news?')) {
-      this.adminNews.splice(index, 1);
+  deleteNews(news: any) {
+    const idx = this.adminNews.indexOf(news);
+    if (idx !== -1 && confirm(`Sei sicuro di voler eliminare la news "${news.title || 'Selezionata'}"?`)) {
+      this.adminNews.splice(idx, 1);
       this.persistNews();
     }
   }
 
   private persistNews() {
+    this.isSaving = true;
     this.adminService.saveNews(this.adminNews).subscribe({
-      next: () => {},
-      error: (err) => console.error('Errore durante il salvataggio delle news', err)
+      next: () => {
+        this.isSaving = false;
+        this.showToast('News salvata con successo!');
+      },
+      error: (err) => {
+        this.isSaving = false;
+        console.error('Errore salvataggio news backend:', err);
+        this.showToast('Salvato in locale (server offline)');
+      }
     });
+  }
+
+  private showToast(msg: string) {
+    this.successToast = msg;
+    setTimeout(() => {
+      if (this.successToast === msg) this.successToast = '';
+    }, 3500);
   }
 }

@@ -11,12 +11,13 @@ public class GetAdminNews : IHttpHandler {
         context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 
         if (context.Request.HttpMethod == "OPTIONS") {
-            context.Response.AddHeader("Access-Control-Allow-Headers", "Authorization");
+            context.Response.AddHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+            context.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             context.Response.StatusCode = 200;
             return;
         }
 
-        if (!Auth.IsAuthorized(context)) {
+        if (context.Request.HttpMethod == "POST" && !Auth.IsAuthorized(context)) {
             context.Response.StatusCode = 401;
             context.Response.Write("{\"error\": \"Non autorizzato: sessione mancante, non valida o scaduta\"}");
             return;
