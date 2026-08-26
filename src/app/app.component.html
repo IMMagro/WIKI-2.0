@@ -160,14 +160,14 @@
       </div>
     </header>
 
-    <!-- Footer -->
-    <footer class="bg-transparent px-4 sm:px-6 py-3 sm:py-4 backdrop-blur-sm relative z-10 pb-6 md:pb-4" style="animation: fadeInPage 1s ease forwards">
-
-      <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-qe-textSecondary dark:text-slate-500">
-        <p>&copy; 2026 <a href="https://www.quadernoelettronico.it" target="_blank" rel="noopener noreferrer" class="font-bold text-qe-text dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue transition-colors">Quaderno Elettronico</a> &bull; Assistenza Clienti</p>
-        <div class="flex items-center gap-4">
-          <button type="button" (click)="legalService.openPrivacy()" class="hover:text-[#377DFF] dark:hover:text-[#377DFF] transition-colors cursor-pointer focus:outline-none">Privacy</button>
-          <button type="button" (click)="legalService.openTerms()" class="hover:text-[#377DFF] dark:hover:text-[#377DFF] transition-colors cursor-pointer focus:outline-none">Termini</button>
+    <!-- Footer (Ultra-minimal: discreet on desktop, hidden on mobile) -->
+    <footer class="hidden md:flex bg-transparent px-6 py-2 relative z-10 opacity-70 hover:opacity-100 transition-opacity" style="animation: fadeInPage 1s ease forwards">
+      <div class="w-full flex items-center justify-between gap-4 text-[11px] text-qe-textSecondary/70 dark:text-slate-500/70">
+        <p>&copy; 2026 <a href="https://www.quadernoelettronico.it" target="_blank" rel="noopener noreferrer" class="font-medium text-slate-600 dark:text-slate-400 hover:text-qe-blue dark:hover:text-qe-blue transition-colors">Quaderno Elettronico</a> &bull; Assistenza</p>
+        <div class="flex items-center gap-3">
+          <button type="button" (click)="legalService.openPrivacy()" class="hover:text-qe-blue dark:hover:text-qe-blue transition-colors cursor-pointer focus:outline-none">Privacy</button>
+          <span class="text-slate-300 dark:text-slate-700">&bull;</span>
+          <button type="button" (click)="legalService.openTerms()" class="hover:text-qe-blue dark:hover:text-qe-blue transition-colors cursor-pointer focus:outline-none">Termini</button>
         </div>
       </div>
     </footer>
