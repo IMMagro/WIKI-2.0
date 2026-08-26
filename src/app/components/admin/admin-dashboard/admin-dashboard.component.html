@@ -173,7 +173,7 @@
 
       <!-- SVG MAPPA DETTAGLIATA D'ITALIA -->
       <div class="relative w-full max-w-[480px]">
-        <svg viewBox="0 0 300 300" class="w-full h-auto drop-shadow-md select-none" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 480 580" class="w-full h-auto drop-shadow-md select-none" preserveAspectRatio="xMidYMid meet">
           <defs>
             <!-- Gradiente per la sagoma d'Italia -->
             <linearGradient id="italyMeshGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -184,82 +184,103 @@
 
             <!-- Filtro glow per la terra -->
             <filter id="mapShadow" x="-10%" y="-10%" width="120%" height="120%">
-              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#377DFF" flood-opacity="0.15"/>
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#377DFF" flood-opacity="0.12"/>
             </filter>
 
             <!-- Glow radiale per i nodi attivi -->
             <radialGradient id="nodeBlueGlow">
-              <stop offset="0%" stop-color="#377DFF" stop-opacity="0.8"/>
-              <stop offset="60%" stop-color="#377DFF" stop-opacity="0.2"/>
+              <stop offset="0%" stop-color="#377DFF" stop-opacity="0.85"/>
+              <stop offset="50%" stop-color="#377DFF" stop-opacity="0.3"/>
               <stop offset="100%" stop-color="#377DFF" stop-opacity="0"/>
             </radialGradient>
 
             <radialGradient id="nodeMagentaGlow">
-              <stop offset="0%" stop-color="#F80086" stop-opacity="0.8"/>
-              <stop offset="60%" stop-color="#F80086" stop-opacity="0.2"/>
+              <stop offset="0%" stop-color="#F80086" stop-opacity="0.85"/>
+              <stop offset="50%" stop-color="#F80086" stop-opacity="0.3"/>
               <stop offset="100%" stop-color="#F80086" stop-opacity="0"/>
             </radialGradient>
 
             <radialGradient id="nodeOrangeGlow">
-              <stop offset="0%" stop-color="#F97316" stop-opacity="0.8"/>
-              <stop offset="60%" stop-color="#F97316" stop-opacity="0.2"/>
+              <stop offset="0%" stop-color="#F97316" stop-opacity="0.85"/>
+              <stop offset="50%" stop-color="#F97316" stop-opacity="0.3"/>
               <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
             </radialGradient>
           </defs>
 
-          <!-- Sagoma dell'Italia completa e precisa -->
-          <path [attr.d]="italyPath" 
-                fill="url(#italyMeshGradient)" 
-                stroke="#93C5FD" 
-                stroke-width="1" 
-                stroke-linejoin="round"
-                filter="url(#mapShadow)"
-                class="transition-all duration-500 hover:brightness-105"/>
+          <!-- Sagome Vettoriali delle 20 Regioni Italiane (Terraferma, Sicilia, Sardegna) -->
+          <g id="italy-regions-group">
+            <path *ngFor="let reg of italyRegions" 
+                  [attr.id]="'reg-' + reg.name"
+                  [attr.d]="reg.d" 
+                  [attr.data-name]="reg.name"
+                  [ngClass]="{
+                    'opacity-100 fill-[#EBF2FF] stroke-[#93C5FD]': selectedMacroRegion === 'all' || selectedMacroRegion === reg.macro,
+                    'opacity-30 fill-[#F1F5F9] stroke-[#CBD5E1]': selectedMacroRegion !== 'all' && selectedMacroRegion !== reg.macro,
+                    'fill-[#D8E8FF] stroke-[#377DFF] brightness-95': hoveredRegion === reg.name
+                  }"
+                  (mouseenter)="hoveredRegion = reg.name"
+                  (mouseleave)="hoveredRegion = null"
+                  stroke-width="1.1" 
+                  stroke-linejoin="round"
+                  filter="url(#mapShadow)"
+                  class="transition-all duration-300 cursor-pointer">
+              <title>{{ reg.name }}</title>
+            </path>
+          </g>
 
-          <!-- Linee di connessione a raggi sottili tra gli Hub -->
-          <g opacity="0.25" stroke="#377DFF" stroke-width="0.6" stroke-dasharray="2,2">
-            <line x1="72" y1="48" x2="138" y2="158" />
-            <line x1="138" y1="158" x2="172" y2="188" />
-            <line x1="108" y1="78" x2="138" y2="158" />
-            <line x1="44" y1="56" x2="72" y2="48" />
-            <line x1="172" y1="188" x2="232" y2="194" />
-            <line x1="172" y1="188" x2="152" y2="266" />
+          <!-- Linee di connessione a raggi sottili tra gli Hub principali -->
+          <g opacity="0.3" stroke="#377DFF" stroke-width="0.8" stroke-dasharray="3,3">
+            <line x1="72.3" y1="112.2" x2="124.2" y2="94.0" />
+            <line x1="124.2" y1="94.0" x2="186.3" y2="95.2" />
+            <line x1="186.3" y1="95.2" x2="231.9" y2="95.0" />
+            <line x1="124.2" y1="94.0" x2="115.8" y2="142.9" />
+            <line x1="124.2" y1="94.0" x2="198.4" y2="138.8" />
+            <line x1="198.4" y1="138.8" x2="195.4" y2="172.3" />
+            <line x1="195.4" y1="172.3" x2="238.2" y2="258.7" />
+            <line x1="238.2" y1="258.7" x2="299.2" y2="307.3" />
+            <line x1="198.4" y1="138.8" x2="389.0" y2="295.0" />
+            <line x1="299.2" y1="307.3" x2="389.0" y2="295.0" />
+            <line x1="299.2" y1="307.3" x2="268.0" y2="433.8" />
+            <line x1="102.3" y1="313.1" x2="121.8" y2="382.5" />
           </g>
 
           <!-- Nodi Città Interattivi con Effetti Radar e Pulse -->
           <g *ngFor="let node of filteredMapNodes" 
-             (mouseenter)="hoveredNode = node" 
-             (mouseleave)="hoveredNode = null"
+             (mouseenter)="hoveredNode = node; hoveredRegion = node.region" 
+             (mouseleave)="hoveredNode = null; hoveredRegion = null"
              class="cursor-pointer group">
 
-            <!-- Radar Wave Ring animato su nodo attivo/ping -->
-            <circle [attr.cx]="node.x" [attr.cy]="node.y" 
-                    [attr.r]="12 + (node.v / accessMapMax) * 12" 
+            <!-- Radar Wave Ring animato SOLO su nodo attivo/ping in tempo reale -->
+            <circle *ngIf="activePingNode?.name === node.name"
+                    [attr.cx]="node.x" [attr.cy]="node.y" 
+                    r="18" 
                     [attr.fill]="node.software === 'Poliwin' ? 'url(#nodeMagentaGlow)' : node.software === 'Winodlab' ? 'url(#nodeOrangeGlow)' : 'url(#nodeBlueGlow)'" 
-                    class="animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] opacity-60 pointer-events-none"/>
+                    class="animate-ping opacity-75 pointer-events-none"/>
 
-            <!-- Halo di sfondo fisso -->
+            <!-- Halo di sfondo delicato proporzionato al volume di accessi -->
             <circle [attr.cx]="node.x" [attr.cy]="node.y" 
-                    [attr.r]="5 + (node.v / accessMapMax) * 6" 
+                    [attr.r]="6 + (node.v / accessMapMax) * 5" 
                     [attr.fill]="node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF'" 
-                    opacity="0.25" 
-                    class="group-hover:scale-150 transition-transform"/>
+                    opacity="0.2" 
+                    class="group-hover:opacity-40 group-hover:scale-150 transition-all duration-300"/>
 
             <!-- Punto centrale della Città -->
             <circle [attr.cx]="node.x" [attr.cy]="node.y" 
-                    [attr.r]="3.5" 
+                    [attr.r]="activePingNode?.name === node.name ? 5 : 4" 
                     [attr.fill]="node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF'" 
                     stroke="#FFFFFF" 
-                    stroke-width="1.5"
-                    class="transition-transform group-hover:scale-125"/>
+                    stroke-width="1.8"
+                    class="transition-transform group-hover:scale-125 duration-200"/>
 
-            <!-- Etichetta Nome Città -->
-            <text [attr.x]="node.x + 6" [attr.y]="node.y + 3" 
-                  font-size="6.5" 
+            <!-- Etichetta Nome Città con posizionamento e ancoraggio intelligente anti-collisione -->
+            <text [attr.x]="node.x + (node.labelDx || 8)" 
+                  [attr.y]="node.y + (node.labelDy || 3)" 
+                  [attr.text-anchor]="node.textAnchor || 'start'"
+                  font-size="8.5" 
                   font-weight="700" 
                   fill="#1E2022" 
                   class="select-none pointer-events-none transition-all group-hover:fill-[#377DFF] group-hover:font-extrabold"
-                  style="text-shadow: 0 1px 2px rgba(255,255,255,0.9);">
+                  style="text-shadow: 0 1px 2px rgba(255,255,255,0.95), 0 0 5px rgba(255,255,255,0.9);">
               {{ node.name }}
             </text>
           </g>
