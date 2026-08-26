@@ -51,8 +51,16 @@
 
     <!-- ===== VIEW: Primi passi ===== -->
     <ng-container *ngIf="view === 'journey'">
-      <button class="backbtn" (click)="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> Tutte le guide</button>
-      <div class="eyebrow">Percorso guidato</div>
+      <nav class="breadcrumb-bar" aria-label="Percorso di navigazione">
+        <button class="bc-item" (click)="goHome()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" class="bc-home-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['compass']"></path>
+          </svg>
+          <span>Guide</span>
+        </button>
+        <span class="bc-sep">/</span>
+        <span class="bc-current">Muovere i primi passi</span>
+      </nav>
       <h1 class="page">Muovere i primi passi</h1>
       <p class="lede">{{ journey.intro }}</p>
       <div class="journey">
@@ -73,8 +81,19 @@
 
     <!-- ===== VIEW: Guide di una categoria ===== -->
     <ng-container *ngIf="view === 'guides' && curCat as c">
-      <button class="backbtn" (click)="goHome()"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> Tutte le categorie</button>
-      <div class="eyebrow">Categoria</div>
+      <nav class="breadcrumb-bar" aria-label="Percorso di navigazione">
+        <button class="bc-item" (click)="goHome()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" class="bc-home-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['compass']"></path>
+          </svg>
+          <span>Guide</span>
+        </button>
+        <span class="bc-sep">/</span>
+        <span class="bc-current">
+          <img *ngIf="c.id" [src]="'assets/images/emojis/' + c.id + '.png'" class="bc-emoji" [alt]="c.name" />
+          <span>{{ c.name }}</span>
+        </span>
+      </nav>
       <h1 class="page">{{ c.name }}</h1>
       <p class="lede">{{ c.desc }}</p>
       <div class="grid3">
@@ -93,8 +112,27 @@
 
     <!-- ===== VIEW: Lettura guida ===== -->
     <ng-container *ngIf="view === 'read' && curGuide as g">
-      <button class="backbtn" (click)="openCat(selCat!, 'back')"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg> {{ curCat?.name }}</button>
-      <div class="eyebrow">{{ curCat?.name }} &middot; Guida</div>
+      <nav class="breadcrumb-bar" aria-label="Percorso di navigazione">
+        <button class="bc-item" (click)="goHome()">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" class="bc-home-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['compass']"></path>
+          </svg>
+          <span>Guide</span>
+        </button>
+        <span class="bc-sep">/</span>
+        <button class="bc-item" (click)="openCat(selCat!, 'back')">
+          <img *ngIf="curCat?.id" [src]="'assets/images/emojis/' + curCat?.id + '.png'" class="bc-emoji" [alt]="curCat?.name" />
+          <span>{{ curCat?.name }}</span>
+        </button>
+        <span class="bc-sep">/</span>
+        <span class="bc-current" *ngIf="selFaq === -1">{{ g.title }}</span>
+        <ng-container *ngIf="selFaq >= 0">
+          <button class="bc-item" (click)="openFaq(-1)">{{ g.title }}</button>
+          <span class="bc-sep">/</span>
+          <span class="bc-current">{{ curFaq?.q }}</span>
+        </ng-container>
+      </nav>
+
       <h1 class="page sm">{{ g.title }}</h1>
 
       <div class="reader" [class.toc-open]="isTocOpen">
