@@ -82,9 +82,9 @@ export class AppComponent implements OnInit {
 
   menuItems = [
     { icon: 'home', label: 'QeHome', active: true },
+    { icon: 'folder', label: 'Guide', active: false },
     { icon: 'book-open', label: 'FAQ', active: false },
     { icon: 'briefcase', label: 'Servizi', active: false },
-    { icon: 'folder', label: 'Guide', active: false },
     { icon: 'newspaper', label: 'News', active: false }
   ];
 
@@ -308,19 +308,19 @@ export class AppComponent implements OnInit {
       
       // Step 1: Color it blue after 800ms
       this.pageTimeout = setTimeout(() => {
-        if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
+        if (this.activeIndex !== 3 || this.animationId !== currentAnimId) return;
         this.serviziStage = 'title-blue';
         
         // Step 2: Move to top left after 500ms using JS FLIP for 60fps
         // (misura/muta/misura/anima delegati a ServiziComponent, che possiede il DOM del titolo)
         setTimeout(() => {
-          if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
+          if (this.activeIndex !== 3 || this.animationId !== currentAnimId) return;
 
           // First (measure)
           const first = this.serviziRef?.getTitleRect();
           if (!first) {
             this.serviziStage = 'moving';
-            setTimeout(() => { if (this.activeIndex === 2 && this.animationId === currentAnimId) this.serviziStage = 'cards'; }, 800);
+            setTimeout(() => { if (this.activeIndex === 3 && this.animationId === currentAnimId) this.serviziStage = 'cards'; }, 800);
             return;
           }
 
@@ -329,12 +329,12 @@ export class AppComponent implements OnInit {
 
           // Wait for Angular to update the DOM
           setTimeout(() => {
-            if (this.activeIndex !== 2 || this.animationId !== currentAnimId) return;
+            if (this.activeIndex !== 3 || this.animationId !== currentAnimId) return;
 
             // Last (measure new layout) + Invert & Play
             this.serviziRef?.animateTitleFlip(first, () => {
               setTimeout(() => {
-                if (this.activeIndex === 2 && this.animationId === currentAnimId) {
+                if (this.activeIndex === 3 && this.animationId === currentAnimId) {
                   this.serviziStage = 'cards';
                   this.cdr.detectChanges();
                 }
@@ -430,14 +430,14 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:wheel', ['$event'])
   onWheel(event: WheelEvent) {
-    if (!(this.activeIndex === 2 && this.serviziStage === 'cards') && !(this.activeIndex === 4 && this.newsStage === 'detail')) return;
+    if (!(this.activeIndex === 3 && this.serviziStage === 'cards') && !(this.activeIndex === 4 && this.newsStage === 'detail')) return;
     
     event.preventDefault();
     const now = Date.now();
     const isContinuousScroll = (now - this.lastWheelTime) < 150;
     this.lastWheelTime = now;
 
-    if (this.activeIndex === 2) {
+    if (this.activeIndex === 3) {
       if (this.scrollLock || isContinuousScroll) return;
       if (event.deltaY > 0) this.nextServicePage();
       else if (event.deltaY < 0) this.prevServicePage();
@@ -482,9 +482,9 @@ export class AppComponent implements OnInit {
   }
 
   goToCategoryFromFaq(catId?: string) {
-    // Passa alla sezione Guide (indice menu 3) e apri la categoria della FAQ.
-    this.menuItems.forEach((m, idx) => m.active = (idx === 3));
-    this.activeIndex = 3;
+    // Passa alla sezione Guide (indice menu 1) e apri la categoria della FAQ.
+    this.menuItems.forEach((m, idx) => m.active = (idx === 1));
+    this.activeIndex = 1;
     if (catId) {
       setTimeout(() => this.guideRef?.openCat(catId), 0);
     }
