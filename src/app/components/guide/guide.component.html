@@ -185,9 +185,6 @@
         <aside class="toc">
           <div class="toc-head">
             <h4>Contenuto guida</h4>
-            <button class="toc-close-btn" (click)="toggleToc()" title="Chiudi indice">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['close']"></path></svg>
-            </button>
           </div>
           <button [class.on]="selFaq === -1" (click)="openFaq(-1)"><span class="dot"></span><span>Panoramica</span></button>
           <ng-container *ngIf="hasExtraFaqs">
