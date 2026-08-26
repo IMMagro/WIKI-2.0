@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideService } from '../../../services/guide.service';
+import { AdminService } from '../../../services/admin.service';
 import { HttpClient } from '@angular/common/http';
 
 export interface MapRegionNode {
@@ -61,6 +62,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   get totalLiveViewers(): number {
     return this.liveGuides.reduce((sum, g) => sum + (g.viewersCount || 0), 0);
+  }
+
+  get unreadNotificationsCount(): number {
+    return this.adminNotifications.filter(n => n.unread).length;
   }
 
   // Accurate SVG Paths for all 20 Italian Regions (High precision, normalized 480x580)
@@ -199,27 +204,44 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   // Real-time live access log
   liveFeed: LiveAccessEvent[] = [];
-  private feedInterval: any;
-  private pingInterval: any;
   private pollInterval: any;
 
-  constructor(private guideService: GuideService, private http: HttpClient) {}
+  constructor(
+    private guideService: GuideService,
+    private adminService: AdminService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit() {
-    this.adminNotifications = [
-      { message: 'Nuovo backup generato con successo', time: '10 min fa', icon: 'fallback' }
-    ];
+    this.loadNotifications();
     this.loadAccessStats();
-    this.initLiveFeed();
 
     // Aggiorna periodicamente le statistiche in tempo reale dal server ogni 5s
     this.pollInterval = setInterval(() => this.loadAccessStats(), 5000);
   }
 
   ngOnDestroy() {
-    if (this.feedInterval) clearInterval(this.feedInterval);
-    if (this.pingInterval) clearInterval(this.pingInterval);
     if (this.pollInterval) clearInterval(this.pollInterval);
+  }
+
+  loadNotifications() {
+    this.adminService.getNotifications().subscribe({
+      next: (notifs) => {
+        this.adminNotifications = Array.isArray(notifs) ? notifs : [];
+      },
+      error: (err) => {
+        console.error('Errore caricamento notifiche:', err);
+        this.adminNotifications = [];
+      }
+    });
+  }
+
+  markAllNotificationsAsRead() {
+    this.adminNotifications = this.adminNotifications.map(n => ({ ...n, unread: false }));
+    this.adminService.markNotificationsAsRead(this.adminNotifications).subscribe({
+      next: () => {},
+      error: (err) => console.error('Errore salvataggio notifiche:', err)
+    });
   }
 
   get guideStats() {
@@ -254,10 +276,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private loadAccessStats() {
     this.http.get<any>('/api/get_access_stats.ashx').subscribe({
       next: (d) => {
-        if (d && Array.isArray(d.mapNodes) && d.mapNodes.length > 0) {
+        if (d && typeof d === 'object') {
           this.accessStats = d;
         } else {
-          this.seedDefaultNodes();
+          this.accessStats = { mapNodes: [], recentEvents: [], liveGuides: [], heatmap: [] };
         }
 
         // 1. Aggiorna manuali in consultazione live
@@ -268,11 +290,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         }
 
         // 2. Aggiorna flusso accessi ed eventi live reali dal backend
-        if (d && Array.isArray(d.recentEvents) && d.recentEvents.length > 0) {
+        if (d && Array.isArray(d.recentEvents)) {
           this.liveFeed = d.recentEvents.map((ev: any) => {
             const sw = ev.software || this.getSoftwareByRegion(ev.region);
             return {
-              id: ev.id || ('ev_' + Math.random()),
+              id: ev.id || ('ev_' + (ev.time || Date.now())),
               region: ev.region || 'Italia',
               clientName: ev.clientName || ('Utente ' + (ev.region || 'Online')),
               software: sw,
@@ -283,40 +305,37 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
               color: ev.color || this.getColorBySoftware(sw)
             };
           });
+        } else {
+          this.liveFeed = [];
         }
+
+        // 3. Calcolo nodo di ping attivo reale
+        this.updateActivePingNode();
       },
-      error: () => {
-        if (!this.accessStats) this.seedDefaultNodes();
+      error: (err) => {
+        console.error('Errore caricamento statistiche accessi:', err);
+        if (!this.accessStats) {
+          this.accessStats = { mapNodes: [], recentEvents: [], liveGuides: [], heatmap: [] };
+        }
+        this.liveGuides = [];
+        this.liveFeed = [];
+        this.activePingNode = null;
       }
     });
   }
 
-  private seedDefaultNodes() {
-    this.accessStats = {
-      heatmap: [],
-      mapNodes: [
-        { id: "lom", name: "Lombardia", code: "LOM", macroArea: "nord", x: 138.0, y: 92.0, lat: 45.46, lng: 9.19, v: 168, active: 9, software: "Windent" },
-        { id: "laz", name: "Lazio", code: "LAZ", macroArea: "centro", x: 245.0, y: 260.0, lat: 41.90, lng: 12.50, v: 189, active: 11, software: "Poliwin" },
-        { id: "cam", name: "Campania", code: "CAM", macroArea: "sud", x: 312.0, y: 312.0, lat: 40.85, lng: 14.27, v: 125, active: 7, software: "Poliwin" },
-        { id: "ven", name: "Veneto", code: "VEN", macroArea: "nord", x: 215.0, y: 92.0, lat: 45.44, lng: 12.32, v: 116, active: 6, software: "Winodlab" },
-        { id: "emr", name: "Emilia-Romagna", code: "EMR", macroArea: "nord", x: 188.0, y: 142.0, lat: 44.49, lng: 11.34, v: 96, active: 6, software: "Winodlab" },
-        { id: "pug", name: "Puglia", code: "PUG", macroArea: "sud", x: 382.0, y: 305.0, lat: 41.12, lng: 16.87, v: 92, active: 5, software: "Poliwin" },
-        { id: "sic", name: "Sicilia", code: "SIC", macroArea: "sud", x: 285.0, y: 460.0, lat: 37.50, lng: 14.20, v: 85, active: 4, software: "Poliwin" },
-        { id: "tos", name: "Toscana", code: "TOS", macroArea: "centro", x: 188.0, y: 188.0, lat: 43.77, lng: 11.25, v: 84, active: 5, software: "Windent" },
-        { id: "pie", name: "Piemonte", code: "PIE", macroArea: "nord", x: 72.3, y: 112.2, lat: 45.07, lng: 7.68, v: 78, active: 4, software: "Windent" },
-        { id: "sar", name: "Sardegna", code: "SAR", macroArea: "sud", x: 115.0, y: 345.0, lat: 40.12, lng: 9.01, v: 54, active: 3, software: "Windent" },
-        { id: "lig", name: "Liguria", code: "LIG", macroArea: "nord", x: 105.0, y: 152.0, lat: 44.41, lng: 8.93, v: 45, active: 2, software: "Windent" },
-        { id: "mar", name: "Marche", code: "MAR", macroArea: "centro", x: 260.0, y: 190.0, lat: 43.61, lng: 13.51, v: 42, active: 2, software: "Windent" },
-        { id: "cal", name: "Calabria", code: "CAL", macroArea: "sud", x: 370.0, y: 395.0, lat: 38.91, lng: 16.59, v: 38, active: 2, software: "Poliwin" },
-        { id: "taa", name: "Trentino-Alto Adige", code: "TAA", macroArea: "nord", x: 202.0, y: 54.0, lat: 46.06, lng: 11.12, v: 36, active: 2, software: "Winodlab" },
-        { id: "fvg", name: "Friuli-Venezia Giulia", code: "FVG", macroArea: "nord", x: 262.0, y: 68.0, lat: 45.65, lng: 13.77, v: 35, active: 2, software: "Windent" },
-        { id: "abr", name: "Abruzzo", code: "ABR", macroArea: "sud", x: 288.0, y: 242.0, lat: 42.35, lng: 13.40, v: 34, active: 2, software: "Poliwin" },
-        { id: "umb", name: "Umbria", code: "UMB", macroArea: "centro", x: 238.0, y: 208.0, lat: 43.11, lng: 12.39, v: 31, active: 1, software: "Windent" },
-        { id: "bas", name: "Basilicata", code: "BAS", macroArea: "sud", x: 360.0, y: 330.0, lat: 40.64, lng: 15.80, v: 22, active: 1, software: "Poliwin" },
-        { id: "mol", name: "Molise", code: "MOL", macroArea: "sud", x: 310.0, y: 268.0, lat: 41.56, lng: 14.66, v: 19, active: 1, software: "Poliwin" },
-        { id: "vda", name: "Valle d'Aosta", code: "VDA", macroArea: "nord", x: 60.0, y: 82.0, lat: 45.73, lng: 7.32, v: 18, active: 1, software: "Windent" }
-      ]
-    };
+  private updateActivePingNode() {
+    // Imposta activePingNode sull'ultimo evento reale in recentEvents se presente,
+    // oppure sulla prima regione con active > 0. Se non ci sono accessi attivi, activePingNode = null.
+    if (this.liveFeed.length > 0 && this.liveFeed[0].region) {
+      const recentNode = this.getRegionNode(this.liveFeed[0].region);
+      if (recentNode && ((recentNode.active || 0) > 0 || (recentNode.v || 0) > 0)) {
+        this.activePingNode = recentNode;
+        return;
+      }
+    }
+    const activeNode = this.accessMapNodes.find(n => (n.active || 0) > 0);
+    this.activePingNode = activeNode || null;
   }
 
   // ---- Mappa e Nodi Regionali ----
@@ -331,8 +350,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return this.italyRegions.map(reg => {
       const n = mapByName.get(reg.name.toLowerCase()) || {};
       const def = this.regionDefaultPositions[reg.name] || { x: 200, y: 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
-      const v = n.v !== undefined ? Number(n.v) : 20;
-      const active = n.active !== undefined ? Number(n.active) : Math.max(1, Math.round(v / 15));
+      const v = n.v !== undefined ? Number(n.v) : 0;
+      const active = n.active !== undefined ? Number(n.active) : 0;
       const software = n.software || (['Lazio', 'Campania', 'Puglia', 'Sicilia', 'Calabria', 'Basilicata', 'Abruzzo', 'Molise'].includes(reg.name) ? 'Poliwin' : ['Emilia-Romagna', 'Veneto', 'Trentino-Alto Adige'].includes(reg.name) ? 'Winodlab' : 'Windent');
 
       return {
@@ -360,8 +379,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return this.accessMapNodes.filter(n => n.macroArea === this.selectedMacroRegion);
   }
 
+  get accessMapNodesRanked(): MapRegionNode[] {
+    return this.filteredMapNodes.filter(n => (n.v || 0) > 0).sort((a, b) => b.v - a.v);
+  }
+
   get accessMapNodesSorted(): MapRegionNode[] {
-    return [...this.filteredMapNodes].sort((a, b) => b.v - a.v);
+    return this.accessMapNodesRanked;
   }
 
   get accessMapMax(): number {
@@ -378,7 +401,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   get topRegion(): MapRegionNode | null {
     if (!this.accessMapNodes.length) return null;
-    return [...this.accessMapNodes].sort((a, b) => b.v - a.v)[0];
+    const sorted = [...this.accessMapNodes].sort((a, b) => b.v - a.v);
+    return (sorted[0] && sorted[0].v > 0) ? sorted[0] : null;
   }
 
   // Retrocompatibilità
@@ -393,7 +417,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   getRegionFill(name: string): string {
     const node = this.getRegionNode(name);
-    if (!node) return '#EAF2FF';
+    if (!node) return '#F8FAFD';
 
     // Se filtrato per macro area
     if (this.selectedMacroRegion !== 'all' && node.macroArea !== this.selectedMacroRegion) {
@@ -412,6 +436,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.55)';
       if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.55)';
       return 'rgba(55, 125, 255, 0.55)';
+    }
+
+    // Se non ci sono accessi (v === 0), sfondo neutro pulito
+    if (!node.v || node.v === 0) {
+      return '#F8FAFD';
     }
 
     // Calcolo sfumatura coropletica in base a v / accessMapMax
@@ -443,6 +472,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
     if (this.activePingNode?.name === name) {
       return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
+    }
+
+    if (!node.v || node.v === 0) {
+      return '#E2E8F0';
     }
 
     if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.35)';
@@ -490,38 +523,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     if (software === 'Poliwin') return '#F80086';
     if (software === 'Winodlab') return '#F97316';
     return '#377DFF';
-  }
-
-  // ---- Live Stream & Radar Ping ----
-  private initLiveFeed() {
-    // Se non ci sono ancora eventi dal backend, inizializza un feed di cortesia
-    if (this.liveFeed.length === 0) {
-      const fallbackEvents = [
-        { region: 'Lombardia', clientName: 'Studio Dentistico Milano', software: 'Windent', action: 'Consultazione guida fatturazione', time: '1 min fa', color: '#377DFF' },
-        { region: 'Lazio', clientName: 'Poliambulatorio Roma Centro', software: 'Poliwin', action: 'Apertura cartella clinica', time: '3 min fa', color: '#F80086' },
-        { region: 'Veneto', clientName: 'Laboratorio Digitale Odontotecnico', software: 'Winodlab', action: 'Invio lavorazione CAD/CAM', time: '5 min fa', color: '#F97316' }
-      ];
-      this.liveFeed = fallbackEvents.map((c, i) => ({
-        id: 'f_' + i + '_' + Date.now(),
-        region: c.region,
-        clientName: c.clientName,
-        software: c.software,
-        action: c.action,
-        time: c.time,
-        color: c.color
-      }));
-    }
-
-    // Ciclo di animazione radar ping sincrono sulle regioni attive o nodi
-    this.pingInterval = setInterval(() => {
-      const activeNodes = this.accessMapNodes.filter(n => (n.active || 0) > 0);
-      if (activeNodes.length > 0) {
-        this.activePingNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
-      } else if (this.accessMapNodes.length > 0) {
-        const rnd = this.accessMapNodes[Math.floor(Math.random() * this.accessMapNodes.length)];
-        this.activePingNode = rnd;
-      }
-    }, 2800);
   }
 
   // ---- Heatmap Oraria ----

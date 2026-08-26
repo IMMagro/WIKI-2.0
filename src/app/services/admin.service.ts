@@ -57,4 +57,13 @@ export class AdminService {
   getServerStats(): Observable<any> {
     return this.http.get<any>('/api/get_admin_server.ashx', { headers: this.getHeaders() });
   }
+
+  getNotifications(): Observable<any[]> {
+    return this.http.get<any[]>('/api/get_notifications.ashx', { headers: this.getHeaders() });
+  }
+
+  markNotificationsAsRead(notifications: any[] = []): Observable<any> {
+    const payload = notifications.map(n => ({ ...n, unread: false }));
+    return this.http.post<any>('/api/get_notifications.ashx', payload, { headers: this.getHeaders() });
+  }
 }
