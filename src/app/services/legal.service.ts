@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
 
+export interface CookiePreferences {
+  technical: boolean;
+  analytics: boolean;
+  preferences: boolean;
+  timestamp?: string;
+}
+
 export interface LegalConfig {
   companyName: string;
   vatNumber: string;
@@ -32,11 +39,16 @@ export interface LegalSection {
 export class LegalService {
   private readonly STORAGE_KEY = 'qe_legal_configuration_v1';
   private readonly ACCEPTANCE_KEY = 'qe_legal_accepted_v1';
+  private readonly COOKIE_KEY = 'qe_cookie_consent_v1';
 
   // Modal display states
   isViewerOpen = false;
   isWizardOpen = false;
+  isCookieBannerOpen = false;
   activeViewerTab: 'privacy' | 'terms' = 'privacy';
+
+  // Cookie preferences
+  cookiePreferences: CookiePreferences | null = null;
 
   // Default initial configuration
   config: LegalConfig = {
@@ -60,6 +72,84 @@ export class LegalService {
 
   constructor() {
     this.loadConfig();
+    this.loadCookieConsent();
+  }
+
+  /**
+   * Carica il consenso cookie salvato
+   */
+  loadCookieConsent(): void {
+    try {
+      const saved = localStorage.getItem(this.COOKIE_KEY);
+      if (saved) {
+        this.cookiePreferences = JSON.parse(saved);
+        this.isCookieBannerOpen = false;
+      } else {
+        // Prima volta che l'utente entra: mostra il banner
+        this.isCookieBannerOpen = true;
+      }
+    } catch (e) {
+      console.warn('Errore lettura cookie consent:', e);
+      this.isCookieBannerOpen = true;
+    }
+  }
+
+  /**
+   * Accetta tutti i cookie (tecnici, analitici, preferenze)
+   */
+  acceptAllCookies(): void {
+    const prefs: CookiePreferences = {
+      technical: true,
+      analytics: true,
+      preferences: true,
+      timestamp: new Date().toISOString()
+    };
+    this.saveCookiePreferences(prefs);
+  }
+
+  /**
+   * Accetta solo i cookie tecnici strettamente necessari
+   */
+  acceptNecessaryCookies(): void {
+    const prefs: CookiePreferences = {
+      technical: true,
+      analytics: false,
+      preferences: false,
+      timestamp: new Date().toISOString()
+    };
+    this.saveCookiePreferences(prefs);
+  }
+
+  /**
+   * Salva preferenze personalizzate
+   */
+  saveCustomCookies(analytics: boolean, preferences: boolean): void {
+    const prefs: CookiePreferences = {
+      technical: true,
+      analytics: analytics,
+      preferences: preferences,
+      timestamp: new Date().toISOString()
+    };
+    this.saveCookiePreferences(prefs);
+  }
+
+  private saveCookiePreferences(prefs: CookiePreferences): void {
+    this.cookiePreferences = prefs;
+    try {
+      localStorage.setItem(this.COOKIE_KEY, JSON.stringify(prefs));
+    } catch (e) {
+      console.error('Errore salvataggio cookie consent:', e);
+    }
+    this.isCookieBannerOpen = false;
+  }
+
+  /**
+   * Resetta il consenso cookie (utile per test e admin)
+   */
+  resetCookieConsent(): void {
+    localStorage.removeItem(this.COOKIE_KEY);
+    this.cookiePreferences = null;
+    this.isCookieBannerOpen = true;
   }
 
   /**
@@ -138,7 +228,7 @@ export class LegalService {
   }
 
   /**
-   * Apre la Procedura Guidata (Wizard)
+   * Apre la Procedura Guidata (Wizard / Editor)
    */
   openWizard(): void {
     this.isWizardOpen = true;

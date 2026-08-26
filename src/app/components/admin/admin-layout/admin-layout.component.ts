@@ -5,13 +5,14 @@ import { AdminDashboardComponent } from '../admin-dashboard/admin-dashboard.comp
 import { AdminNewsComponent } from '../admin-news/admin-news.component';
 import { AdminServerComponent } from '../admin-server/admin-server.component';
 import { GuideAdminComponent } from '../../guide/guide-admin.component';
+import { AdminLegalComponent } from '../admin-legal/admin-legal.component';
 import { ThemeService } from '../../../services/theme.service';
 import { LegalService } from '../../../services/legal.service';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, AdminDashboardComponent, AdminNewsComponent, AdminServerComponent, GuideAdminComponent],
+  imports: [CommonModule, AdminDashboardComponent, AdminNewsComponent, AdminServerComponent, GuideAdminComponent, AdminLegalComponent],
   templateUrl: './admin-layout.component.html'
 })
 export class AdminLayoutComponent {

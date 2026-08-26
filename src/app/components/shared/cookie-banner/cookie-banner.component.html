@@ -1,0 +1,108 @@
+<div *ngIf="legalService.isCookieBannerOpen"
+     class="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-auto md:right-6 md:max-w-xl z-50 animate-fadeIn font-sans">
+  
+  <!-- Cookie Banner Card with Glassmorphism & Shadow -->
+  <div class="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/80 dark:border-slate-800 rounded-3xl p-5 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] overflow-hidden transition-all duration-300">
+    
+    <!-- Top Accent Bar -->
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#377DFF] via-[#5B94FF] to-[#F80086]"></div>
+
+    <!-- Main Banner Content -->
+    <div class="flex items-start gap-3.5 mb-4">
+      <!-- Cookie / Shield Icon -->
+      <div class="w-10 h-10 rounded-2xl bg-[#377DFF]/10 text-[#377DFF] flex items-center justify-center shrink-0 border border-[#377DFF]/20 mt-0.5">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="text-sm md:text-base font-bold text-[#1E2022] dark:text-white flex items-center gap-2">
+          Informativa sui Cookie & Privacy
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#377DFF]/10 text-[#377DFF] font-semibold border border-[#377DFF]/20">GDPR</span>
+        </h3>
+        <p class="text-xs text-[#77838F] dark:text-slate-300 mt-1 leading-relaxed">
+          Utilizziamo cookie tecnici per garantire il corretto funzionamento della Wiki e cookie analitici anonimizzati per migliorare le guide di supporto per 
+          <strong class="text-[#1E2022] dark:text-white font-medium">Quaderno Elettronico</strong>. Nessun dato viene ceduto a terzi per scopi pubblicitari.
+        </p>
+      </div>
+    </div>
+
+    <!-- Customization Accordion Box -->
+    <div *ngIf="isCustomizing" class="mb-4 p-4 rounded-2xl bg-[#F8FAFD] dark:bg-slate-800/80 border border-[#E2E8F0] dark:border-slate-700 space-y-2.5 animate-fadeIn">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold text-[#1E2022] dark:text-white block">Cookie Tecnici (Necessari)</span>
+          <span class="text-[11px] text-[#77838F] dark:text-slate-400">Salvano preferenze di sessione e tema grafico.</span>
+        </div>
+        <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
+          Sempre Attivi
+        </span>
+      </div>
+
+      <div class="h-px bg-[#E2E8F0] dark:bg-slate-700"></div>
+
+      <label class="flex items-center justify-between cursor-pointer">
+        <div>
+          <span class="text-xs font-bold text-[#1E2022] dark:text-white block">Cookie Analitici Anonimizzati</span>
+          <span class="text-[11px] text-[#77838F] dark:text-slate-400">Statistiche sull'uso delle guide senza identificazione utente.</span>
+        </div>
+        <input type="checkbox" [(ngModel)]="analyticsConsent" class="w-4 h-4 text-[#377DFF] rounded focus:ring-0 cursor-pointer">
+      </label>
+
+      <div class="h-px bg-[#E2E8F0] dark:bg-slate-700"></div>
+
+      <label class="flex items-center justify-between cursor-pointer">
+        <div>
+          <span class="text-xs font-bold text-[#1E2022] dark:text-white block">Cookie di Preferenze UI</span>
+          <span class="text-[11px] text-[#77838F] dark:text-slate-400">Memorizzano filtri e ordinamento dei manuali.</span>
+        </div>
+        <input type="checkbox" [(ngModel)]="preferencesConsent" class="w-4 h-4 text-[#377DFF] rounded focus:ring-0 cursor-pointer">
+      </label>
+    </div>
+
+    <!-- Action Buttons Bar -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1">
+      
+      <!-- Privacy Policy Link & Toggle Customize -->
+      <div class="flex items-center gap-3 text-xs">
+        <button type="button"
+                (click)="openPrivacy()"
+                class="text-[#377DFF] hover:underline font-medium cursor-pointer">
+          Leggi Informativa Completa
+        </button>
+        <span class="text-[#CBD5E1] dark:text-slate-700">&bull;</span>
+        <button type="button"
+                (click)="toggleCustomize()"
+                class="text-[#77838F] dark:text-slate-400 hover:text-[#1E2022] dark:hover:text-white transition-colors cursor-pointer">
+          {{ isCustomizing ? 'Nascondi opzioni' : 'Personalizza' }}
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button *ngIf="!isCustomizing"
+                type="button"
+                (click)="acceptNecessary()"
+                class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl text-xs font-medium text-[#77838F] hover:text-[#1E2022] dark:hover:text-white bg-[#F8FAFD] dark:bg-slate-800 hover:bg-[#F0F5FF] border border-[#E2E8F0] dark:border-slate-700 transition-all cursor-pointer">
+          Solo Necessari
+        </button>
+
+        <button *ngIf="isCustomizing"
+                type="button"
+                (click)="saveCustom()"
+                class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold text-white bg-slate-700 hover:bg-slate-800 transition-all cursor-pointer">
+          Salva Preferenze
+        </button>
+
+        <button type="button"
+                (click)="acceptAll()"
+                class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-semibold text-white bg-[#377DFF] hover:bg-[#2868E0] shadow-md shadow-[#377DFF]/20 transition-all cursor-pointer">
+          Accetta Tutti
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

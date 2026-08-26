@@ -20,7 +20,7 @@ import { FaqReadingPanelComponent } from './components/shared/faq-reading-panel/
 import { NewsCarouselComponent } from './components/news-carousel/news-carousel.component';
 import { LegalService } from './services/legal.service';
 import { LegalModalComponent } from './components/shared/legal-modal/legal-modal.component';
-import { LegalWizardModalComponent } from './components/shared/legal-wizard-modal/legal-wizard-modal.component';
+import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +40,7 @@ import { LegalWizardModalComponent } from './components/shared/legal-wizard-moda
     FaqReadingPanelComponent,
     NewsCarouselComponent,
     LegalModalComponent,
-    LegalWizardModalComponent
+    CookieBannerComponent
   ],
   templateUrl: './app.component.html'
 })
