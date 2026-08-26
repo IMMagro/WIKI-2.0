@@ -203,7 +203,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // Interactive Map State
   selectedMacroRegion: 'all' | 'nord' | 'centro' | 'sud' = 'all';
   hoveredNode: MapRegionNode | null = null;
-  activePingNode: MapRegionNode | null = null;
   hoveredRegion: string | null = null;
 
   // Real-time live access log
@@ -312,9 +311,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         } else {
           this.liveFeed = [];
         }
-
-        // 3. Calcolo nodo di ping attivo reale
-        this.updateActivePingNode();
       },
       error: (err) => {
         console.error('Errore caricamento statistiche accessi:', err);
@@ -323,23 +319,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         }
         this.liveGuides = [];
         this.liveFeed = [];
-        this.activePingNode = null;
       }
     });
-  }
-
-  private updateActivePingNode() {
-    // Imposta activePingNode sull'ultimo evento reale in recentEvents se presente,
-    // oppure sulla prima regione con active > 0. Se non ci sono accessi attivi, activePingNode = null.
-    if (this.liveFeed.length > 0 && this.liveFeed[0].region) {
-      const recentNode = this.getRegionNode(this.liveFeed[0].region);
-      if (recentNode && ((recentNode.active || 0) > 0 || (recentNode.v || 0) > 0)) {
-        this.activePingNode = recentNode;
-        return;
-      }
-    }
-    const activeNode = this.accessMapNodes.find(n => (n.active || 0) > 0);
-    this.activePingNode = activeNode || null;
   }
 
   // ---- Mappa e Nodi Regionali ----
@@ -435,13 +416,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       return 'rgba(55, 125, 255, 0.42)';
     }
 
-    // Ping attivo live stream
-    if (this.activePingNode?.name === name) {
-      if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.55)';
-      if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.55)';
-      return 'rgba(55, 125, 255, 0.55)';
-    }
-
     // Se non ci sono accessi (v === 0), sfondo neutro pulito
     if (!node.v || node.v === 0) {
       return '#F8FAFD';
@@ -474,10 +448,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
     }
 
-    if (this.activePingNode?.name === name) {
-      return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
-    }
-
     if (!node.v || node.v === 0) {
       return '#E2E8F0';
     }
@@ -490,9 +460,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   getRegionStrokeWidth(name: string): number {
     if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
       return 1.8;
-    }
-    if (this.activePingNode?.name === name) {
-      return 2.0;
     }
     return 1.1;
   }
