@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { GuideService } from '../../../services/guide.service';
 import { HttpClient } from '@angular/common/http';
 
-export interface MapCityNode {
+export interface MapRegionNode {
+  id?: string;
   name: string;
-  region: string;
+  code?: string;
+  region?: string;
   x: number;
   y: number;
   lat: number;
@@ -28,7 +30,6 @@ export interface RegionPath {
 
 export interface LiveAccessEvent {
   id: string;
-  city: string;
   region: string;
   clientName: string;
   software: string;
@@ -56,7 +57,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         "d": "M53.4,102.5L52.4,100.3L55.1,96.8L52.1,94.3L53.3,91.6L56.3,93.7L65.5,88.5L73.9,90.0L79.7,88.1L81.0,81.9L78.5,78.9L78.9,70.4L82.8,69.3L84.3,64.7L88.3,62.6L85.9,57.1L98.5,47.7L98.4,57.6L107.8,64.6L108.3,67.8L102.8,73.7L102.3,79.6L105.7,82.4L107.7,91.4L112.2,97.2L107.9,97.9L109.4,99.2L107.0,101.9L102.2,98.7L100.3,101.9L102.3,104.3L101.2,106.3L103.2,106.1L101.9,107.4L105.9,114.6L113.7,112.7L120.1,123.9L125.0,126.9L124.7,134.0L122.3,135.1L115.2,130.4L113.6,132.1L114.8,135.7L111.6,135.7L110.3,139.0L107.8,134.8L95.5,140.2L91.9,137.2L90.3,143.0L85.2,147.8L86.3,153.6L82.4,155.3L83.4,156.9L75.0,155.2L73.6,158.9L71.9,153.5L63.3,156.4L58.3,155.1L49.0,150.8L44.8,144.9L46.9,141.8L43.7,137.0L47.6,133.0L47.4,130.4L51.3,129.8L49.5,123.6L40.1,119.8L39.9,114.8L37.3,114.3L35.8,110.6L40.7,108.0L45.0,109.1L53.4,102.5Z"
     },
     {
-        "name": "Valle d'Aosta/Vall\u00e9e d'Aoste",
+        "name": "Valle d'Aosta",
         "macro": "nord",
         "d": "M74.0,72.7L78.5,73.0L81.1,85.7L73.9,90.0L65.5,88.5L56.3,93.7L53.4,91.6L50.3,93.6L48.3,90.9L48.6,85.8L41.9,80.5L42.4,76.9L49.8,72.8L55.2,75.7L68.3,69.7L74.0,72.7Z"
     },
@@ -71,7 +72,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         "d": "M103.1,80.7L102.8,73.7L108.2,68.4L108.7,63.5L112.5,65.7L110.2,69.7L114.0,71.1L114.6,77.0L118.8,77.4L120.7,73.8L117.2,70.5L117.9,67.5L126.2,58.4L128.0,54.1L126.1,49.0L127.4,46.2L131.8,47.6L133.5,45.7L133.5,51.8L136.6,55.2L141.9,55.7L143.0,53.0L150.5,51.6L153.7,58.6L156.4,58.8L158.2,57.3L155.7,53.9L157.8,50.4L153.5,48.6L153.6,44.3L155.6,40.9L160.4,39.8L162.3,43.7L166.5,43.7L173.5,48.5L173.0,51.6L170.0,52.8L172.3,57.9L167.7,69.7L170.5,79.0L181.1,76.9L173.8,87.6L173.6,94.9L176.9,96.7L175.8,99.6L184.4,104.7L189.1,110.9L193.6,110.3L192.6,112.6L201.3,117.7L189.1,117.2L182.8,119.5L177.2,115.8L170.0,119.5L166.1,116.1L153.8,113.5L151.6,109.3L148.0,109.6L148.5,111.7L146.0,113.0L143.7,110.2L142.3,112.7L136.5,109.3L136.0,111.8L131.8,111.6L127.4,118.6L130.1,123.6L127.4,126.2L128.8,129.8L124.5,129.9L125.0,126.9L120.1,123.9L113.7,112.7L105.9,114.6L101.9,107.4L103.2,106.1L101.2,106.3L102.3,104.3L100.3,101.9L102.2,98.7L107.0,101.9L109.4,99.2L107.9,97.9L112.2,97.2L107.7,91.4L106.6,84.1L103.1,80.7Z"
     },
     {
-        "name": "Trentino-Alto Adige/S\u00fcdtirol",
+        "name": "Trentino-Alto Adige",
         "macro": "nord",
         "d": "M221.5,43.7L215.1,45.6L217.2,48.8L213.3,52.6L218.6,57.7L219.3,61.3L210.2,64.9L209.9,70.8L204.2,68.6L199.4,69.9L198.6,73.4L195.5,72.8L191.1,83.4L183.9,84.0L181.2,82.2L182.7,77.9L180.6,76.7L171.2,79.2L169.4,77.0L167.7,69.6L172.3,57.7L169.9,53.2L173.8,50.6L172.8,47.5L167.9,45.6L169.1,40.7L165.6,38.9L168.4,29.6L175.1,28.7L178.4,31.1L177.3,32.7L187.3,33.8L192.3,24.5L208.1,22.4L212.3,24.4L227.5,18.7L229.3,19.8L225.2,22.6L226.0,26.9L230.5,28.3L230.8,33.0L237.5,37.7L227.7,41.7L223.4,38.0L221.5,43.7Z"
     },
@@ -152,27 +153,34 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
 ];
 
-  // Pre-calculated city coordinates & collision-free label placements
-  readonly cityDefaultPositions: Record<string, { x: number; y: number; labelDx: number; labelDy: number; textAnchor: 'start' | 'middle' | 'end' }> = {
-    'Torino': { x: 72.3, y: 112.2, labelDx: -10, labelDy: -6, textAnchor: 'end' },
-    'Milano': { x: 124.2, y: 94.0, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
-    'Genova': { x: 115.8, y: 142.9, labelDx: -10, labelDy: 12, textAnchor: 'end' },
-    'Verona': { x: 186.3, y: 95.2, labelDx: -8, labelDy: -10, textAnchor: 'end' },
-    'Venezia': { x: 231.9, y: 95.0, labelDx: 10, labelDy: -8, textAnchor: 'start' },
-    'Bologna': { x: 198.4, y: 138.8, labelDx: 10, labelDy: 4, textAnchor: 'start' },
-    'Firenze': { x: 195.4, y: 172.3, labelDx: -10, labelDy: 4, textAnchor: 'end' },
-    'Roma': { x: 238.2, y: 258.7, labelDx: -12, labelDy: 3, textAnchor: 'end' },
-    'Napoli': { x: 299.2, y: 307.3, labelDx: 10, labelDy: 12, textAnchor: 'start' },
-    'Bari': { x: 389.0, y: 295.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
-    'Palermo': { x: 268.0, y: 433.8, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
-    'Cagliari': { x: 121.8, y: 382.5, labelDx: 10, labelDy: 3, textAnchor: 'start' },
-    'Sassari': { x: 102.3, y: 313.1, labelDx: -10, labelDy: 1, textAnchor: 'end' }
+  // Pre-calculated region coordinates & collision-free label placements for 480x580 viewport
+  readonly regionDefaultPositions: Record<string, { x: number; y: number; labelDx: number; labelDy: number; textAnchor: 'start' | 'middle' | 'end' }> = {
+    'Valle d\'Aosta': { x: 60.0, y: 82.0, labelDx: -10, labelDy: -6, textAnchor: 'end' },
+    'Piemonte': { x: 72.3, y: 112.2, labelDx: -10, labelDy: 4, textAnchor: 'end' },
+    'Liguria': { x: 105.0, y: 152.0, labelDx: -10, labelDy: 12, textAnchor: 'end' },
+    'Lombardia': { x: 138.0, y: 92.0, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
+    'Trentino-Alto Adige': { x: 202.0, y: 54.0, labelDx: 10, labelDy: -6, textAnchor: 'start' },
+    'Veneto': { x: 215.0, y: 92.0, labelDx: 10, labelDy: 2, textAnchor: 'start' },
+    'Friuli-Venezia Giulia': { x: 262.0, y: 68.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
+    'Emilia-Romagna': { x: 188.0, y: 142.0, labelDx: 10, labelDy: 4, textAnchor: 'start' },
+    'Toscana': { x: 188.0, y: 188.0, labelDx: -10, labelDy: 4, textAnchor: 'end' },
+    'Umbria': { x: 238.0, y: 208.0, labelDx: -10, labelDy: -6, textAnchor: 'end' },
+    'Marche': { x: 260.0, y: 190.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
+    'Lazio': { x: 245.0, y: 260.0, labelDx: -12, labelDy: 4, textAnchor: 'end' },
+    'Abruzzo': { x: 288.0, y: 242.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
+    'Molise': { x: 310.0, y: 268.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
+    'Campania': { x: 312.0, y: 312.0, labelDx: -10, labelDy: 4, textAnchor: 'end' },
+    'Puglia': { x: 382.0, y: 305.0, labelDx: 10, labelDy: 3, textAnchor: 'start' },
+    'Basilicata': { x: 360.0, y: 330.0, labelDx: -10, labelDy: 8, textAnchor: 'end' },
+    'Calabria': { x: 370.0, y: 395.0, labelDx: 10, labelDy: 4, textAnchor: 'start' },
+    'Sicilia': { x: 285.0, y: 460.0, labelDx: 0, labelDy: -10, textAnchor: 'middle' },
+    'Sardegna': { x: 115.0, y: 345.0, labelDx: 12, labelDy: 3, textAnchor: 'start' }
   };
 
   // Interactive Map State
   selectedMacroRegion: 'all' | 'nord' | 'centro' | 'sud' = 'all';
-  hoveredNode: MapCityNode | null = null;
-  activePingNode: MapCityNode | null = null;
+  hoveredNode: MapRegionNode | null = null;
+  activePingNode: MapRegionNode | null = null;
   hoveredRegion: string | null = null;
 
   // Real-time live access log
@@ -248,45 +256,56 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.accessStats = {
       heatmap: [],
       mapNodes: [
-        { name: "Milano", region: "Lombardia", x: 124.2, y: 94.0, lat: 45.4642, lng: 9.1900, v: 142, active: 8, software: "Windent" },
-        { name: "Roma", region: "Lazio", x: 238.2, y: 258.7, lat: 41.9028, lng: 12.4964, v: 189, active: 11, software: "Poliwin" },
-        { name: "Torino", region: "Piemonte", x: 72.3, y: 112.2, lat: 45.0703, lng: 7.6869, v: 78, active: 4, software: "Windent" },
-        { name: "Bologna", region: "Emilia-Romagna", x: 198.4, y: 138.8, lat: 44.4949, lng: 11.3426, v: 96, active: 6, software: "Winodlab" },
-        { name: "Firenze", region: "Toscana", x: 195.4, y: 172.3, lat: 43.7696, lng: 11.2558, v: 84, active: 5, software: "Windent" },
-        { name: "Napoli", region: "Campania", x: 299.2, y: 307.3, lat: 40.8518, lng: 14.2681, v: 115, active: 7, software: "Poliwin" },
-        { name: "Venezia", region: "Veneto", x: 231.9, y: 95.0, lat: 45.4408, lng: 12.3155, v: 64, active: 3, software: "Windent" },
-        { name: "Verona", region: "Veneto", x: 186.3, y: 95.2, lat: 45.4384, lng: 10.9916, v: 52, active: 3, software: "Winodlab" },
-        { name: "Genova", region: "Liguria", x: 115.8, y: 142.9, lat: 44.4056, lng: 8.9463, v: 45, active: 2, software: "Windent" },
-        { name: "Bari", region: "Puglia", x: 389.0, y: 295.0, lat: 41.1171, lng: 16.8719, v: 72, active: 4, software: "Poliwin" },
-        { name: "Palermo", region: "Sicilia", x: 268.0, y: 433.8, lat: 38.1157, lng: 13.3615, v: 58, active: 3, software: "Poliwin" },
-        { name: "Cagliari", region: "Sardegna", x: 121.8, y: 382.5, lat: 39.2238, lng: 9.1217, v: 41, active: 2, software: "Windent" },
-        { name: "Sassari", region: "Sardegna", x: 102.3, y: 313.1, lat: 40.7259, lng: 8.5556, v: 35, active: 2, software: "Windent" }
+        { id: "lom", name: "Lombardia", code: "LOM", macroArea: "nord", x: 138.0, y: 92.0, lat: 45.46, lng: 9.19, v: 168, active: 9, software: "Windent" },
+        { id: "laz", name: "Lazio", code: "LAZ", macroArea: "centro", x: 245.0, y: 260.0, lat: 41.90, lng: 12.50, v: 189, active: 11, software: "Poliwin" },
+        { id: "cam", name: "Campania", code: "CAM", macroArea: "sud", x: 312.0, y: 312.0, lat: 40.85, lng: 14.27, v: 125, active: 7, software: "Poliwin" },
+        { id: "ven", name: "Veneto", code: "VEN", macroArea: "nord", x: 215.0, y: 92.0, lat: 45.44, lng: 12.32, v: 116, active: 6, software: "Winodlab" },
+        { id: "emr", name: "Emilia-Romagna", code: "EMR", macroArea: "nord", x: 188.0, y: 142.0, lat: 44.49, lng: 11.34, v: 96, active: 6, software: "Winodlab" },
+        { id: "pug", name: "Puglia", code: "PUG", macroArea: "sud", x: 382.0, y: 305.0, lat: 41.12, lng: 16.87, v: 92, active: 5, software: "Poliwin" },
+        { id: "sic", name: "Sicilia", code: "SIC", macroArea: "sud", x: 285.0, y: 460.0, lat: 37.50, lng: 14.20, v: 85, active: 4, software: "Poliwin" },
+        { id: "tos", name: "Toscana", code: "TOS", macroArea: "centro", x: 188.0, y: 188.0, lat: 43.77, lng: 11.25, v: 84, active: 5, software: "Windent" },
+        { id: "pie", name: "Piemonte", code: "PIE", macroArea: "nord", x: 72.3, y: 112.2, lat: 45.07, lng: 7.68, v: 78, active: 4, software: "Windent" },
+        { id: "sar", name: "Sardegna", code: "SAR", macroArea: "sud", x: 115.0, y: 345.0, lat: 40.12, lng: 9.01, v: 54, active: 3, software: "Windent" },
+        { id: "lig", "name": "Liguria", code: "LIG", macroArea: "nord", x: 105.0, y: 152.0, lat: 44.41, lng: 8.93, v: 45, active: 2, software: "Windent" },
+        { id: "mar", name: "Marche", code: "MAR", macroArea: "centro", x: 260.0, y: 190.0, lat: 43.61, lng: 13.51, v: 42, active: 2, software: "Windent" },
+        { id: "cal", name: "Calabria", code: "CAL", macroArea: "sud", x: 370.0, y: 395.0, lat: 38.91, lng: 16.59, v: 38, active: 2, software: "Poliwin" },
+        { id: "taa", name: "Trentino-Alto Adige", code: "TAA", macroArea: "nord", x: 202.0, y: 54.0, lat: 46.06, lng: 11.12, v: 36, active: 2, software: "Winodlab" },
+        { id: "fvg", name: "Friuli-Venezia Giulia", code: "FVG", macroArea: "nord", x: 262.0, y: 68.0, lat: 45.65, lng: 13.77, v: 35, active: 2, software: "Windent" },
+        { id: "abr", name: "Abruzzo", code: "ABR", macroArea: "sud", x: 288.0, y: 242.0, lat: 42.35, lng: 13.40, v: 34, active: 2, software: "Poliwin" },
+        { id: "umb", name: "Umbria", code: "UMB", macroArea: "centro", x: 238.0, y: 208.0, lat: 43.11, lng: 12.39, v: 31, active: 1, software: "Windent" },
+        { id: "bas", name: "Basilicata", code: "BAS", macroArea: "sud", x: 360.0, y: 330.0, lat: 40.64, lng: 15.80, v: 22, active: 1, software: "Poliwin" },
+        { id: "mol", name: "Molise", code: "MOL", macroArea: "sud", x: 310.0, y: 268.0, lat: 41.56, lng: 14.66, v: 19, active: 1, software: "Poliwin" },
+        { id: "vda", name: "Valle d'Aosta", code: "VDA", macroArea: "nord", x: 60.0, y: 82.0, lat: 45.73, lng: 7.32, v: 18, active: 1, software: "Windent" }
       ]
     };
   }
 
-  // ---- Mappa e Nodi ----
-  get accessMapNodes(): MapCityNode[] {
+  // ---- Mappa e Nodi Regionali ----
+  get accessMapNodes(): MapRegionNode[] {
     const raw: any[] = (this.accessStats && Array.isArray(this.accessStats.mapNodes)) ? this.accessStats.mapNodes : [];
     return raw.map(n => {
+      const regionName = n.name || n.region || 'Italia';
+      const def = this.regionDefaultPositions[regionName] || { x: n.x || 200, y: n.y || 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
       const lat = Number(n.lat) || 0;
-      let macro: 'nord' | 'centro' | 'sud' = 'centro';
-      if (lat >= 43.9) macro = 'nord';
-      else if (lat >= 41.5) macro = 'centro';
-      else macro = 'sud';
-
-      const def = this.cityDefaultPositions[n.name] || { x: n.x || 200, y: n.y || 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
+      let macro: 'nord' | 'centro' | 'sud' = n.macroArea || 'centro';
+      if (!n.macroArea && lat > 0) {
+        if (lat >= 43.9) macro = 'nord';
+        else if (lat >= 41.5) macro = 'centro';
+        else macro = 'sud';
+      }
 
       return {
-        name: n.name,
-        region: n.region || this.guessRegion(n.name),
+        id: n.id,
+        name: regionName,
+        code: n.code,
+        region: regionName,
         x: def.x,
         y: def.y,
         lat: n.lat,
         lng: n.lng,
         v: n.v || 0,
         active: n.active !== undefined ? n.active : Math.max(1, Math.round((n.v || 1) / 15)),
-        software: n.software || (n.name === 'Roma' || n.name === 'Napoli' || n.name === 'Bari' || n.name === 'Palermo' ? 'Poliwin' : n.name === 'Bologna' || n.name === 'Verona' ? 'Winodlab' : 'Windent'),
+        software: n.software || (['Lazio', 'Campania', 'Puglia', 'Sicilia', 'Calabria', 'Basilicata', 'Abruzzo', 'Molise'].includes(regionName) ? 'Poliwin' : ['Emilia-Romagna', 'Veneto', 'Trentino-Alto Adige'].includes(regionName) ? 'Winodlab' : 'Windent'),
         macroArea: macro,
         labelDx: def.labelDx,
         labelDy: def.labelDy,
@@ -295,12 +314,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  get filteredMapNodes(): MapCityNode[] {
+  get filteredMapNodes(): MapRegionNode[] {
     if (this.selectedMacroRegion === 'all') return this.accessMapNodes;
     return this.accessMapNodes.filter(n => n.macroArea === this.selectedMacroRegion);
   }
 
-  get accessMapNodesSorted(): MapCityNode[] {
+  get accessMapNodesSorted(): MapRegionNode[] {
     return [...this.filteredMapNodes].sort((a, b) => b.v - a.v);
   }
 
@@ -316,44 +335,44 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return this.accessMapNodes.reduce((sum, n) => sum + (n.active || 0), 0);
   }
 
-  get topCity(): MapCityNode | null {
+  get topRegion(): MapRegionNode | null {
     if (!this.accessMapNodes.length) return null;
     return [...this.accessMapNodes].sort((a, b) => b.v - a.v)[0];
   }
 
-  private guessRegion(city: string): string {
-    const map: Record<string, string> = {
-      'Milano': 'Lombardia', 'Torino': 'Piemonte', 'Genova': 'Liguria', 'Venezia': 'Veneto',
-      'Verona': 'Veneto', 'Trieste': 'Friuli-VG', 'Bologna': 'Emilia-Romagna', 'Firenze': 'Toscana',
-      'Ancona': 'Marche', 'Perugia': 'Umbria', 'Roma': 'Lazio', 'Pescara': 'Abruzzo',
-      'Napoli': 'Campania', 'Bari': 'Puglia', 'Lecce': 'Puglia', 'Catanzaro': 'Calabria',
-      'Palermo': 'Sicilia', 'Catania': 'Sicilia', 'Cagliari': 'Sardegna', 'Sassari': 'Sardegna'
-    };
-    return map[city] || 'Italia';
+  // Retrocompatibilità
+  get topCity(): MapRegionNode | null {
+    return this.topRegion;
   }
 
   // ---- Simulazione Live Stream / Real-time Ping ----
   private initLiveFeed() {
     const clients = [
-      { name: 'Studio Dentistico DentalCare', city: 'Milano', region: 'Lombardia', software: 'Windent', action: 'Apertura cartella clinica', color: '#377DFF' },
-      { name: 'Poliambulatorio San Marco', city: 'Roma', region: 'Lazio', software: 'Poliwin', action: 'Gestione agenda appuntamenti', color: '#F80086' },
-      { name: 'Lab Odontotecnico F.lli Rossi', city: 'Bologna', region: 'Emilia-Romagna', software: 'Winodlab', action: 'Invio lavorazione CAD/CAM', color: '#F97316' },
-      { name: 'Centro Medico Tirreno', city: 'Napoli', region: 'Campania', software: 'Poliwin', action: 'Consultazione guida fatturazione', color: '#F80086' },
-      { name: 'Studio Odontoiatrico Dott. Bianchi', city: 'Torino', region: 'Piemonte', software: 'Windent', action: 'Esecuzione backup cloud', color: '#377DFF' },
-      { name: 'Clinica Villa dei Fiori', city: 'Firenze', region: 'Toscana', software: 'Windent', action: 'Accesso manuale paziente', color: '#377DFF' },
-      { name: 'Studio Associato Adriatico', city: 'Bari', region: 'Puglia', software: 'Poliwin', action: 'Stampa prescrizioni mediche', color: '#F80086' },
-      { name: 'Centro Odontoiatrico Trinacria', city: 'Palermo', region: 'Sicilia', software: 'Poliwin', action: 'Sincronizzazione cartelle', color: '#F80086' },
-      { name: 'Laboratorio Digitale Sardo', city: 'Cagliari', region: 'Sardegna', software: 'Windent', action: 'Ricerca FAQ sistema', color: '#377DFF' },
-      { name: 'Studio Medico San Giorgio', city: 'Genova', region: 'Liguria', software: 'Windent', action: 'Consultazione listino prestazioni', color: '#377DFF' },
-      { name: 'Poliambulatorio Scaligero', city: 'Verona', region: 'Veneto', software: 'Winodlab', action: 'Aggiornamento prontuario', color: '#F97316' },
-      { name: 'Clinica Serenissima', city: 'Venezia', region: 'Veneto', software: 'Windent', action: 'Emissione fattura sanitaria', color: '#377DFF' },
-      { name: 'Centro Diagnostico Turritano', city: 'Sassari', region: 'Sardegna', software: 'Windent', action: 'Archiviazione radiografie', color: '#377DFF' }
+      { name: 'Studio Dentistico DentalCare', region: 'Lombardia', software: 'Windent', action: 'Apertura cartella clinica', color: '#377DFF' },
+      { name: 'Poliambulatorio San Marco', region: 'Lazio', software: 'Poliwin', action: 'Gestione agenda appuntamenti', color: '#F80086' },
+      { name: 'Lab Odontotecnico F.lli Rossi', region: 'Emilia-Romagna', software: 'Winodlab', action: 'Invio lavorazione CAD/CAM', color: '#F97316' },
+      { name: 'Centro Medico Partenopeo', region: 'Campania', software: 'Poliwin', action: 'Consultazione guida fatturazione', color: '#F80086' },
+      { name: 'Studio Odontoiatrico Dott. Bianchi', region: 'Piemonte', software: 'Windent', action: 'Esecuzione backup cloud', color: '#377DFF' },
+      { name: 'Clinica Villa dei Fiori', region: 'Toscana', software: 'Windent', action: 'Accesso manuale paziente', color: '#377DFF' },
+      { name: 'Studio Associato Adriatico', region: 'Puglia', software: 'Poliwin', action: 'Stampa prescrizioni mediche', color: '#F80086' },
+      { name: 'Centro Odontoiatrico Trinacria', region: 'Sicilia', software: 'Poliwin', action: 'Sincronizzazione cartelle', color: '#F80086' },
+      { name: 'Laboratorio Digitale Sardo', region: 'Sardegna', software: 'Windent', action: 'Ricerca FAQ sistema', color: '#377DFF' },
+      { name: 'Studio Medico San Giorgio', region: 'Liguria', software: 'Windent', action: 'Consultazione listino prestazioni', color: '#377DFF' },
+      { name: 'Poliambulatorio Scaligero', region: 'Veneto', software: 'Winodlab', action: 'Aggiornamento prontuario', color: '#F97316' },
+      { name: 'Clinica Dolomiti Care', region: 'Trentino-Alto Adige', software: 'Winodlab', action: 'Archiviazione radiografie', color: '#F97316' },
+      { name: 'Studio Riviera del Conero', region: 'Marche', software: 'Windent', action: 'Emissione fattura sanitaria', color: '#377DFF' },
+      { name: 'Poliambulatorio Etruria', region: 'Umbria', software: 'Windent', action: 'Controllo diario clinico', color: '#377DFF' },
+      { name: 'Centro Medico Gran Sasso', region: 'Abruzzo', software: 'Poliwin', action: 'Invio promemoria SMS', color: '#F80086' },
+      { name: 'Studio Dentistico Sannita', region: 'Molise', software: 'Poliwin', action: 'Verifica consensi informati', color: '#F80086' },
+      { name: 'Clinica Lucana Salute', region: 'Basilicata', software: 'Poliwin', action: 'Gestione anamnesi', color: '#F80086' },
+      { name: 'Centro Odontoiatrico Magna Grecia', region: 'Calabria', software: 'Poliwin', action: 'Sincronizzazione archivio', color: '#F80086' },
+      { name: 'Studio Alpi Graie', region: 'Valle d\'Aosta', software: 'Windent', action: 'Aggiornamento licenza', color: '#377DFF' },
+      { name: 'Poliambulatorio Friulano', region: 'Friuli-Venezia Giulia', software: 'Windent', action: 'Consultazione manuale', color: '#377DFF' }
     ];
 
     // Popola feed iniziale
     this.liveFeed = clients.slice(0, 4).map((c, i) => ({
       id: 'f_' + i + '_' + Date.now(),
-      city: c.city,
       region: c.region,
       clientName: c.name,
       software: c.software,
@@ -365,7 +384,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     // Aggiunge un evento live ogni ~3.5 secondi
     this.feedInterval = setInterval(() => {
       const sample = clients[Math.floor(Math.random() * clients.length)];
-      const node = this.accessMapNodes.find(n => n.name === sample.city);
+      const node = this.accessMapNodes.find(n => n.name === sample.region || n.region === sample.region);
       if (node) {
         node.v += 1;
         this.activePingNode = node;
@@ -373,7 +392,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
       const newEvent: LiveAccessEvent = {
         id: 'f_' + Date.now(),
-        city: sample.city,
         region: sample.region,
         clientName: sample.name,
         software: sample.software,
