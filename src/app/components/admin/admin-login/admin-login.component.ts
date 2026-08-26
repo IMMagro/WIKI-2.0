@@ -7,7 +7,32 @@ import { AdminService } from '../../../services/admin.service';
   selector: 'app-admin-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin-login.component.html'
+  templateUrl: './admin-login.component.html',
+  styles: [`
+    @keyframes fadeUpCard {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-fade-up {
+      animation: fadeUpCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: #ffffff !important;
+      caret-color: #ffffff !important;
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: inset 0 0 20px 20px rgba(15, 23, 42, 0.95) !important;
+    }
+  `]
 })
 export class AdminLoginComponent implements OnInit, OnDestroy {
   @Output() loginSuccess = new EventEmitter<void>();
