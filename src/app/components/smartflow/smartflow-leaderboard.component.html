@@ -1,0 +1,150 @@
+<div class="space-y-6">
+
+  <!-- Current Operator Profile Card -->
+  <div *ngIf="currentOperator" class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+    <!-- Subtle gradient decoration in background -->
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-gradient-to-br from-[#377DFF]/10 to-[#F80086]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+      <!-- User info & Avatar -->
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-white shadow-sm flex items-center justify-center text-4xl shrink-0">
+          {{ currentOperator.emoji }}
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="text-xl font-bold text-[#1E2022]">{{ currentOperator.name }}</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold text-white shadow-sm"
+                  [style.backgroundColor]="getLevelColor(currentOperator.level)">
+              Livello {{ currentOperator.level }} · {{ currentOperator.levelName }}
+            </span>
+          </div>
+          <p class="text-xs text-[#77838F] mt-1">Membro dal {{ currentOperator.registeredAt || 'inizio' }}</p>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="flex items-center gap-4 self-start md:self-auto">
+        <div class="px-4 py-2.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] text-center min-w-[90px]">
+          <div class="text-lg font-black text-[#377DFF]">{{ currentOperator.score }}</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#77838F]">Punti Totali</div>
+        </div>
+        <div class="px-4 py-2.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] text-center min-w-[90px]">
+          <div class="text-lg font-black text-[#1E2022]">{{ currentOperator.guidesCreated || 0 }}</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#77838F]">Bozze Create</div>
+        </div>
+        <div class="px-4 py-2.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] text-center min-w-[90px]">
+          <div class="text-lg font-black text-emerald-600">{{ currentOperator.guidesApproved || 0 }}</div>
+          <div class="text-[10px] font-bold uppercase tracking-wider text-[#77838F]">Approvate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar toward Next Level -->
+    <div class="mt-6 pt-5 border-t border-[#E2E8F0]/80">
+      <div class="flex items-center justify-between text-xs font-bold mb-2">
+        <div class="flex items-center gap-1.5 text-[#1E2022]">
+          <span>🎯 Prossimo traguardo:</span>
+          <span *ngIf="getNextLevel(currentOperator.score) as nextLvl" class="text-[#377DFF]">
+            {{ nextLvl.emoji }} {{ nextLvl.name }} ({{ nextLvl.minScore }} pt)
+          </span>
+          <span *ngIf="!getNextLevel(currentOperator.score)" class="text-[#F80086]">
+            Livello Massimo Raggiunto! 👑
+          </span>
+        </div>
+        <div class="text-[#77838F]">
+          <span *ngIf="getNextLevel(currentOperator.score) as nextLvl">
+            Mancano <strong class="text-[#1E2022]">{{ nextLvl.minScore - currentOperator.score }}</strong> pt
+          </span>
+          <span *ngIf="!getNextLevel(currentOperator.score)">
+            {{ currentOperator.score }} pt
+          </span>
+        </div>
+      </div>
+
+      <!-- Track -->
+      <div class="w-full bg-[#E2E8F0] h-3.5 rounded-full overflow-hidden p-0.5 border border-white/60 shadow-inner">
+        <div class="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#377DFF] via-[#6366F1] to-[#F80086]"
+             [style.width.%]="getProgressPercentage(currentOperator.score)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Card -->
+  <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+      <div>
+        <h3 class="text-lg font-bold text-[#1E2022] flex items-center gap-2">
+          <span>🏆 Classifica Operatori</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-[#EAF1FF] text-[#377DFF] font-semibold">{{ leaderboard.length }} partecipanti</span>
+        </h3>
+        <p class="text-xs text-[#77838F] mt-0.5">Guadagna punti creando e facendo approvare nuove guide per salire in classifica.</p>
+      </div>
+
+      <!-- Levels legend preview -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span *ngFor="let lvl of smartflow.levels" class="text-[11px] font-semibold px-2 py-0.5 rounded-md border"
+              [style.borderColor]="lvl.color + '40'" [style.color]="lvl.color" [style.backgroundColor]="lvl.color + '10'"
+              [title]="lvl.name + ': da ' + lvl.minScore + ' pt'">
+          {{ lvl.emoji }} {{ lvl.name }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Leaderboard list -->
+    <div *ngIf="leaderboard.length === 0" class="text-center py-12 text-[#A9B4BF]">
+      Nessun operatore registrato. Registrati per primo per scalare la classifica!
+    </div>
+
+    <div class="space-y-2.5">
+      <div *ngFor="let op of leaderboard; let idx = index"
+           class="p-4 rounded-xl border transition-all flex items-center gap-4"
+           [ngClass]="op.id === currentOperator?.id ? 'bg-[#EAF1FF]/60 border-[#377DFF]/50 shadow-sm' : 'bg-white/60 border-[#E2E8F0] hover:bg-white hover:border-[#CBD5E1]'">
+        
+        <!-- Rank Icon / Number -->
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shrink-0"
+             [ngClass]="idx === 0 ? 'bg-gradient-to-br from-amber-300 to-yellow-500 text-white shadow-md shadow-yellow-500/20' :
+                        idx === 1 ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-md' :
+                        idx === 2 ? 'bg-gradient-to-br from-amber-600 to-amber-700 text-white shadow-md' :
+                        'bg-[#F8FAFD] text-[#77838F] border border-[#E2E8F0]'">
+          <span *ngIf="idx === 0">🥇</span>
+          <span *ngIf="idx === 1">🥈</span>
+          <span *ngIf="idx === 2">🥉</span>
+          <span *ngIf="idx > 2">#{{ idx + 1 }}</span>
+        </div>
+
+        <!-- Avatar -->
+        <div class="w-10 h-10 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] flex items-center justify-center text-2xl shrink-0">
+          {{ op.emoji }}
+        </div>
+
+        <!-- Name & Details -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold text-[#1E2022] truncate">{{ op.name }}</span>
+            <span *ngIf="op.id === currentOperator?.id" class="px-1.5 py-0.2 text-[10px] font-bold rounded bg-[#377DFF] text-white">Tu</span>
+          </div>
+          <div class="text-[11px] text-[#77838F] flex items-center gap-3 mt-0.5 flex-wrap">
+            <span>{{ op.guidesCreated || 0 }} create</span>
+            <span>•</span>
+            <span class="text-emerald-600 font-semibold">{{ op.guidesApproved || 0 }} approvate</span>
+            <span>•</span>
+            <span>Attività: {{ op.lastActivity || 'recentemente' }}</span>
+          </div>
+        </div>
+
+        <!-- Level Badge -->
+        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-bold shrink-0"
+             [style.borderColor]="getLevelColor(op.level) + '50'" [style.color]="getLevelColor(op.level)" [style.backgroundColor]="getLevelColor(op.level) + '10'">
+          <span>{{ op.levelName }}</span>
+        </div>
+
+        <!-- Total Points -->
+        <div class="text-right shrink-0 min-w-[70px]">
+          <div class="text-base font-black text-[#1E2022]">{{ op.score }} <span class="text-xs font-semibold text-[#77838F]">pt</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

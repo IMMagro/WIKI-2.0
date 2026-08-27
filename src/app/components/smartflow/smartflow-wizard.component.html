@@ -1,0 +1,614 @@
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- Header Wizard -->
+  <div class="flex items-center justify-between flex-wrap gap-4 bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div class="flex items-center gap-3.5">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#377DFF] to-[#60A5FA] text-white flex items-center justify-center shadow-lg shadow-blue-500/25">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-[#1E2022]">SmartFlow Wizard</h2>
+        <p class="text-xs text-[#77838F] font-medium">Creazione guidata documentazione e procedure operative</p>
+      </div>
+    </div>
+
+    <!-- Badge tipo stimato dinamico (mostrato se abbiamo iniziato a inserire dati) -->
+    <div *ngIf="!wizardComplete && (title || steps[0].t)" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
+      <span class="text-base">{{ typeEmoji }}</span>
+      <div class="text-left">
+        <div class="text-[10px] uppercase font-bold text-[#A9B4BF] tracking-wider">Classificazione</div>
+        <div class="text-xs font-bold text-[#1E2022]">{{ typeLabel }} <span class="text-[#377DFF] font-semibold">(+{{ pointsForCurrentType }} pt)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEPPER PROGRESS BAR ===== -->
+  <div *ngIf="!wizardComplete" class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <div class="relative flex items-center justify-between max-w-2xl mx-auto px-4">
+      <!-- Background Connecting Line -->
+      <div class="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-0.5 bg-[#E2E8F0] -z-0"></div>
+      
+      <!-- Stepper Item 1 -->
+      <div class="relative z-10 flex flex-col items-center group cursor-pointer" (click)="goToStep(1)">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+             [ngClass]="currentStep === 1 ? 'bg-[#377DFF] text-white ring-4 ring-[#EAF1FF] shadow-md shadow-blue-500/30' :
+                        currentStep > 1 ? 'bg-emerald-500 text-white' : 'bg-white text-[#77838F] border-2 border-[#E2E8F0]'">
+          <svg *ngIf="currentStep > 1" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span *ngIf="currentStep <= 1">1</span>
+        </div>
+        <span class="text-[11px] font-semibold mt-1.5"
+              [ngClass]="currentStep === 1 ? 'text-[#377DFF]' : currentStep > 1 ? 'text-emerald-600' : 'text-[#77838F]'">
+          Area
+        </span>
+      </div>
+
+      <!-- Stepper Item 2 -->
+      <div class="relative z-10 flex flex-col items-center group cursor-pointer" (click)="goToStep(2)">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+             [ngClass]="currentStep === 2 ? 'bg-[#377DFF] text-white ring-4 ring-[#EAF1FF] shadow-md shadow-blue-500/30' :
+                        currentStep > 2 ? 'bg-emerald-500 text-white' : 'bg-white text-[#77838F] border-2 border-[#E2E8F0]'">
+          <svg *ngIf="currentStep > 2" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span *ngIf="currentStep <= 2">2</span>
+        </div>
+        <span class="text-[11px] font-semibold mt-1.5"
+              [ngClass]="currentStep === 2 ? 'text-[#377DFF]' : currentStep > 2 ? 'text-emerald-600' : 'text-[#77838F]'">
+          Descrizione
+        </span>
+      </div>
+
+      <!-- Stepper Item 3 -->
+      <div class="relative z-10 flex flex-col items-center group cursor-pointer" (click)="goToStep(3)">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+             [ngClass]="currentStep === 3 ? 'bg-[#377DFF] text-white ring-4 ring-[#EAF1FF] shadow-md shadow-blue-500/30' :
+                        currentStep > 3 ? 'bg-emerald-500 text-white' : 'bg-white text-[#77838F] border-2 border-[#E2E8F0]'">
+          <svg *ngIf="currentStep > 3" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span *ngIf="currentStep <= 3">3</span>
+        </div>
+        <span class="text-[11px] font-semibold mt-1.5"
+              [ngClass]="currentStep === 3 ? 'text-[#377DFF]' : currentStep > 3 ? 'text-emerald-600' : 'text-[#77838F]'">
+          Passaggi
+        </span>
+      </div>
+
+      <!-- Stepper Item 4 -->
+      <div class="relative z-10 flex flex-col items-center group cursor-pointer" (click)="goToStep(4)">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+             [ngClass]="currentStep === 4 ? 'bg-[#377DFF] text-white ring-4 ring-[#EAF1FF] shadow-md shadow-blue-500/30' :
+                        currentStep > 4 ? 'bg-emerald-500 text-white' : 'bg-white text-[#77838F] border-2 border-[#E2E8F0]'">
+          <svg *ngIf="currentStep > 4" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span *ngIf="currentStep <= 4">4</span>
+        </div>
+        <span class="text-[11px] font-semibold mt-1.5"
+              [ngClass]="currentStep === 4 ? 'text-[#377DFF]' : currentStep > 4 ? 'text-emerald-600' : 'text-[#77838F]'">
+          FAQ
+        </span>
+      </div>
+
+      <!-- Stepper Item 5 -->
+      <div class="relative z-10 flex flex-col items-center group cursor-pointer" (click)="goToStep(5)">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all"
+             [ngClass]="currentStep === 5 ? 'bg-[#377DFF] text-white ring-4 ring-[#EAF1FF] shadow-md shadow-blue-500/30' : 'bg-white text-[#77838F] border-2 border-[#E2E8F0]'">
+          <span>5</span>
+        </div>
+        <span class="text-[11px] font-semibold mt-1.5"
+              [ngClass]="currentStep === 5 ? 'text-[#377DFF]' : 'text-[#77838F]'">
+          Revisione
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- STEP 1: AREA FUNZIONALE                                        -->
+  <!-- ============================================================== -->
+  <div *ngIf="currentStep === 1 && !wizardComplete" class="wizard-step-enter space-y-6">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <div class="mb-5">
+        <span class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">Step 1 di 5</span>
+        <h3 class="text-xl font-bold text-[#1E2022] mt-1">Cosa vuoi documentare?</h3>
+        <p class="text-sm text-[#77838F] mt-0.5">Seleziona la categoria dell'area funzionale o inserisci un nuovo ambito.</p>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 mb-5">
+        <div *ngFor="let cat of categories"
+             (click)="selectCategory(cat.id)"
+             class="p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between"
+             [ngClass]="!useNewCategory && selectedCategoryId === cat.id ?
+                        'border-[#377DFF] bg-[#EAF1FF]/60 shadow-sm ring-2 ring-[#377DFF]/20' :
+                        'border-[#E2E8F0] bg-white hover:border-[#377DFF]/40 hover:bg-[#F8FAFD]'">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-8 h-8 rounded-lg flex items-center justify-center"
+                    [ngClass]="cat.accent === 'magenta' ? 'bg-[#FFE9F4] text-[#F80086]' : 'bg-[#EAF1FF] text-[#377DFF]'">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="iconPath(cat.icon)"/>
+                </svg>
+              </span>
+              <div class="w-5 h-5 rounded-full border flex items-center justify-center"
+                   [ngClass]="!useNewCategory && selectedCategoryId === cat.id ? 'border-[#377DFF] bg-[#377DFF] text-white' : 'border-[#E2E8F0] bg-white'">
+                <svg *ngIf="!useNewCategory && selectedCategoryId === cat.id" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <h4 class="font-bold text-sm text-[#1E2022]">{{ cat.name }}</h4>
+            <p class="text-xs text-[#77838F] mt-1 line-clamp-2">{{ cat.desc || 'Guide operative e procedure per ' + cat.name }}</p>
+          </div>
+          <div class="mt-3 pt-2 border-t border-[#E2E8F0]/60 text-[11px] text-[#A9B4BF] font-semibold">
+            {{ cat.manuals ? cat.manuals.length : 0 }} guide presenti
+          </div>
+        </div>
+      </div>
+
+      <!-- Nuova Area non categorizzata -->
+      <div class="p-4 rounded-xl border transition-all"
+           [ngClass]="useNewCategory ? 'border-[#377DFF] bg-[#EAF1FF]/40 ring-2 ring-[#377DFF]/20' : 'border-[#E2E8F0] bg-white'">
+        <div class="flex items-center gap-3 cursor-pointer" (click)="selectNewCategoryOption()">
+          <div class="w-5 h-5 rounded-full border flex items-center justify-center shrink-0"
+               [ngClass]="useNewCategory ? 'border-[#377DFF] bg-[#377DFF] text-white' : 'border-[#E2E8F0] bg-white'">
+            <svg *ngIf="useNewCategory" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <span class="text-sm font-bold text-[#1E2022]">Nuova area non categorizzata</span>
+            <p class="text-xs text-[#77838F]">Se l'argomento non rientra nelle categorie esistenti, specifica un nuovo nome</p>
+          </div>
+        </div>
+
+        <div *ngIf="useNewCategory" class="mt-3 pt-3 border-t border-[#E2E8F0]">
+          <label class="block">
+            <span class="text-xs font-bold text-[#77838F] uppercase tracking-wide">Nome nuova area / categoria</span>
+            <input type="text" [(ngModel)]="newCategoryName" placeholder="es. Fatturazione Elettronica, Integrazione API, Magazzino..."
+                   class="mt-1.5 w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] font-medium text-sm">
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- STEP 2: DESCRIZIONE & TIPOLOGIA                                -->
+  <!-- ============================================================== -->
+  <div *ngIf="currentStep === 2 && !wizardComplete" class="wizard-step-enter space-y-6">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">Step 2 di 5</span>
+        <h3 class="text-xl font-bold text-[#1E2022] mt-1">Descrivi la situazione</h3>
+        <p class="text-sm text-[#77838F] mt-0.5">Definisci l'argomento della guida e indica se si tratta di un problema o di una procedura standard.</p>
+      </div>
+
+      <!-- Titolo -->
+      <div>
+        <label class="block">
+          <span class="text-xs font-bold text-[#77838F] uppercase tracking-wide">Titolo della Guida *</span>
+          <input type="text" [(ngModel)]="title" placeholder="es. Come configurare l'invio telematico dei corrispettivi"
+                 class="mt-1.5 w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] font-semibold text-base">
+        </label>
+        <!-- Suggerimento categoria -->
+        <div *ngIf="suggestedCategory && !selectedCategoryId && !useNewCategory" class="mt-2 flex items-center gap-2 text-xs text-[#377DFF]">
+          <span class="font-bold">💡 Categoria suggerita:</span>
+          <span>{{ suggestedCategory }}</span>
+          <button (click)="applySuggestedCategory()" class="underline font-bold hover:text-blue-700">Applica</button>
+        </div>
+      </div>
+
+      <!-- Tipologia di guida / problema -->
+      <div>
+        <span class="text-xs font-bold text-[#77838F] uppercase tracking-wide block mb-2">Tipologia di Documento</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" (click)="problemType = 'procedura'"
+                  class="flex items-center gap-3 p-4 rounded-xl border text-left transition-all cursor-pointer"
+                  [ngClass]="problemType === 'procedura' ? 'border-[#377DFF] bg-[#EAF1FF]/60 shadow-sm ring-2 ring-[#377DFF]/20' : 'border-[#E2E8F0] bg-white hover:bg-[#F8FAFD]'">
+            <span class="text-2xl">📖</span>
+            <div>
+              <div class="text-sm font-bold text-[#1E2022]">Procedura nuova / How-to</div>
+              <div class="text-xs text-[#77838F] mt-0.5">Spiega come eseguire un'operazione o una configurazione</div>
+            </div>
+          </button>
+
+          <button type="button" (click)="problemType = 'risoluzione'"
+                  class="flex items-center gap-3 p-4 rounded-xl border text-left transition-all cursor-pointer"
+                  [ngClass]="problemType === 'risoluzione' ? 'border-[#F80086] bg-[#FFE9F4]/60 shadow-sm ring-2 ring-[#F80086]/20' : 'border-[#E2E8F0] bg-white hover:bg-[#F8FAFD]'">
+            <span class="text-2xl">🐛</span>
+            <div>
+              <div class="text-sm font-bold text-[#1E2022]">Risoluzione problema / Errore</div>
+              <div class="text-xs text-[#77838F] mt-0.5">Risolve un errore comune, anomalia o blocco utente</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Descrizione generale -->
+      <div>
+        <label class="block">
+          <span class="text-xs font-bold text-[#77838F] uppercase tracking-wide">Descrizione / Obiettivo *</span>
+          <textarea [(ngModel)]="description" rows="3" placeholder="Descrivi brevemente a chi serve questa guida e quale risultato si ottiene..."
+                    class="mt-1.5 w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] text-sm leading-relaxed resize-y"></textarea>
+        </label>
+      </div>
+
+      <!-- Campi extra se risoluzione problema -->
+      <div *ngIf="problemType === 'risoluzione'" class="p-5 rounded-2xl bg-[#FFE9F4]/30 border border-[#F80086]/20 space-y-4">
+        <div class="flex items-center gap-2 text-xs font-bold text-[#F80086] uppercase tracking-wide">
+          <span>🔍</span> Dettagli Risoluzione Problema
+        </div>
+        <div>
+          <label class="block">
+            <span class="text-xs font-bold text-[#1E2022] tracking-wide">Qual è la causa principale del problema?</span>
+            <input type="text" [(ngModel)]="cause" placeholder="es. Certificato digitale scaduto o errata configurazione del driver stampante"
+                   class="mt-1.5 w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F80086]/20 focus:border-[#F80086] text-[#1E2022] text-sm">
+          </label>
+        </div>
+        <div>
+          <label class="block">
+            <span class="text-xs font-bold text-[#1E2022] tracking-wide">Qual è la soluzione o workaround rapido?</span>
+            <textarea [(ngModel)]="solution" rows="2" placeholder="es. Rinnovare il certificato e riavviare il servizio di sincronizzazione..."
+                      class="mt-1.5 w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F80086]/20 focus:border-[#F80086] text-[#1E2022] text-sm resize-y"></textarea>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- STEP 3: PASSAGGI OPERATIVI                                     -->
+  <!-- ============================================================== -->
+  <div *ngIf="currentStep === 3 && !wizardComplete" class="wizard-step-enter space-y-6">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5">
+      <div class="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">Step 3 di 5</span>
+          <h3 class="text-xl font-bold text-[#1E2022] mt-1">Passaggi operativi</h3>
+          <p class="text-sm text-[#77838F] mt-0.5">Aggiungi i passi dettagliati che l'operatore o cliente deve seguire in sequenza.</p>
+        </div>
+
+        <!-- Indicator badge -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] text-xs font-semibold text-[#1E2022]">
+          <span>{{ typeEmoji }}</span>
+          <span>{{ typeLabel }} ({{ steps.length }} passaggi)</span>
+        </div>
+      </div>
+
+      <!-- Lista Step -->
+      <div class="space-y-3.5">
+        <div *ngFor="let s of steps; let i = index"
+             class="p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFD]/60 hover:bg-white hover:shadow-sm transition-all space-y-3">
+          
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-lg bg-[#377DFF] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-1 shadow-sm shadow-blue-500/30">
+              {{ i + 1 }}
+            </span>
+            <div class="flex-1">
+              <textarea [(ngModel)]="s.t" rows="2" placeholder="Descrivi questo passaggio (es. Aprire il menu 'Configurazione', selezionare 'Dispositivi' e premere 'Aggiorna')..."
+                        class="w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] text-sm resize-y"></textarea>
+            </div>
+          </div>
+
+          <!-- Bottom bar of Step item: Media checkboxes & Move/Delete actions -->
+          <div class="flex items-center justify-between flex-wrap gap-2 pl-10 pt-1">
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-1.5 text-xs font-medium text-[#77838F] hover:text-[#1E2022] cursor-pointer">
+                <input type="checkbox" [(ngModel)]="s.img" class="rounded accent-[#377DFF] w-4 h-4 cursor-pointer">
+                <span>📷 Screenshot necessario</span>
+              </label>
+              <label class="flex items-center gap-1.5 text-xs font-medium text-[#77838F] hover:text-[#1E2022] cursor-pointer">
+                <input type="checkbox" [(ngModel)]="s.video" class="rounded accent-[#377DFF] w-4 h-4 cursor-pointer">
+                <span>🎥 Video clip</span>
+              </label>
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button type="button" (click)="moveStep(i, -1)" [disabled]="i === 0" title="Sposta su"
+                      class="p-1.5 rounded-lg text-[#77838F] hover:text-[#377DFF] hover:bg-[#EAF1FF] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
+              <button type="button" (click)="moveStep(i, 1)" [disabled]="i === steps.length - 1" title="Sposta giù"
+                      class="p-1.5 rounded-lg text-[#77838F] hover:text-[#377DFF] hover:bg-[#EAF1FF] disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <button type="button" (click)="removeStep(i)" [disabled]="steps.length <= 1" title="Elimina step"
+                      class="p-1.5 rounded-lg text-[#77838F] hover:text-[#FF4757] hover:bg-rose-50 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Add step button -->
+      <button type="button" (click)="addStep()"
+              class="w-full py-3 rounded-xl border border-dashed border-[#377DFF]/50 text-[#377DFF] font-semibold text-sm hover:bg-[#EAF1FF] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>Aggiungi un altro passaggio</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- STEP 4: FAQ COLLEGATE                                          -->
+  <!-- ============================================================== -->
+  <div *ngIf="currentStep === 4 && !wizardComplete" class="wizard-step-enter space-y-6">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-5">
+      <div class="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">Step 4 di 5</span>
+          <h3 class="text-xl font-bold text-[#1E2022] mt-1">Domande Frequenti collegate</h3>
+          <p class="text-sm text-[#77838F] mt-0.5">I clienti chiedono spesso anche chiarimenti o casi particolari.</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#F8FAFD] border border-[#E2E8F0] text-[#77838F]">
+          Opzionale
+        </span>
+      </div>
+
+      <!-- Hint box -->
+      <div class="p-3.5 rounded-xl bg-blue-50/70 border border-blue-100 flex items-center gap-3 text-xs text-blue-800">
+        <span class="text-lg">💡</span>
+        <span>Questo step è opzionale. Puoi aggiungere le domande più frequenti oppure cliccare su "Avanti" per passare direttamente alla revisione.</span>
+      </div>
+
+      <!-- FAQ List -->
+      <div *ngIf="faqs.length === 0" class="text-center py-8 text-[#77838F] bg-[#F8FAFD]/50 rounded-xl border border-dashed border-[#E2E8F0]">
+        <span class="text-2xl block mb-1">❓</span>
+        <p class="text-sm font-semibold text-[#1E2022]">Nessuna FAQ aggiunta</p>
+        <p class="text-xs text-[#77838F] mt-0.5">Clicca su "Aggiungi FAQ" per inserire domande e risposte frequenti correlate.</p>
+      </div>
+
+      <div class="space-y-4">
+        <div *ngFor="let f of faqs; let fi = index"
+             class="p-4 rounded-xl border border-[#E2E8F0] bg-white shadow-sm space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold text-[#377DFF] uppercase tracking-wide">FAQ #{{ fi + 1 }}</span>
+            <button type="button" (click)="removeFaq(fi)" title="Rimuovi FAQ"
+                    class="p-1 rounded text-[#77838F] hover:text-[#FF4757] hover:bg-rose-50 transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+
+          <div>
+            <label class="block">
+              <span class="text-[11px] font-bold text-[#77838F] uppercase tracking-wide">Domanda</span>
+              <input type="text" [(ngModel)]="f.q" placeholder="es. Cosa fare se compare l'errore 'Dispositivo non trovato'?"
+                     class="mt-1 w-full px-3.5 py-2 bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-sm text-[#1E2022] font-semibold">
+            </label>
+          </div>
+
+          <div>
+            <label class="block">
+              <span class="text-[11px] font-bold text-[#77838F] uppercase tracking-wide">Risposta</span>
+              <textarea [(ngModel)]="f.a" rows="2" placeholder="es. Verificare il cavo USB e riavviare il terminale..."
+                        class="mt-1 w-full px-3.5 py-2 bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-sm text-[#1E2022] resize-y"></textarea>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add FAQ Button -->
+      <button type="button" (click)="addFaq()"
+              class="w-full py-2.5 rounded-xl border border-dashed border-[#377DFF]/40 text-[#377DFF] font-semibold text-sm hover:bg-[#EAF1FF] transition-all flex items-center justify-center gap-2 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>Aggiungi FAQ</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- STEP 5: REVISIONE & CONFERMA                                   -->
+  <!-- ============================================================== -->
+  <div *ngIf="currentStep === 5 && !wizardComplete" class="wizard-step-enter space-y-6">
+    <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-wider text-[#377DFF]">Step 5 di 5</span>
+        <h3 class="text-xl font-bold text-[#1E2022] mt-1">Revisione & Conferma</h3>
+        <p class="text-sm text-[#77838F] mt-0.5">Verifica il riepilogo della guida prima di salvarla come bozza.</p>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="p-5 rounded-2xl bg-[#F8FAFD] border border-[#E2E8F0] space-y-4">
+        
+        <!-- Badges header -->
+        <div class="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-[#E2E8F0]">
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Type badge -->
+            <span class="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm"
+                  [ngClass]="autoType === 'breve' ? 'bg-emerald-100 text-emerald-700' :
+                             autoType === 'standard' ? 'bg-blue-100 text-[#377DFF]' : 'bg-rose-100 text-[#F80086]'">
+              <span>{{ typeEmoji }}</span>
+              <span>{{ typeLabel }}</span>
+            </span>
+
+            <!-- Category badge -->
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#E2E8F0] text-[#1E2022]">
+              📁 {{ selectedCategoryName }}
+            </span>
+
+            <!-- Problem type badge -->
+            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#E2E8F0] text-[#77838F]">
+              {{ problemType === 'risoluzione' ? '🐛 Risoluzione problema' : '📖 Procedura nuova' }}
+            </span>
+          </div>
+
+          <!-- Points reward -->
+          <div class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            Valore: +{{ pointsForCurrentType }} pt
+          </div>
+        </div>
+
+        <!-- Title & description -->
+        <div>
+          <h4 class="text-lg font-bold text-[#1E2022]">{{ title || 'Senza titolo' }}</h4>
+          <p class="text-sm text-[#77838F] mt-1 leading-relaxed">{{ description }}</p>
+        </div>
+
+        <!-- Cause and Solution (if Risoluzione) -->
+        <div *ngIf="problemType === 'risoluzione' && (cause || solution)" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div *ngIf="cause" class="p-3 rounded-xl bg-white border border-rose-100">
+            <span class="text-[10px] font-bold text-[#F80086] uppercase tracking-wide block mb-1">Causa identificata</span>
+            <p class="text-xs text-[#1E2022]">{{ cause }}</p>
+          </div>
+          <div *ngIf="solution" class="p-3 rounded-xl bg-white border border-emerald-100">
+            <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wide block mb-1">Soluzione rapida</span>
+            <p class="text-xs text-[#1E2022]">{{ solution }}</p>
+          </div>
+        </div>
+
+        <!-- Steps Summary Preview -->
+        <div class="pt-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#77838F] block mb-2">Passaggi Operativi ({{ steps.length }})</span>
+          <div class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar pr-1">
+            <div *ngFor="let s of steps; let si = index" class="p-3 rounded-xl bg-white border border-[#E2E8F0] flex items-start gap-3">
+              <span class="w-6 h-6 rounded-md bg-[#EAF1FF] text-[#377DFF] flex items-center justify-center text-xs font-bold shrink-0">
+                {{ si + 1 }}
+              </span>
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-[#1E2022] leading-relaxed">{{ s.t }}</p>
+                <div *ngIf="s.img || s.video" class="flex items-center gap-3 mt-1.5 text-[10px] font-semibold text-[#77838F]">
+                  <span *ngIf="s.img" class="flex items-center gap-1 text-blue-600">📷 Screenshot</span>
+                  <span *ngIf="s.video" class="flex items-center gap-1 text-purple-600">🎥 Video</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQs Summary Preview (if any) -->
+        <div *ngIf="faqs.length > 0" class="pt-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#77838F] block mb-2">FAQ Collegate ({{ faqs.length }})</span>
+          <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+            <div *ngFor="let f of faqs; let fi = index" class="p-3 rounded-xl bg-white border border-[#E2E8F0]">
+              <div class="text-xs font-bold text-[#1E2022]">Q: {{ f.q }}</div>
+              <div class="text-xs text-[#77838F] mt-1">A: {{ f.a }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Box -->
+      <div class="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/60 flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">💾</span>
+          <div>
+            <div class="text-sm font-bold text-[#1E2022]">Salva come Bozza in SmartFlow</div>
+            <div class="text-xs text-[#77838F]">La guida sarà inviata per la revisione admin e ti verranno accreditati i punti.</div>
+          </div>
+        </div>
+        <button type="button" (click)="submitDraft()"
+                class="px-6 py-3 rounded-xl bg-[#377DFF] hover:bg-[#2563EB] text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2 cursor-pointer">
+          <span>Genera Bozza</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- SUCCESS STATE                                                  -->
+  <!-- ============================================================== -->
+  <div *ngIf="wizardComplete" class="wizard-step-enter bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center space-y-6">
+    
+    <!-- Success Icon -->
+    <div class="w-20 h-20 rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+      <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+
+    <div>
+      <h3 class="text-2xl font-bold text-[#1E2022]">Bozza creata con successo!</h3>
+      <p class="text-sm text-[#77838F] mt-1 max-w-md mx-auto">
+        La guida è stata registrata nello SmartFlow con stato <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">pending</span> e verrà revisionata dall'amministratore.
+      </p>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-xl mx-auto text-left">
+      <div class="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
+        <div class="text-[10px] font-bold uppercase tracking-wide text-[#77838F]">Categoria</div>
+        <div class="text-xs font-bold text-[#1E2022] mt-0.5 truncate">{{ selectedCategoryName }}</div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
+        <div class="text-[10px] font-bold uppercase tracking-wide text-[#77838F]">Tipo</div>
+        <div class="text-xs font-bold text-[#377DFF] mt-0.5">{{ typeLabel }}</div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
+        <div class="text-[10px] font-bold uppercase tracking-wide text-[#77838F]">Passaggi</div>
+        <div class="text-xs font-bold text-[#1E2022] mt-0.5">{{ steps.length }} step</div>
+      </div>
+      <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+        <div class="text-[10px] font-bold uppercase tracking-wide text-emerald-700">Punti</div>
+        <div class="text-xs font-bold text-emerald-600 mt-0.5">+{{ pointsForCurrentType }} pt</div>
+      </div>
+    </div>
+
+    <div>
+      <button type="button" (click)="resetWizard()"
+              class="px-6 py-3 rounded-xl bg-[#377DFF] hover:bg-[#2563EB] text-white font-bold text-sm shadow-md shadow-blue-500/20 transition-all inline-flex items-center gap-2 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>Crea un'altra guida</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- NAVIGATION BAR (BOTTOM)                                        -->
+  <!-- ============================================================== -->
+  <div *ngIf="!wizardComplete" class="flex items-center justify-between bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    <!-- Back Button -->
+    <button type="button" (click)="prevStep()" [disabled]="currentStep === 1"
+            class="px-5 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-sm font-semibold text-[#77838F] hover:text-[#1E2022] hover:bg-[#F8FAFD] disabled:opacity-40 disabled:pointer-events-none transition-all flex items-center gap-1.5 cursor-pointer">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Indietro</span>
+    </button>
+
+    <div class="text-xs font-semibold text-[#77838F]">
+      Passaggio {{ currentStep }} di {{ totalSteps }}
+    </div>
+
+    <!-- Next Button -->
+    <button *ngIf="currentStep < totalSteps" type="button" (click)="nextStep()" [disabled]="!canProceed()"
+            class="px-6 py-2.5 rounded-xl bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold shadow-md shadow-blue-500/20 transition-all flex items-center gap-1.5 cursor-pointer">
+      <span>Avanti</span>
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+</div>

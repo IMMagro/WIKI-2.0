@@ -1,18 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
+import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
+import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
+import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
+import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
 
 @Component({
   selector: 'app-guide-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SmartflowWizardComponent,
+    SmartflowReviewComponent,
+    SmartflowLeaderboardComponent
+  ],
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
-  activeTab: 'manuals' | 'pills' = 'manuals';
+  @Input() activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
+  sfView: 'wizard' | 'review' | 'leaderboard' = 'wizard';
 
   selCat: Category | null = null;
   selGuide: Guide | null = null;
@@ -33,7 +44,8 @@ export class GuideAdminComponent {
   };
   iconPath(name: string): string { return this.iconPaths[name] || this.iconPaths['book']; }
 
-  constructor(public guides: GuideService, private http: HttpClient) {}
+  constructor(public guides: GuideService, public smartflow: SmartflowService, private http: HttpClient) {}
+
 
   get categories(): Category[] { return this.guides.categories; }
   get homePills(): HomePill[] { return this.guides.homePills; }
@@ -167,6 +179,10 @@ export class GuideAdminComponent {
 
   getSuggestions(): { pill: HomePill; reason: string }[] {
     return this.guides.getSuggestedPills();
+  }
+
+  logoutOp() {
+    this.smartflow.logout();
   }
 
   // ----- Salvataggio -----

@@ -1,0 +1,285 @@
+<div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-6 items-start">
+
+  <!-- ==================== COLONNA SINISTRA: ELENCO BOZZE IN ATTESA ==================== -->
+  <aside class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+    
+    <!-- Header Sidebar -->
+    <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#E2E8F0]">
+      <div>
+        <h3 class="text-sm font-bold text-[#1E2022] uppercase tracking-wider">Bozze in Attesa</h3>
+        <p class="text-xs text-[#77838F] mt-0.5">Sottomissioni da revisionare</p>
+      </div>
+      <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+        {{ drafts.length }}
+      </span>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="drafts.length === 0" class="py-12 px-4 text-center text-[#A9B4BF]">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto mb-3 text-2xl">
+        🎉
+      </div>
+      <div class="text-sm font-bold text-[#1E2022]">Nessuna bozza in attesa</div>
+      <p class="text-xs text-[#77838F] mt-1.5 leading-relaxed">Tutte le guide proposte dagli operatori sono state revisionate.</p>
+    </div>
+
+    <!-- Drafts List -->
+    <div *ngIf="drafts.length > 0" class="space-y-3">
+      <div *ngFor="let d of drafts"
+           (click)="selectDraft(d)"
+           class="p-4 rounded-xl border transition-all cursor-pointer select-none"
+           [ngClass]="selectedDraft?.id === d.id ? 'bg-[#EAF1FF]/60 border-[#377DFF] shadow-sm ring-1 ring-[#377DFF]/30' : 'bg-white border-[#E2E8F0] hover:border-[#377DFF]/40 hover:bg-[#F8FAFD]'">
+        
+        <!-- Header: Badges -->
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <span class="px-2 py-0.5 rounded-md text-[10px] font-bold border" [ngClass]="getTypeBadgeInfo(d.type).colorClass">
+            {{ getTypeBadgeInfo(d.type).emoji }} {{ getTypeBadgeInfo(d.type).label }} (+{{ getTypeBadgeInfo(d.type).points }} pt)
+          </span>
+          <span class="text-[10px] font-semibold text-[#77838F]">
+            <span *ngIf="d.problemType === 'risoluzione'" class="text-amber-600">🛠️ Risoluzione</span>
+            <span *ngIf="d.problemType === 'procedura'" class="text-blue-600">📋 Procedura</span>
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h4 class="text-sm font-bold text-[#1E2022] leading-snug line-clamp-2 mb-1.5">
+          {{ d.title }}
+        </h4>
+
+        <!-- Category -->
+        <div class="text-xs text-[#77838F] flex items-center gap-1.5 mb-3">
+          <span>📁</span>
+          <span class="truncate font-medium">{{ getCategoryName(d.targetCategory) }}</span>
+        </div>
+
+        <!-- Footer: Operator & Date -->
+        <div class="flex items-center justify-between pt-2 border-t border-[#E2E8F0]/70 text-[11px] text-[#A9B4BF]">
+          <div class="flex items-center gap-1.5 text-[#1E2022]">
+            <span class="text-xs">{{ getOperator(d.operatorId)?.emoji || '👤' }}</span>
+            <span class="font-medium truncate max-w-[120px]">{{ getOperator(d.operatorId)?.name || 'Operatore' }}</span>
+          </div>
+          <span>{{ d.createdAt }}</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ==================== COLONNA DESTRA: ANTEPRIMA & AZIONI REVISIONE ==================== -->
+  <main class="min-w-0">
+
+    <!-- Placeholder se nessuna bozza selezionata -->
+    <div *ngIf="!selectedDraft" class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-12 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center justify-center min-h-[460px]">
+      <div class="w-16 h-16 rounded-3xl bg-[#EAF1FF] text-[#377DFF] flex items-center justify-center text-3xl mb-4 shadow-sm">
+        👁️
+      </div>
+      <h3 class="text-lg font-bold text-[#1E2022]">Seleziona una bozza da revisionare</h3>
+      <p class="text-sm text-[#77838F] mt-1.5 max-w-md">Scegli una bozza dalla lista a sinistra per visualizzare i contenuti completi, verificare passaggi e FAQ, e procedere all'approvazione.</p>
+    </div>
+
+    <!-- Contenuto Bozza Selezionata -->
+    <div *ngIf="selectedDraft" class="space-y-6">
+
+      <!-- Header & Action Bar -->
+      <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#E2E8F0]">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border" [ngClass]="getTypeBadgeInfo(selectedDraft.type).colorClass">
+                {{ getTypeBadgeInfo(selectedDraft.type).emoji }} {{ getTypeBadgeInfo(selectedDraft.type).label }}
+              </span>
+              <span *ngIf="selectedDraft.problemType === 'risoluzione'" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                🛠️ Risoluzione Problema
+              </span>
+              <span *ngIf="selectedDraft.problemType === 'procedura'" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                📋 Procedura Standard
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                ⏳ In Revisione
+              </span>
+            </div>
+            <h2 class="text-2xl font-bold text-[#1E2022] leading-tight">{{ selectedDraft.title }}</h2>
+          </div>
+
+          <!-- Pulsanti Azione Principali -->
+          <div class="flex items-center gap-3 shrink-0">
+            <button (click)="copyForAI()"
+                    class="px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm">
+              🤖 Copia per AI
+            </button>
+            <button (click)="showRejectModal = true"
+                    class="px-4 py-2.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-bold transition-all flex items-center gap-2 cursor-pointer shadow-sm">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              Rigetta
+            </button>
+            <button (click)="approve()"
+                    class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/20">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              Approva e Pubblica
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[11px] font-bold">+{{ getTypeBadgeInfo(selectedDraft.type).points }} pt</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metadata Details Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block">Operatore</span>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-base">{{ getOperator(selectedDraft.operatorId)?.emoji || '👤' }}</span>
+              <span class="text-sm font-semibold text-[#1E2022] truncate">{{ getOperator(selectedDraft.operatorId)?.name || 'Operatore' }}</span>
+            </div>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block">Categoria Target</span>
+            <span class="text-sm font-semibold text-[#1E2022] mt-1 block truncate">📁 {{ getCategoryName(selectedDraft.targetCategory) }}</span>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block">Data Creazione</span>
+            <span class="text-sm font-semibold text-[#1E2022] mt-1 block">📅 {{ selectedDraft.createdAt }}</span>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block">Punteggio Previsto</span>
+            <span class="text-sm font-bold text-[#377DFF] mt-1 block">⭐ +{{ getTypeBadgeInfo(selectedDraft.type).points }} Punti</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquadramento e Descrizione -->
+      <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <h3 class="text-xs font-bold text-[#77838F] uppercase tracking-wider mb-3">Descrizione & Inquadramento</h3>
+        <p class="text-sm text-[#1E2022] leading-relaxed whitespace-pre-line">{{ selectedDraft.description }}</p>
+
+        <!-- Se Risoluzione Problema: Mostra Causa e Soluzione -->
+        <div *ngIf="selectedDraft.problemType === 'risoluzione'" class="grid md:grid-cols-2 gap-4 mt-5">
+          <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+            <div class="flex items-center gap-2 text-xs font-bold text-amber-800 uppercase tracking-wider mb-2">
+              <span>⚠️</span> Causa del Problema
+            </div>
+            <p class="text-sm text-[#1E2022] leading-relaxed">{{ selectedDraft.cause || 'Non specificata' }}</p>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200">
+            <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">
+              <span>💡</span> Soluzione Applicata
+            </div>
+            <p class="text-sm text-[#1E2022] leading-relaxed">{{ selectedDraft.solution || 'Non specificata' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Passaggi Operativi (Steps) -->
+      <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold text-[#77838F] uppercase tracking-wider">
+            Procedura Principale ({{ selectedDraft.steps.length }} Passaggi)
+          </h3>
+        </div>
+
+        <div class="space-y-3">
+          <div *ngFor="let step of selectedDraft.steps; let idx = index"
+               class="p-4 rounded-xl border border-[#E2E8F0] bg-white flex items-start gap-4 shadow-sm">
+            <span class="w-7 h-7 rounded-xl bg-[#377DFF] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-sm shadow-blue-500/20">
+              {{ idx + 1 }}
+            </span>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-[#1E2022] leading-relaxed whitespace-pre-line">{{ step.t }}</p>
+              <div *ngIf="step.img || step.video" class="flex items-center gap-3 mt-2 pt-2 border-t border-[#E2E8F0]/60">
+                <span *ngIf="step.img" class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#377DFF] bg-[#EAF1FF] px-2 py-0.5 rounded-md">
+                  🖼️ Include Immagine
+                </span>
+                <span *ngIf="step.video" class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#F80086] bg-[#FFE9F4] px-2 py-0.5 rounded-md">
+                  🎥 Include Video
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Collegate -->
+      <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold text-[#77838F] uppercase tracking-wider">
+            FAQ Collegate ({{ selectedDraft.faqs.length }})
+          </h3>
+        </div>
+
+        <div *ngIf="!selectedDraft.faqs || selectedDraft.faqs.length === 0" class="text-xs text-[#A9B4BF] py-2">
+          Nessuna FAQ addizionale allegata a questa guida.
+        </div>
+
+        <div *ngIf="selectedDraft.faqs && selectedDraft.faqs.length > 0" class="space-y-3">
+          <div *ngFor="let faq of selectedDraft.faqs; let fIdx = index"
+               class="p-4 rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+            <div class="flex items-start gap-2.5 mb-2">
+              <span class="w-5 h-5 rounded-md bg-[#FFE9F4] text-[#F80086] flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                Q
+              </span>
+              <h5 class="text-sm font-bold text-[#1E2022]">{{ faq.q }}</h5>
+            </div>
+            <div class="flex items-start gap-2.5 ml-7">
+              <p class="text-xs text-[#77838F] leading-relaxed whitespace-pre-line">{{ faq.a }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Approval Bar -->
+      <div class="p-4 rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 flex items-center justify-between shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <span class="text-xs text-[#77838F]">Bozza ID: <code class="text-[#1E2022] font-mono">{{ selectedDraft.id }}</code></span>
+        <div class="flex items-center gap-3">
+          <button (click)="copyForAI()" class="px-4 py-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all cursor-pointer">
+            🤖 Copia per AI
+          </button>
+          <button (click)="showRejectModal = true"
+                  class="px-4 py-2 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition-all cursor-pointer">
+            Rigetta Bozza
+          </button>
+          <button (click)="approve()"
+                  class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-md shadow-emerald-600/20">
+            Approva e Pubblica (+{{ getTypeBadgeInfo(selectedDraft.type).points }} pt)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== MODAL RIGETTO ==================== -->
+  <div *ngIf="showRejectModal"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl border border-[#E2E8F0]">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg font-bold">
+          🚫
+        </span>
+        <div>
+          <h3 class="text-base font-bold text-[#1E2022]">Motivo del Rifiuto</h3>
+          <p class="text-xs text-[#77838F]">Fornisci un feedback utile all'operatore per correggere la bozza.</p>
+        </div>
+      </div>
+
+      <label class="block mb-5">
+        <span class="text-[11px] font-bold text-[#77838F] uppercase tracking-wider block mb-1.5">Note di revisione</span>
+        <textarea [(ngModel)]="rejectionNote"
+                  rows="4"
+                  placeholder="Es. Mancano alcuni passaggi essenziali relativi alla configurazione dello stampante..."
+                  class="w-full px-3.5 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-sm text-[#1E2022] focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 resize-y"></textarea>
+      </label>
+
+      <div class="flex items-center justify-end gap-3">
+        <button (click)="showRejectModal = false"
+                class="px-4 py-2 rounded-xl border border-[#E2E8F0] bg-white text-xs font-bold text-[#77838F] hover:bg-[#F8FAFD] transition-all cursor-pointer">
+          Annulla
+        </button>
+        <button (click)="reject()"
+                [disabled]="!rejectionNote.trim()"
+                class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-md shadow-rose-600/20 cursor-pointer">
+          Conferma Rifiuto
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

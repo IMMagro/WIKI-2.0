@@ -2,12 +2,37 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
+import { SmartflowService } from '../../../services/smartflow.service';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './admin-login.component.html'
+  templateUrl: './admin-login.component.html',
+  styles: [`
+    @keyframes fadeUpCard {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    :host input:-webkit-autofill,
+    :host input:-webkit-autofill:hover, 
+    :host input:-webkit-autofill:focus, 
+    :host input:-webkit-autofill:active {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: #ffffff !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+      box-shadow: inset 0 0 40px 40px rgba(15, 23, 42, 0.9) !important;
+    }
+    :host input {
+      background-color: transparent !important;
+    }
+  `]
 })
 export class AdminLoginComponent implements OnInit, OnDestroy {
   @Output() loginSuccess = new EventEmitter<void>();
@@ -17,13 +42,25 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
   loginLoading = false;
   loginError = '';
 
+  isSignUpMode = false;
+  regName = '';
+  regEmoji = '🧑‍💻';
+  regAvatar: string | null = null;
+  regPassword = '';
+  regConfirm = '';
+  regError = '';
+  regSuccess = '';
+
   backgroundImages = [
     '/assets/images/quaderno-bg-left-logo.jpg'
   ];
   currentBgIndex = 0;
   private bgInterval: any;
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    public smartflow: SmartflowService
+  ) {}
 
   ngOnInit() {
     this.startBackgroundRotation();
@@ -54,18 +91,81 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       return;
     }
     
-    this.loginLoading = true;
-    
-    this.adminService.login(this.loginEmail, this.loginPassword).subscribe({
-      next: (res) => {
-        this.loginLoading = false;
-        this.loginSuccess.emit();
-      },
-      error: (err) => {
-        this.loginLoading = false;
-        this.loginError = err.error?.error || 'Credenziali non valide o errore di rete';
+    if (this.loginEmail.trim() === 'admin') {
+      // Normal admin service login (Master Admin)
+      this.loginLoading = true;
+      this.adminService.login(this.loginEmail.trim(), this.loginPassword).subscribe({
+        next: () => {
+          this.loginLoading = false;
+          this.loginSuccess.emit();
+        },
+        error: (err) => {
+          this.loginLoading = false;
+          this.loginError = err.error?.error || 'Credenziali non valide o errore di rete';
+        }
+      });
+    } else {
+      // Smartflow Operator login
+      const username = this.loginEmail.trim().toLowerCase();
+      const op = this.smartflow.operators.find(o => o.name.trim().toLowerCase() === username && o.password === this.loginPassword);
+      if (!op) {
+        this.loginError = 'Credenziali errate';
+        return;
       }
-    });
+      if (op.status === 'pending') {
+        this.loginError = 'Account in attesa di approvazione admin';
+        return;
+      }
+      if (op.status === 'rejected') {
+        this.loginError = 'Account respinto';
+        return;
+      }
+
+      // Approved
+      this.smartflow.loginAs(op.id);
+      this.loginSuccess.emit();
+    }
+  }
+
+  signUp() {
+    this.regError = '';
+    this.regSuccess = '';
+
+    const name = this.regName.trim();
+    if (!name || !this.regPassword || this.regPassword !== this.regConfirm) {
+      this.regError = 'Campi non validi o le password non coincidono';
+      return;
+    }
+    if (name.toLowerCase() === 'admin') {
+      this.regError = 'Il nome admin è riservato';
+      return;
+    }
+    if (this.smartflow.operators.find(o => o.name.trim().toLowerCase() === name.toLowerCase())) {
+      this.regError = 'Nome utente già in uso';
+      return;
+    }
+
+    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword, this.regAvatar || undefined);
+    this.regSuccess = 'Registrazione completata! In attesa di approvazione.';
+    setTimeout(() => {
+      this.isSignUpMode = false;
+      this.regSuccess = '';
+      this.regName = '';
+      this.regPassword = '';
+      this.regConfirm = '';
+      this.regAvatar = null;
+    }, 2500);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.regAvatar = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   exitAdmin() {

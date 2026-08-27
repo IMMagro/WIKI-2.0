@@ -1,4 +1,4 @@
-<header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
+<header *ngIf="activeTab !== 'smartflow'" class="flex justify-between items-center mb-6 gap-4 flex-wrap">
   <div>
     <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide & Pills</span></h1>
     <p class="text-[#77838F] mt-1 font-medium">Crea e organizza categorie, guide, FAQ e le pill in evidenza nella Home.</p>
@@ -16,6 +16,7 @@
       </button>
     </div>
   </div>
+
 
   <div class="flex items-center gap-3">
     <span *ngIf="saveMsg" class="text-sm font-semibold" [ngClass]="saveOk ? 'text-emerald-600' : 'text-[#FF4757]'">{{ saveMsg }}</span>
@@ -343,3 +344,51 @@
   </div>
 
 </div>
+
+<!-- ===== TAB 3: SMARTFLOW ===== -->
+<div *ngIf="activeTab === 'smartflow'">
+  
+  <header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
+    <div>
+      <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">SmartFlow <span class="font-bold text-[#377DFF]">AI</span></h1>
+      <p class="text-[#77838F] mt-1 font-medium">Gestione guide guidate e intelligenza artificiale per l'assistenza.</p>
+    </div>
+  </header>
+
+  <!-- SmartFlow Nav Tabs & Current Profile -->
+  <div class="flex items-center justify-between gap-3 mb-6 flex-wrap">
+    <div class="flex items-center gap-2 flex-wrap">
+      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+              [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        ✍️ Crea Nuova Guida
+      </button>
+      <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+              [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        👁️ Bozze in Revisione
+        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
+      </button>
+      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+              [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        🏆 Classifica
+      </button>
+    </div>
+    <!-- Operator mini indicator -->
+    <div *ngIf="smartflow.currentOperator" class="hidden">
+      <!-- Operator info is now globally in the layout pill -->
+    </div>
+  </div>
+
+  <div *ngIf="sfView === 'wizard'">
+    <app-smartflow-wizard></app-smartflow-wizard>
+  </div>
+  
+  <div *ngIf="sfView === 'review'">
+    <app-smartflow-review></app-smartflow-review>
+  </div>
+
+  <div *ngIf="sfView === 'leaderboard'">
+    <app-smartflow-leaderboard></app-smartflow-leaderboard>
+  </div>
+
+</div>
+
