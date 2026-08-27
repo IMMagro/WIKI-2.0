@@ -103,83 +103,72 @@
     <!-- ===== VIEW: Lettura guida ===== -->
     <ng-container *ngIf="view === 'read' && curGuide as g">
       <h1 class="page sm">{{ g.title }}</h1>
-      <nav class="breadcrumb" aria-label="Percorso di navigazione">
-        <button class="bc-link" (click)="goHome()">Guide</button>
-        <span class="bc-sep">/</span>
-        <button class="bc-link" (click)="openCat(selCat!, 'back')">
-          <img *ngIf="curCat?.id" [src]="'assets/images/emojis/' + curCat?.id + '.png'" class="bc-emoji" [alt]="curCat?.name" />
-          <span>{{ curCat?.name }}</span>
-        </button>
-        <span class="bc-sep">/</span>
-        <span class="bc-current" *ngIf="selFaq === -1">{{ g.title }}</span>
-        <ng-container *ngIf="selFaq >= 0">
-          <button class="bc-link" (click)="openFaq(-1)">{{ g.title }}</button>
-          <span class="bc-sep">/</span>
-          <span class="bc-current">{{ curFaq?.q }}</span>
-        </ng-container>
-      </nav>
-
-      <div class="reader" [class.toc-open]="isTocOpen">
-        <!-- Articolo -->
-        <article class="article">
-          <!-- Pulsante freccia minimalista per aprire/chiudere l'indice -->
-          <button class="toc-min-toggle" (click)="toggleToc()" [attr.aria-label]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'" [title]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'">
-            <svg class="toc-min-icon" [class.rotated]="isTocOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path>
-            </svg>
+        <nav class="bc">
+          <button class="bc-link" (click)="goHome()">
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
           </button>
+          <span class="bc-sep">/</span>
+          <button class="bc-link" (click)="openCat(selCat!, 'back')">
+            <img *ngIf="curCat?.id" [src]="'assets/images/emojis/' + curCat?.id + '.png'" class="bc-emoji" [alt]="curCat?.name" />
+            <span>{{ curCat?.name }}</span>
+          </button>
+          <span class="bc-sep">/</span>
+          <span class="bc-current">{{ g.title }}</span>
+        </nav>
 
-          <!-- Panoramica -->
-          <ng-container *ngIf="selFaq === -1">
-            <div class="kick">
-              <span class="qtag man">Guida</span>
-            </div>
-            <h2 class="artTitle">{{ g.title }}</h2>
-            <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
-            
-            <ng-container *ngIf="hasExtraFaqs">
-              <div class="faqhead">Domande e casi particolari <span class="ln"></span></div>
-              <button class="faqrow" *ngFor="let f of extraFaqs; let i = index; trackBy: trackByFaq" [style.animationDelay]="(i * 40) + 'ms'" (click)="openFaq(i)">
-                <span class="qn">{{ i + 1 }}</span>
-                <b>{{ f.q }}</b>
-                <span class="rd" *ngIf="f.read">Letta</span>
-                <span class="chev"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg></span>
-              </button>
-            </ng-container>
-          </ng-container>
+        <div class="reader" [class.toc-open]="isTocOpen">
+          <!-- Articolo -->
+          <article class="article">
+            <!-- Pulsante freccia minimalista per aprire/chiudere l'indice -->
+            <button class="toc-min-toggle" (click)="toggleToc()" [attr.aria-label]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'" [title]="isTocOpen ? 'Nascondi indice' : 'Mostra indice'">
+              <svg class="toc-min-icon" [class.rotated]="isTocOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path>
+              </svg>
+            </button>
 
-          <!-- FAQ aperta -->
-          <ng-container *ngIf="curFaq as f">
-            <div class="kick">
-              <span class="qtag">Domanda</span>
-              <span class="updated" *ngFor="let t of f.tags">#{{ t }}</span>
-            </div>
-            <h2 class="artTitle">{{ f.q }}</h2>
-            <div class="steps">
-              <div class="step" *ngFor="let s of f.steps; let i = index; trackBy: trackByStep">
-                <div class="num">{{ i + 1 }}</div>
-                <div class="body">
-                  <p [innerHTML]="s.t"></p>
-                  <div class="media img" *ngIf="s.img"><span class="cap">&#128247; Screenshot procedura</span></div>
-                  <div class="media video" *ngIf="s.video">
-                    <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
-                    <span class="cap">&#9654; Video &middot; 0:42</span>
+            <!-- Panoramica -->
+            <ng-container>
+              <div class="kick">
+                <span class="qtag man">Guida</span>
+              </div>
+              <h2 class="artTitle">{{ g.title }}</h2>
+              <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
+              
+              <ng-container *ngIf="hasExtraFaqs">
+                <div class="faqhead">Domande e casi particolari <span class="ln"></span></div>
+                
+                <div *ngFor="let f of extraFaqs; let i = index; trackBy: trackByFaq" class="faq-accordion-item" [style.animationDelay]="(i * 40) + 'ms'" [style.marginBottom]="f.expanded ? '9px' : '0'">
+                  <button class="faqrow" [class.open]="f.expanded" (click)="toggleFaq(f)"
+                          [style.marginBottom]="f.expanded ? '0' : ''" 
+                          [style.borderBottomLeftRadius]="f.expanded ? '0' : ''" 
+                          [style.borderBottomRightRadius]="f.expanded ? '0' : ''">
+                    <span class="qn">{{ i + 1 }}</span>
+                    <b>{{ f.q }}</b>
+                    <span class="rd" *ngIf="f.read">Letta</span>
+                    <span class="chev" [style.transform]="f.expanded ? 'rotate(90deg)' : 'rotate(0deg)'" style="transition: transform 0.2s;">
+                      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg>
+                    </span>
+                  </button>
+                  
+                  <div class="faq-content bg-[#F8FAFD] rounded-b-2xl border border-t-0 border-[#E2E8F0] px-6 py-5 mb-3" *ngIf="f.expanded">
+                    <div class="steps" style="margin-top: 0;">
+                      <div class="step" *ngFor="let s of f.steps; let si = index; trackBy: trackByStep">
+                        <div class="num">{{ si + 1 }}</div>
+                        <div class="body">
+                          <p [innerHTML]="s.t"></p>
+                          <div class="media img" *ngIf="s.img"><span class="cap">&#128247; Screenshot procedura</span></div>
+                          <div class="media video" *ngIf="s.video">
+                            <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
+                            <span class="cap">&#9654; Video &middot; 0:42</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="navfaq">
-              <button (click)="openFaq(selFaq - 1)">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevL']"></path></svg>
-                <span class="lb"><span>{{ selFaq === 0 ? 'Torna a' : 'Precedente' }}</span><b>{{ selFaq === 0 ? 'Panoramica' : extraFaqs[selFaq - 1].q }}</b></span>
-              </button>
-              <button [disabled]="selFaq === extraFaqs.length - 1" (click)="openFaq(selFaq + 1)">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icons['chevR']"></path></svg>
-                <span class="lb"><span>Successiva</span><b>{{ selFaq < extraFaqs.length - 1 ? extraFaqs[selFaq + 1].q : '&mdash;' }}</b></span>
-              </button>
-            </div>
-          </ng-container>
-        </article>
+              </ng-container>
+            </ng-container>
+          </article>
 
         <!-- Indice a destra (popup / cassetto retraibile) -->
         <aside class="toc">
