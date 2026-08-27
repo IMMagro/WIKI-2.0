@@ -8,8 +8,6 @@ import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
-import { SmartflowUsersComponent } from '../smartflow/smartflow-users.component';
-import { SmartflowOnboardingComponent } from '../smartflow/smartflow-onboarding.component';
 
 @Component({
   selector: 'app-guide-admin',
@@ -19,18 +17,13 @@ import { SmartflowOnboardingComponent } from '../smartflow/smartflow-onboarding.
     FormsModule,
     SmartflowWizardComponent,
     SmartflowReviewComponent,
-    SmartflowLeaderboardComponent,
-    SmartflowUsersComponent,
-    SmartflowOnboardingComponent
+    SmartflowLeaderboardComponent
   ],
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
   activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
-  sfView: 'wizard' | 'review' | 'leaderboard' | 'users' = 'wizard';
-
-  regName = '';
-  regEmoji = '🧔';
+  sfView: 'wizard' | 'review' | 'leaderboard' = 'wizard';
 
   selCat: Category | null = null;
   selGuide: Guide | null = null;
@@ -188,26 +181,8 @@ export class GuideAdminComponent {
     return this.guides.getSuggestedPills();
   }
 
-  // ----- SmartFlow Operator Login/Register -----
-  registerOp() {
-    if (!this.regName.trim()) return;
-    const op = this.smartflow.registerOperator(this.regName, this.regEmoji);
-    this.smartflow.loginAs(op.id);
-  }
-
-  loginOp(id: string) {
-    this.smartflow.loginAs(id);
-  }
-
   logoutOp() {
     this.smartflow.logout();
-  }
-
-  finishOnboarding() {
-    if (this.smartflow.currentOperator) {
-      this.smartflow.currentOperator.hasOnboarded = true;
-      this.smartflow.saveOperator(this.smartflow.currentOperator);
-    }
   }
 
   // ----- Salvataggio -----

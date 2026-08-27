@@ -33,6 +33,7 @@ export interface SmartflowOperator {
   id: string;
   name: string;
   emoji: string;
+  password?: string;
   score: number;
   level: number;
   levelName: string;

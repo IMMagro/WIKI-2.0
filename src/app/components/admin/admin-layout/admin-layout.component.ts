@@ -1,11 +1,14 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService } from '../../../services/admin.service';
+import { SmartflowService } from '../../../services/smartflow.service';
 import { AdminDashboardComponent } from '../admin-dashboard/admin-dashboard.component';
 import { AdminNewsComponent } from '../admin-news/admin-news.component';
 import { AdminServerComponent } from '../admin-server/admin-server.component';
 import { GuideAdminComponent } from '../../guide/guide-admin.component';
 import { AdminLegalComponent } from '../admin-legal/admin-legal.component';
+import { SmartflowUsersComponent } from '../../smartflow/smartflow-users.component';
+import { SmartflowOnboardingComponent } from '../../smartflow/smartflow-onboarding.component';
 import { ThemeService } from '../../../services/theme.service';
 import { LegalService } from '../../../services/legal.service';
 import { NavigationSettingsService } from '../../../services/navigation-settings.service';
@@ -13,12 +16,22 @@ import { NavigationSettingsService } from '../../../services/navigation-settings
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, AdminDashboardComponent, AdminNewsComponent, AdminServerComponent, GuideAdminComponent, AdminLegalComponent],
+  imports: [
+    CommonModule,
+    AdminDashboardComponent,
+    AdminNewsComponent,
+    AdminServerComponent,
+    GuideAdminComponent,
+    AdminLegalComponent,
+    SmartflowUsersComponent,
+    SmartflowOnboardingComponent
+  ],
   templateUrl: './admin-layout.component.html'
 })
-export class AdminLayoutComponent {
+export class AdminLayoutComponent implements OnInit {
   @Output() exitAdmin = new EventEmitter<void>();
   activeAdminTab: string = 'dashboard';
+  showOnboarding = false;
 
   menuItemsMetadata = [
     { id: 'home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', label: 'Home', description: 'La pagina principale con la dashboard e i widget rapidi.' },
@@ -29,14 +42,35 @@ export class AdminLayoutComponent {
   ];
 
   constructor(
-    private adminService: AdminService,
+    public adminService: AdminService,
+    public smartflow: SmartflowService,
     public themeService: ThemeService,
     public legalService: LegalService,
     public navigationSettingsService: NavigationSettingsService
   ) {}
 
+  isMasterAdmin(): boolean {
+    return !!this.adminService.token;
+  }
+
+  ngOnInit() {
+    const op = this.smartflow.currentOperator;
+    if (op && op.status === 'approved' && !op.hasOnboarded) {
+      this.showOnboarding = true;
+    }
+  }
+
+  finishOnboarding() {
+    this.showOnboarding = false;
+    if (this.smartflow.currentOperator) {
+      this.smartflow.currentOperator.hasOnboarded = true;
+      this.smartflow.saveOperator(this.smartflow.currentOperator);
+    }
+  }
+
   onExitAdmin() {
     this.adminService.logout();
+    this.smartflow.logout();
     this.exitAdmin.emit();
   }
 

@@ -94,11 +94,11 @@ export class SmartflowService {
     if (existing >= 0) this.operators[existing] = op;
   }
 
-  registerOperator(name: string, emoji: string): SmartflowOperator {
+  registerOperator(name: string, emoji: string, password?: string): SmartflowOperator {
     const id = 'op-' + Date.now();
     const now = this.today();
     const op: SmartflowOperator = {
-      id, name, emoji, score: 0, level: 1, levelName: 'Barba',
+      id, name, emoji, password, score: 0, level: 1, levelName: 'Barba',
       guidesCreated: 0, guidesApproved: 0, lastActivity: now, registeredAt: now,
       status: 'pending',
       hasOnboarded: false

@@ -32,37 +32,103 @@
         <div class="w-full p-8 bg-[#1E293B]/60 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.5)] rounded-[2.5rem] backdrop-blur-2xl text-[#F8FAFD]" style="animation: fadeUpCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
           <div class="flex justify-between items-center mb-8">
             <span class="text-xs font-bold tracking-widest text-[#94A3B8] uppercase">Quaderno</span>
-            <span class="text-xs font-bold tracking-widest text-[#F8FAFD] uppercase cursor-pointer hover:opacity-80">Sign up</span>
+            <span (click)="isSignUpMode = !isSignUpMode; loginError = ''; regError = ''; regSuccess = '';" class="text-xs font-bold tracking-widest text-[#F8FAFD] uppercase cursor-pointer hover:opacity-80 transition-opacity">
+              {{ isSignUpMode ? 'LOG IN' : 'SIGN UP' }}
+            </span>
           </div>
-          <h2 class="text-4xl font-light tracking-tight mb-8 text-white">Log in</h2>
-          <div class="w-full space-y-4">
-            <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
-              <div class="pl-4 pr-3 flex items-center pointer-events-none"><span class="text-[#94A3B8] font-bold">&#64;</span></div>
-              <input type="email" [(ngModel)]="loginEmail" (keyup.enter)="loginAdmin()" placeholder="e-mail address" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
-            </div>
-            <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] pr-2">
-              <div class="pl-4 pr-3 flex items-center pointer-events-none">
-                <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-              </div>
-              <input type="password" [(ngModel)]="loginPassword" (keyup.enter)="loginAdmin()" placeholder="password" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
-              <button class="px-4 py-1.5 bg-[#1E293B] rounded-full text-xs font-bold text-[#94A3B8] shadow-sm hover:text-white transition-colors flex-shrink-0">I forgot</button>
-            </div>
-          </div>
+          <h2 class="text-4xl font-light tracking-tight mb-8 text-white">{{ isSignUpMode ? 'Sign up' : 'Log in' }}</h2>
           
-          <div *ngIf="loginError" class="mt-4 text-xs font-bold text-[#F80086] text-center animate-pulse">
-            {{loginError}}
-          </div>
-
-          <div class="mt-8 flex items-center justify-between">
-            <div class="flex flex-col gap-1">
-              <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Accesso riservato al personale. In caso di problemi contatta l'amministratore.</p>
-              <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Please authenticate!</span>
+          <!-- LOGIN MODE -->
+          <ng-container *ngIf="!isSignUpMode">
+            <div class="w-full space-y-4">
+              <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none"><span class="text-[#94A3B8] font-bold">&#64;</span></div>
+                <input type="text" [(ngModel)]="loginEmail" (keyup.enter)="loginAdmin()" placeholder="Nome Utente o admin" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              </div>
+              <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] pr-2">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none">
+                  <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                </div>
+                <input type="password" [(ngModel)]="loginPassword" (keyup.enter)="loginAdmin()" placeholder="password" class="w-full py-3.5 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+                <button class="px-4 py-1.5 bg-[#1E293B] rounded-full text-xs font-bold text-[#94A3B8] shadow-sm hover:text-white transition-colors flex-shrink-0">I forgot</button>
+              </div>
             </div>
-            <button [disabled]="loginLoading" (click)="loginAdmin()" class="w-12 h-12 bg-white text-[#0F172A] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95 transition-transform flex-shrink-0 disabled:opacity-50">
-              <svg *ngIf="!loginLoading" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              <svg *ngIf="loginLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-            </button>
-          </div>
+            
+            <div *ngIf="loginError" class="mt-4 text-xs font-bold text-[#F80086] text-center animate-pulse">
+              {{loginError}}
+            </div>
+
+            <div class="mt-8 flex items-center justify-between">
+              <div class="flex flex-col gap-1">
+                <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Accesso riservato al personale. In caso di problemi contatta l'amministratore.</p>
+                <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Please authenticate!</span>
+              </div>
+              <button [disabled]="loginLoading" (click)="loginAdmin()" class="w-12 h-12 bg-white text-[#0F172A] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95 transition-transform flex-shrink-0 disabled:opacity-50 cursor-pointer">
+                <svg *ngIf="!loginLoading" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg *ngIf="loginLoading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              </button>
+            </div>
+          </ng-container>
+
+          <!-- SIGN UP MODE -->
+          <ng-container *ngIf="isSignUpMode">
+            <div class="w-full space-y-3.5">
+              <!-- Nome Utente -->
+              <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none"><span class="text-[#94A3B8] font-bold">&#64;</span></div>
+                <input type="text" [(ngModel)]="regName" placeholder="Nome Utente" class="w-full py-3 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              </div>
+
+              <!-- Emoji Avatar Selector -->
+              <div class="flex items-center justify-between px-3 py-2 rounded-2xl bg-[#0F172A]/40 border border-white/10">
+                <span class="text-xs text-[#94A3B8] font-medium pl-1">Avatar:</span>
+                <div class="flex gap-1.5 flex-wrap">
+                  <button *ngFor="let em of ['🧑‍💻','👩','🧔','🦸','🧙','🤖']" 
+                          (click)="regEmoji = em" 
+                          type="button"
+                          class="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all cursor-pointer"
+                          [ngClass]="regEmoji === em ? 'bg-[#377DFF] scale-110 shadow-md shadow-blue-500/40 border border-white/40' : 'bg-white/5 hover:bg-white/15 border border-white/5'">
+                    {{em}}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none">
+                  <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                </div>
+                <input type="password" [(ngModel)]="regPassword" placeholder="Password" class="w-full py-3 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              </div>
+
+              <!-- Conferma Password -->
+              <div class="relative flex items-center rounded-full overflow-hidden bg-[#0F172A]/50 border border-white/10 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+                <div class="pl-4 pr-3 flex items-center pointer-events-none">
+                  <svg class="w-4 h-4 text-[#94A3B8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <input type="password" [(ngModel)]="regConfirm" (keyup.enter)="signUp()" placeholder="Conferma Password" class="w-full py-3 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
+              </div>
+            </div>
+
+            <div *ngIf="regError" class="mt-4 text-xs font-bold text-[#F80086] text-center animate-pulse">
+              {{regError}}
+            </div>
+
+            <div *ngIf="regSuccess" class="mt-4 text-xs font-bold text-emerald-400 text-center animate-pulse">
+              {{regSuccess}}
+            </div>
+
+            <div class="mt-6 flex items-center justify-between">
+              <div class="flex flex-col gap-1">
+                <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Registrati come operatore SmartFlow. Richiede approvazione admin.</p>
+                <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Request access!</span>
+              </div>
+              <button (click)="signUp()" class="px-5 py-3 bg-[#377DFF] hover:bg-[#2563EB] text-white text-xs font-bold rounded-full flex items-center gap-2 shadow-[0_10px_20px_rgba(55,125,255,0.3)] hover:scale-105 active:scale-95 transition-all flex-shrink-0 cursor-pointer">
+                <span>Registrati</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </ng-container>
         </div>
         
         <!-- Dark Pill Info -->
