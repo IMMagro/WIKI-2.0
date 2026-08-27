@@ -67,6 +67,18 @@ export class SmartflowService {
     });
   }
 
+  saveToBackend(): void {
+    const payload = {
+      operators: this.operators,
+      drafts: this.drafts,
+      levels: this.levels
+    };
+    this.http.post('/api/save_smartflow.ashx', payload).subscribe({
+      next: () => console.log('Smartflow data saved successfully.'),
+      error: (err) => console.error('Failed to save smartflow data', err)
+    });
+  }
+
   // ----- Livelli -----
   getLevelForScore(score: number): SmartflowLevel {
     let result = this.levels[0];
@@ -92,6 +104,7 @@ export class SmartflowService {
   saveOperator(op: SmartflowOperator): void {
     const existing = this.operators.findIndex(o => o.id === op.id);
     if (existing >= 0) this.operators[existing] = op;
+    this.saveToBackend();
   }
 
   registerOperator(name: string, emoji: string, password?: string): SmartflowOperator {
@@ -104,6 +117,7 @@ export class SmartflowService {
       hasOnboarded: false
     };
     this.operators.push(op);
+    this.saveToBackend();
     return op;
   }
 
@@ -116,6 +130,7 @@ export class SmartflowService {
     op.level = lvl.level;
     op.levelName = lvl.name;
     op.lastActivity = this.today();
+    this.saveToBackend();
   }
 
   getLeaderboard(): SmartflowOperator[] {
@@ -139,6 +154,7 @@ export class SmartflowService {
         op.lastActivity = this.today();
       }
     }
+    this.saveToBackend();
   }
 
   // ----- Auto-classificazione tipo guida -----
