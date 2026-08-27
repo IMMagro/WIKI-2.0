@@ -361,34 +361,102 @@
 <!-- ===== TAB 3: SMARTFLOW ===== -->
 <div *ngIf="activeTab === 'smartflow'">
   
-  <div *ngIf="smartflow.currentOperatorId; else regTemplate">
-    <div class="flex items-center gap-2 mb-6 flex-wrap">
-      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
-              [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        ✍️ Crea Nuova Guida
-      </button>
-      <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
-              [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        👁️ Bozze in Revisione
-        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
-      </button>
-      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
-              [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        🏆 Classifica
+  <div *ngIf="smartflow.currentOperator; else regTemplate">
+
+    <!-- Approval Wall: In attesa di approvazione -->
+    <div *ngIf="smartflow.currentOperator.status === 'pending'" class="max-w-md mx-auto bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center mt-10">
+      <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 border border-amber-200 flex items-center justify-center text-3xl mx-auto mb-4">
+        ⏳
+      </div>
+      <h3 class="text-xl font-bold text-[#1E2022] mb-2">In attesa di approvazione dall'amministratore</h3>
+      <p class="text-sm text-[#77838F] mb-6 leading-relaxed">
+        Il tuo account operatore (<strong class="text-[#1E2022]">{{ smartflow.currentOperator.emoji }} {{ smartflow.currentOperator.name }}</strong>) è stato registrato ed è in attesa di approvazione da parte di un amministratore.
+      </p>
+      <div class="p-3.5 bg-amber-50/80 border border-amber-200 rounded-xl text-xs text-amber-800 text-left mb-6">
+        <div class="font-bold flex items-center gap-1 mb-1">
+          <span>ℹ️</span> Informazione
+        </div>
+        Non appena un amministratore approverà il profilo, potrai iniziare a creare guide e accedere alle funzionalità di SmartFlow.
+      </div>
+      <button (click)="logoutOp()" class="w-full px-4 py-2.5 bg-[#F8FAFD] hover:bg-[#EAF1FF] border border-[#E2E8F0] text-[#1E2022] font-semibold text-xs rounded-xl transition-all cursor-pointer">
+        Cambia Profilo / Esci
       </button>
     </div>
 
-    <div *ngIf="sfView === 'wizard'">
-      <app-smartflow-wizard></app-smartflow-wizard>
-    </div>
-    
-    <div *ngIf="sfView === 'review'">
-      <app-smartflow-review></app-smartflow-review>
+    <!-- Approval Wall: Richiesta Respinta -->
+    <div *ngIf="smartflow.currentOperator.status === 'rejected'" class="max-w-md mx-auto bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center mt-10">
+      <div class="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 border border-rose-200 flex items-center justify-center text-3xl mx-auto mb-4">
+        🚫
+      </div>
+      <h3 class="text-xl font-bold text-[#1E2022] mb-2">La tua richiesta è stata respinta</h3>
+      <p class="text-sm text-[#77838F] mb-6 leading-relaxed">
+        L'accesso a SmartFlow per il profilo <strong class="text-[#1E2022]">{{ smartflow.currentOperator.emoji }} {{ smartflow.currentOperator.name }}</strong> è stato respinto dall'amministratore.
+      </p>
+      <button (click)="logoutOp()" class="w-full px-4 py-2.5 bg-[#F8FAFD] hover:bg-rose-50 border border-rose-200 text-rose-700 font-semibold text-xs rounded-xl transition-all cursor-pointer">
+        Cambia Profilo / Esci
+      </button>
     </div>
 
-    <div *ngIf="sfView === 'leaderboard'">
-      <app-smartflow-leaderboard></app-smartflow-leaderboard>
+    <!-- Approved Operator View -->
+    <div *ngIf="smartflow.currentOperator.status === 'approved'">
+      <!-- Animated Onboarding Splash Screen (for first-time approved users) -->
+      <app-smartflow-onboarding *ngIf="!smartflow.currentOperator.hasOnboarded" (complete)="finishOnboarding()"></app-smartflow-onboarding>
+
+      <!-- SmartFlow Nav Tabs & Current Profile -->
+      <div class="flex items-center justify-between gap-3 mb-6 flex-wrap">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+                  [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+            ✍️ Crea Nuova Guida
+          </button>
+          <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+                  [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+            👁️ Bozze in Revisione
+            <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
+          </button>
+          <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+                  [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+            🏆 Classifica
+          </button>
+          <button (click)="sfView = 'users'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+                  [ngClass]="sfView === 'users' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+            👥 Gestione Utenti
+            <span *ngIf="smartflow.pendingOperatorsCount > 0" class="px-2 py-0.5 rounded-full text-[10px] bg-[#F80086] text-white font-bold animate-pulse">
+              {{ smartflow.pendingOperatorsCount }}
+            </span>
+          </button>
+        </div>
+
+        <!-- Operator mini indicator -->
+        <div class="flex items-center gap-2.5 bg-white/70 backdrop-blur-xl border border-white/80 px-3 py-1.5 rounded-xl shadow-sm">
+          <span class="text-base">{{ smartflow.currentOperator.emoji }}</span>
+          <div class="text-left">
+            <span class="text-xs font-bold text-[#1E2022] block leading-tight">{{ smartflow.currentOperator.name }}</span>
+            <span class="text-[10px] text-[#377DFF] font-semibold">Lvl {{ smartflow.currentOperator.level }} · {{ smartflow.currentOperator.score }} pt</span>
+          </div>
+          <button (click)="logoutOp()" title="Cambia operatore" class="ml-1 text-[#A9B4BF] hover:text-[#1E2022] text-[11px] font-bold px-2 py-0.5 hover:bg-[#F8FAFD] rounded-lg transition-colors cursor-pointer">
+            Esci
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="sfView === 'wizard'">
+        <app-smartflow-wizard></app-smartflow-wizard>
+      </div>
+      
+      <div *ngIf="sfView === 'review'">
+        <app-smartflow-review></app-smartflow-review>
+      </div>
+
+      <div *ngIf="sfView === 'leaderboard'">
+        <app-smartflow-leaderboard></app-smartflow-leaderboard>
+      </div>
+
+      <div *ngIf="sfView === 'users'">
+        <app-smartflow-users></app-smartflow-users>
+      </div>
     </div>
+
   </div>
 
 </div>
@@ -398,7 +466,7 @@
   <div class="max-w-md mx-auto bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center mt-10">
     <div class="text-4xl mb-4">🚀</div>
     <h3 class="text-2xl font-bold text-[#1E2022] mb-2">Benvenuto in SmartFlow</h3>
-    <p class="text-sm text-[#77838F] mb-6">Identificati per iniziare a creare guide e guadagnare punti.</p>
+    <p class="text-sm text-[#77838F] mb-6">Identificati o registrati per iniziare a creare guide e guadagnare punti.</p>
     
     <div class="flex flex-col gap-4 text-left">
       <div>
@@ -415,14 +483,17 @@
           </button>
         </div>
       </div>
-      <button (click)="registerOp()" [disabled]="!regName.trim()" class="w-full bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-2 transition-all cursor-pointer">Registrati & Inizia</button>
+      <button (click)="registerOp()" [disabled]="!regName.trim()" class="w-full bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-2 transition-all cursor-pointer">Registrati & Richiedi Accesso</button>
     </div>
     
     <div *ngIf="smartflow.operators.length > 0" class="mt-8 pt-6 border-t border-[#E2E8F0]">
       <p class="text-xs text-[#77838F] mb-3">Oppure accedi con un profilo esistente:</p>
       <div class="flex flex-wrap gap-2 justify-center">
-        <button *ngFor="let op of smartflow.operators" (click)="loginOp(op.id)" class="px-3 py-1.5 bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg text-xs font-bold text-[#1E2022] hover:bg-[#EAF1FF] hover:border-[#377DFF] transition-all cursor-pointer">
-          {{op.emoji}} {{op.name}}
+        <button *ngFor="let op of smartflow.operators" (click)="loginOp(op.id)" class="px-3 py-1.5 bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg text-xs font-bold text-[#1E2022] hover:bg-[#EAF1FF] hover:border-[#377DFF] transition-all cursor-pointer flex items-center gap-1.5">
+          <span>{{op.emoji}} {{op.name}}</span>
+          <span *ngIf="op.status === 'pending'" class="w-2 h-2 rounded-full bg-amber-400" title="In attesa"></span>
+          <span *ngIf="op.status === 'rejected'" class="w-2 h-2 rounded-full bg-rose-400" title="Respinto"></span>
+          <span *ngIf="op.status === 'approved'" class="w-2 h-2 rounded-full bg-emerald-400" title="Approvato"></span>
         </button>
       </div>
     </div>

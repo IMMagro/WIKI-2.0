@@ -40,6 +40,8 @@ export interface SmartflowOperator {
   guidesApproved: number;
   lastActivity: string;
   registeredAt: string;
+  status: 'pending' | 'approved' | 'rejected';
+  hasOnboarded?: boolean;
 }
 
 export interface SmartflowDraftStep {

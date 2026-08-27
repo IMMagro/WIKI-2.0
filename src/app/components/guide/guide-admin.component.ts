@@ -8,16 +8,26 @@ import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
+import { SmartflowUsersComponent } from '../smartflow/smartflow-users.component';
+import { SmartflowOnboardingComponent } from '../smartflow/smartflow-onboarding.component';
 
 @Component({
   selector: 'app-guide-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, SmartflowWizardComponent, SmartflowReviewComponent, SmartflowLeaderboardComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SmartflowWizardComponent,
+    SmartflowReviewComponent,
+    SmartflowLeaderboardComponent,
+    SmartflowUsersComponent,
+    SmartflowOnboardingComponent
+  ],
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
   activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
-  sfView: 'wizard' | 'review' | 'leaderboard' = 'wizard';
+  sfView: 'wizard' | 'review' | 'leaderboard' | 'users' = 'wizard';
 
   regName = '';
   regEmoji = '🧔';
@@ -191,6 +201,13 @@ export class GuideAdminComponent {
 
   logoutOp() {
     this.smartflow.logout();
+  }
+
+  finishOnboarding() {
+    if (this.smartflow.currentOperator) {
+      this.smartflow.currentOperator.hasOnboarded = true;
+      this.smartflow.saveOperator(this.smartflow.currentOperator);
+    }
   }
 
   // ----- Salvataggio -----

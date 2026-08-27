@@ -46,7 +46,11 @@ export class SmartflowService {
     this.http.get<SmartflowData>('Data/smartflow.json?v=' + Date.now()).subscribe({
       next: (data) => {
         if (data) {
-          this.operators = data.operators || [];
+          this.operators = (data.operators || []).map(o => ({
+            ...o,
+            status: o.status || 'approved',
+            hasOnboarded: o.hasOnboarded !== undefined ? o.hasOnboarded : true
+          }));
           this.drafts = data.drafts || [];
           if (data.levels && data.levels.length) this.levels = data.levels;
         }
@@ -77,12 +81,27 @@ export class SmartflowService {
     return this.operators.find(o => o.id === id);
   }
 
+  get pendingOperators(): SmartflowOperator[] {
+    return this.operators.filter(o => o.status === 'pending');
+  }
+
+  get pendingOperatorsCount(): number {
+    return this.pendingOperators.length;
+  }
+
+  saveOperator(op: SmartflowOperator): void {
+    const existing = this.operators.findIndex(o => o.id === op.id);
+    if (existing >= 0) this.operators[existing] = op;
+  }
+
   registerOperator(name: string, emoji: string): SmartflowOperator {
     const id = 'op-' + Date.now();
     const now = this.today();
     const op: SmartflowOperator = {
       id, name, emoji, score: 0, level: 1, levelName: 'Barba',
-      guidesCreated: 0, guidesApproved: 0, lastActivity: now, registeredAt: now
+      guidesCreated: 0, guidesApproved: 0, lastActivity: now, registeredAt: now,
+      status: 'pending',
+      hasOnboarded: false
     };
     this.operators.push(op);
     return op;
