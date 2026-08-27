@@ -1,6 +1,6 @@
 <header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
   <div>
-    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide & Pills</span></h1>
+    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide, Pills & SmartFlow</span></h1>
     <p class="text-[#77838F] mt-1 font-medium">Crea e organizza categorie, guide, FAQ e le pill in evidenza nella Home.</p>
     
     <!-- Tab Switcher -->
@@ -14,8 +14,14 @@
         ✨ Pills Home & Ricerche Frequenti
         <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'pills' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ homePills.length }}</span>
       </button>
+      <button (click)="activeTab = 'smartflow'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
+              [ngClass]="activeTab === 'smartflow' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        🚀 SmartFlow
+        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'smartflow' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ smartflow.pendingDrafts.length }}</span>
+      </button>
     </div>
   </div>
+
 
   <div class="flex items-center gap-3">
     <span *ngIf="saveMsg" class="text-sm font-semibold" [ngClass]="saveOk ? 'text-emerald-600' : 'text-[#FF4757]'">{{ saveMsg }}</span>
@@ -342,4 +348,32 @@
 
   </div>
 
+</div>
+
+<!-- ===== TAB 3: SMARTFLOW ===== -->
+<div *ngIf="activeTab === 'smartflow'" class="space-y-6">
+  <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center">
+    <div class="w-16 h-16 rounded-2xl bg-[#EAF1FF] flex items-center justify-center mx-auto mb-4">
+      <span class="text-3xl">🚀</span>
+    </div>
+    <h3 class="text-xl font-bold text-[#1E2022] mb-2">SmartFlow</h3>
+    <p class="text-sm text-[#77838F] max-w-md mx-auto mb-6">Sistema intelligente di creazione documentazione.<br>Rispondi alle domande, il sistema genera la guida.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
+      <div class="p-4 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
+        <div class="text-2xl font-bold text-[#377DFF]">{{ smartflow.operators.length }}</div>
+        <div class="text-xs text-[#77838F] font-semibold mt-1">Operatori</div>
+      </div>
+      <div class="p-4 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
+        <div class="text-2xl font-bold text-[#377DFF]">{{ smartflow.drafts.length }}</div>
+        <div class="text-xs text-[#77838F] font-semibold mt-1">Guide Create</div>
+      </div>
+      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+        <div class="text-2xl font-bold text-amber-600">{{ smartflow.pendingDrafts.length }}</div>
+        <div class="text-xs text-amber-700 font-semibold mt-1">In Attesa di Review</div>
+      </div>
+    </div>
+
+    <p class="text-xs text-[#A9B4BF] italic">Il wizard di creazione, la review e la leaderboard saranno attivati nelle prossime fasi.</p>
+  </div>
 </div>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
+import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 
 @Component({
@@ -12,7 +13,7 @@ import { Category, Guide, Faq, Step, HomePill } from './guide.models';
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
-  activeTab: 'manuals' | 'pills' = 'manuals';
+  activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
 
   selCat: Category | null = null;
   selGuide: Guide | null = null;
@@ -33,7 +34,8 @@ export class GuideAdminComponent {
   };
   iconPath(name: string): string { return this.iconPaths[name] || this.iconPaths['book']; }
 
-  constructor(public guides: GuideService, private http: HttpClient) {}
+  constructor(public guides: GuideService, public smartflow: SmartflowService, private http: HttpClient) {}
+
 
   get categories(): Category[] { return this.guides.categories; }
   get homePills(): HomePill[] { return this.guides.homePills; }

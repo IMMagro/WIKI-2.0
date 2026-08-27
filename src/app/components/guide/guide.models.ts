@@ -20,3 +20,71 @@ export interface HomePill {
   categoryId?: string;
 }
 
+// ===== SmartFlow System =====
+export interface SmartflowLevel {
+  level: number;
+  name: string;
+  emoji: string;
+  minScore: number;
+  color: string;
+}
+
+export interface SmartflowOperator {
+  id: string;
+  name: string;
+  emoji: string;
+  score: number;
+  level: number;
+  levelName: string;
+  guidesCreated: number;
+  guidesApproved: number;
+  lastActivity: string;
+  registeredAt: string;
+}
+
+export interface SmartflowDraftStep {
+  t: string;
+  img?: boolean;
+  video?: boolean;
+}
+
+export interface SmartflowDraftFaq {
+  q: string;
+  a: string;
+}
+
+export interface SmartflowDraft {
+  id: string;
+  operatorId: string;
+  type: 'breve' | 'standard' | 'lunga';
+  targetCategory: string;
+  title: string;
+  description: string;
+  problemType: 'risoluzione' | 'procedura';
+  cause?: string;
+  solution?: string;
+  steps: SmartflowDraftStep[];
+  faqs: SmartflowDraftFaq[];
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionNote?: string;
+  createdAt: string;
+  kbEntriesUsed: string[];
+}
+
+export interface KnowledgeEntry {
+  id: string;
+  topic: string;
+  category: string;
+  internalNotes: string;
+  publicSummary: string;
+  tags: string[];
+  source: 'notion' | 'operator' | 'auto';
+  createdBy?: string;
+  createdAt: string;
+}
+
+export interface SmartflowData {
+  operators: SmartflowOperator[];
+  drafts: SmartflowDraft[];
+  levels: SmartflowLevel[];
+}

@@ -1,0 +1,13 @@
+{
+  "operators": [],
+  "drafts": [],
+  "levels": [
+    { "level": 1, "name": "Barba", "emoji": "🧔", "minScore": 0, "color": "#A9B4BF" },
+    { "level": 2, "name": "Minion", "emoji": "👾", "minScore": 50, "color": "#FFD700" },
+    { "level": 3, "name": "Author", "emoji": "✍️", "minScore": 150, "color": "#10B981" },
+    { "level": 4, "name": "Expert", "emoji": "🎯", "minScore": 350, "color": "#377DFF" },
+    { "level": 5, "name": "Senior", "emoji": "🔷", "minScore": 600, "color": "#6366F1" },
+    { "level": 6, "name": "Master", "emoji": "👑", "minScore": 1000, "color": "#F80086" },
+    { "level": 7, "name": "Legend", "emoji": "🌟", "minScore": 2000, "color": "#FFD700" }
+  ]
+}
