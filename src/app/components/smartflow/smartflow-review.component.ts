@@ -103,6 +103,9 @@ export class SmartflowReviewComponent {
     }
     cat.manuals.push(newGuide);
 
+    // Save the new guide to backend immediately
+    this.guideService.saveToBackend();
+
     // Award points
     const points = this.smartflow.getPointsForType(this.selectedDraft.type);
     this.smartflow.addScore(this.selectedDraft.operatorId, points);
