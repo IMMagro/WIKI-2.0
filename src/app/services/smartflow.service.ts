@@ -73,6 +73,7 @@ export class SmartflowService {
     const op = this.getOperator(operatorId);
     if (!op) return;
     op.score += points;
+    op.guidesApproved = (op.guidesApproved || 0) + 1;
     const lvl = this.getLevelForScore(op.score);
     op.level = lvl.level;
     op.levelName = lvl.name;
@@ -94,11 +95,11 @@ export class SmartflowService {
       this.drafts[existing] = draft;
     } else {
       this.drafts.push(draft);
-    }
-    const op = this.getOperator(draft.operatorId);
-    if (op) {
-      op.guidesCreated++;
-      op.lastActivity = this.today();
+      const op = this.getOperator(draft.operatorId);
+      if (op) {
+        op.guidesCreated++;
+        op.lastActivity = this.today();
+      }
     }
   }
 

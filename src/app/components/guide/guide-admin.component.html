@@ -352,6 +352,25 @@
 
 <!-- ===== TAB 3: SMARTFLOW ===== -->
 <div *ngIf="activeTab === 'smartflow'">
-  <app-smartflow-wizard></app-smartflow-wizard>
+  
+  <div class="flex items-center gap-2 mb-6">
+    <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+            [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+      ✍️ Crea Nuova Guida
+    </button>
+    <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+            [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+      👁️ Bozze in Revisione
+      <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="sfView === 'wizard'">
+    <app-smartflow-wizard></app-smartflow-wizard>
+  </div>
+  
+  <div *ngIf="sfView === 'review'">
+    <app-smartflow-review></app-smartflow-review>
+  </div>
 </div>
 

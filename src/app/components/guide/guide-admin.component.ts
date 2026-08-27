@@ -6,15 +6,17 @@ import { GuideService } from '../../services/guide.service';
 import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
+import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 
 @Component({
   selector: 'app-guide-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, SmartflowWizardComponent],
+  imports: [CommonModule, FormsModule, SmartflowWizardComponent, SmartflowReviewComponent],
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
   activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
+  sfView: 'wizard' | 'review' | 'leaderboard' = 'wizard';
 
   selCat: Category | null = null;
   selGuide: Guide | null = null;
