@@ -135,29 +135,19 @@ export class SmartflowWizardComponent {
     if (step < this.currentStep) {
       this.currentStep = step;
     } else if (step > this.currentStep && this.canProceed()) {
-      if (step === 4 && this.autoType === 'breve') {
-        this.currentStep = 5;
-      } else {
-        this.currentStep = step;
-      }
+      this.currentStep = step;
     }
   }
 
   nextStep(): void {
     if (!this.canProceed()) return;
-    // Skip step 4 (FAQ) if auto-type is 'breve'
-    if (this.currentStep === 3 && this.autoType === 'breve') {
-      this.currentStep = 5;
-    } else if (this.currentStep < this.totalSteps) {
+    if (this.currentStep < this.totalSteps) {
       this.currentStep++;
     }
   }
 
   prevStep(): void {
-    // If we're on step 5 and type is breve, go back to step 3 (skip 4)
-    if (this.currentStep === 5 && this.autoType === 'breve') {
-      this.currentStep = 3;
-    } else if (this.currentStep > 1) {
+    if (this.currentStep > 1) {
       this.currentStep--;
     }
   }
@@ -194,7 +184,7 @@ export class SmartflowWizardComponent {
   submitDraft(): void {
     const targetCat = this.useNewCategory
       ? (this.newCategoryName.trim() || 'uncategorized')
-      : (this.selectedCategoryId || 'uncategorized');
+      : (this.selectedCategoryId || this.suggestedCategory || 'uncategorized');
 
     const draft: SmartflowDraft = {
       id: 'draft-' + Date.now(),

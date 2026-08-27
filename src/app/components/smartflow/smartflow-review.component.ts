@@ -74,7 +74,8 @@ export class SmartflowReviewComponent {
       q: f.q,
       tags: [],
       updated: new Date().toLocaleDateString('it-IT'),
-      steps: [{ t: f.a }]
+      steps: [{ t: f.a }],
+      extra: true
     }));
 
     const newGuide: Guide = {
@@ -87,15 +88,20 @@ export class SmartflowReviewComponent {
     };
 
     // Add to category
-    const cat = this.guideService.categories.find(c => c.id === this.selectedDraft!.targetCategory);
-    if (cat) {
-      cat.manuals.push(newGuide);
-    } else {
-      // Fallback to first category if not found
-      if (this.guideService.categories.length > 0) {
-        this.guideService.categories[0].manuals.push(newGuide);
-      }
+    let cat = this.guideService.categories.find(c => c.id === this.selectedDraft!.targetCategory || c.name.toLowerCase() === this.selectedDraft!.targetCategory.toLowerCase());
+    if (!cat) {
+      const newCatId = this.selectedDraft!.targetCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      cat = {
+        id: newCatId,
+        name: this.selectedDraft!.targetCategory,
+        icon: 'book',
+        accent: 'blue',
+        desc: 'Categoria creata da SmartFlow',
+        manuals: []
+      };
+      this.guideService.categories.push(cat);
     }
+    cat.manuals.push(newGuide);
 
     // Award points
     const points = this.smartflow.getPointsForType(this.selectedDraft.type);
@@ -106,6 +112,38 @@ export class SmartflowReviewComponent {
     this.smartflow.saveDraft(this.selectedDraft);
     
     this.selectedDraft = null;
+  }
+
+  copyForAI() {
+    if (!this.selectedDraft) return;
+    const d = this.selectedDraft;
+    let txt = `# BOZZA MANUALE SMARTFLOW\n\n`;
+    txt += `**Titolo**: ${d.title}\n`;
+    txt += `**Categoria**: ${this.getCategoryName(d.targetCategory)}\n`;
+    txt += `**Tipo stimato**: ${this.getTypeBadgeInfo(d.type).label}\n\n`;
+    txt += `## Descrizione\n${d.description}\n\n`;
+    if (d.problemType === 'risoluzione') {
+      txt += `**Causa**: ${d.cause}\n\n`;
+      txt += `**Soluzione**: ${d.solution}\n\n`;
+    }
+    txt += `## Passaggi Operativi\n`;
+    d.steps.forEach((s, i) => {
+      txt += `${i + 1}. ${s.t}\n`;
+      if (s.img || s.video) {
+        txt += `   *(Media richiesti: ${s.img ? 'Screenshot' : ''} ${s.video ? 'Video' : ''})*\n`;
+      }
+    });
+    if (d.faqs && d.faqs.length > 0) {
+      txt += `\n## FAQ Collegate\n`;
+      d.faqs.forEach(f => {
+        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n\n`;
+      });
+    }
+    navigator.clipboard.writeText(txt).then(() => {
+      alert('Bozza copiata negli appunti! Incollala in chat per revisione AI.');
+    }).catch(err => {
+      console.error('Errore nella copia', err);
+    });
   }
 
   reject() {
