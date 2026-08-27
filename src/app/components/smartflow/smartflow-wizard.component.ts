@@ -52,11 +52,7 @@ export class SmartflowWizardComponent {
     return cat ? cat.name : 'Non selezionata';
   }
 
-  get typeEmoji(): string {
-    if (this.autoType === 'breve') return '📗';
-    if (this.autoType === 'standard') return '📘';
-    return '📕';
-  }
+  // typeEmoji has been removed as per user request to not use emojis
 
   get typeLabel(): string {
     if (this.autoType === 'breve') return 'Guida Breve';

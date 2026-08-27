@@ -75,7 +75,8 @@
     <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
       <div>
         <h3 class="text-lg font-bold text-[#1E2022] flex items-center gap-2">
-          <span>🏆 Classifica Operatori</span>
+          <svg class="w-5 h-5 shrink-0 text-[#377DFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+          <span>Classifica Operatori</span>
           <span class="text-xs px-2 py-0.5 rounded-full bg-[#EAF1FF] text-[#377DFF] font-semibold">{{ leaderboard.length }} partecipanti</span>
         </h3>
         <p class="text-xs text-[#77838F] mt-0.5">Guadagna punti creando e facendo approvare nuove guide per salire in classifica.</p>
@@ -86,7 +87,7 @@
         <span *ngFor="let lvl of smartflow.levels" class="text-[11px] font-semibold px-2 py-0.5 rounded-md border"
               [style.borderColor]="lvl.color + '40'" [style.color]="lvl.color" [style.backgroundColor]="lvl.color + '10'"
               [title]="lvl.name + ': da ' + lvl.minScore + ' pt'">
-          {{ lvl.emoji }} {{ lvl.name }}
+          {{ lvl.name }}
         </span>
       </div>
     </div>
@@ -107,10 +108,7 @@
                         idx === 1 ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-white shadow-md' :
                         idx === 2 ? 'bg-gradient-to-br from-amber-600 to-amber-700 text-white shadow-md' :
                         'bg-[#F8FAFD] text-[#77838F] border border-[#E2E8F0]'">
-          <span *ngIf="idx === 0">🥇</span>
-          <span *ngIf="idx === 1">🥈</span>
-          <span *ngIf="idx === 2">🥉</span>
-          <span *ngIf="idx > 2">#{{ idx + 1 }}</span>
+          <span>{{ idx <= 2 ? idx + 1 : '#' + (idx + 1) }}</span>
         </div>
 
         <!-- Avatar -->

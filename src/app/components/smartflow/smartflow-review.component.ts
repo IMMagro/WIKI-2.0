@@ -37,14 +37,14 @@ export class SmartflowReviewComponent {
     return this.smartflow.getOperator(id);
   }
 
-  getTypeBadgeInfo(type: 'breve' | 'standard' | 'lunga'): { label: string; emoji: string; colorClass: string; points: number } {
+  getTypeBadgeInfo(type: 'breve' | 'standard' | 'lunga'): { label: string; colorClass: string; points: number } {
     if (type === 'breve') {
-      return { label: 'Guida Breve', emoji: '📗', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', points: 10 };
+      return { label: 'Guida Breve', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', points: 10 };
     }
     if (type === 'standard') {
-      return { label: 'Guida Standard', emoji: '📘', colorClass: 'bg-[#EAF1FF] text-[#377DFF] border-blue-200', points: 25 };
+      return { label: 'Guida Standard', colorClass: 'bg-[#EAF1FF] text-[#377DFF] border-blue-200', points: 25 };
     }
-    return { label: 'Guida Lunga', emoji: '📕', colorClass: 'bg-[#FFE9F4] text-[#F80086] border-pink-200', points: 50 };
+    return { label: 'Guida Lunga', colorClass: 'bg-[#FFE9F4] text-[#F80086] border-pink-200', points: 50 };
   }
 
   approve() {

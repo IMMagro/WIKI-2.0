@@ -5,13 +5,15 @@
     
     <!-- Tab Switcher -->
     <div class="flex items-center gap-2 mt-4">
-      <button (click)="activeTab = 'manuals'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
+      <button (click)="activeTab = 'manuals'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="activeTab === 'manuals' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        📁 Categorie & Guide
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+        Categorie & Guide
       </button>
       <button (click)="activeTab = 'pills'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="activeTab === 'pills' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        ✨ Pills Home & Ricerche Frequenti
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+        Pills Home & Ricerche Frequenti
         <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'pills' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ homePills.length }}</span>
       </button>
     </div>
@@ -263,8 +265,8 @@
           <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block mb-1">Destinazione</span>
           <select [(ngModel)]="pill.targetType" (ngModelChange)="onPillTargetTypeChange(pill)"
                   class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#1E2022] focus:outline-none focus:border-[#377DFF]">
-            <option value="category">📁 Categoria</option>
-            <option value="guide">📖 Guida Specifica</option>
+            <option value="category">Categoria</option>
+            <option value="guide">Guida Specifica</option>
           </select>
         </div>
 
@@ -358,18 +360,21 @@
   <!-- SmartFlow Nav Tabs & Current Profile -->
   <div class="flex items-center justify-between gap-3 mb-6 flex-wrap">
     <div class="flex items-center gap-2 flex-wrap">
-      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        ✍️ Crea Nuova Guida
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        Crea Nuova Guida
       </button>
       <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        👁️ Bozze in Revisione
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        Bozze in Revisione
         <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
       </button>
-      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        🏆 Classifica
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+        Classifica
       </button>
     </div>
     <!-- Operator mini indicator -->
