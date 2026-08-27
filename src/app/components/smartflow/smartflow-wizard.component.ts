@@ -71,8 +71,9 @@ export class SmartflowWizardComponent {
   // Wizard completed
   wizardComplete = false;
 
-  // Temp operator (for now, hardcoded; Phase 4 will add real registration)
-  operatorId = 'op-temp';
+  get operatorId(): string {
+    return this.smartflow.currentOperatorId || '';
+  }
 
   get categories(): Category[] {
     return this.guideService.categories;

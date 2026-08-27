@@ -24,6 +24,14 @@
 
 
   <div class="flex items-center gap-3">
+    <div *ngIf="smartflow.currentOperator" class="flex items-center gap-2 bg-[#F8FAFD] border border-[#E2E8F0] px-3 py-1.5 rounded-xl mr-4">
+      <span class="text-xl">{{ smartflow.currentOperator.emoji }}</span>
+      <div class="flex flex-col">
+        <span class="text-xs font-bold text-[#1E2022] leading-tight">{{ smartflow.currentOperator.name }}</span>
+        <span class="text-[10px] font-semibold" [style.color]="smartflow.getLevelForScore(smartflow.currentOperator.score).color">{{ smartflow.currentOperator.levelName }} • {{ smartflow.currentOperator.score }} pt</span>
+      </div>
+      <button (click)="logoutOp()" class="ml-2 text-xs text-[#77838F] hover:text-[#FF4757] cursor-pointer" title="Esci">❌</button>
+    </div>
     <span *ngIf="saveMsg" class="text-sm font-semibold" [ngClass]="saveOk ? 'text-emerald-600' : 'text-[#FF4757]'">{{ saveMsg }}</span>
     <button (click)="save()" [disabled]="saving"
             class="flex items-center gap-2 bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-60 text-white px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-medium cursor-pointer">
@@ -353,24 +361,71 @@
 <!-- ===== TAB 3: SMARTFLOW ===== -->
 <div *ngIf="activeTab === 'smartflow'">
   
-  <div class="flex items-center gap-2 mb-6">
-    <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
-            [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-      ✍️ Crea Nuova Guida
-    </button>
-    <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
-            [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-      👁️ Bozze in Revisione
-      <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
-    </button>
+  <div *ngIf="smartflow.currentOperatorId; else regTemplate">
+    <div class="flex items-center gap-2 mb-6 flex-wrap">
+      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+              [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        ✍️ Crea Nuova Guida
+      </button>
+      <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
+              [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        👁️ Bozze in Revisione
+        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
+      </button>
+      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+              [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
+        🏆 Classifica
+      </button>
+    </div>
+
+    <div *ngIf="sfView === 'wizard'">
+      <app-smartflow-wizard></app-smartflow-wizard>
+    </div>
+    
+    <div *ngIf="sfView === 'review'">
+      <app-smartflow-review></app-smartflow-review>
+    </div>
+
+    <div *ngIf="sfView === 'leaderboard'">
+      <app-smartflow-leaderboard></app-smartflow-leaderboard>
+    </div>
   </div>
 
-  <div *ngIf="sfView === 'wizard'">
-    <app-smartflow-wizard></app-smartflow-wizard>
-  </div>
-  
-  <div *ngIf="sfView === 'review'">
-    <app-smartflow-review></app-smartflow-review>
-  </div>
 </div>
+
+<!-- Registration / Login Template -->
+<ng-template #regTemplate>
+  <div class="max-w-md mx-auto bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center mt-10">
+    <div class="text-4xl mb-4">🚀</div>
+    <h3 class="text-2xl font-bold text-[#1E2022] mb-2">Benvenuto in SmartFlow</h3>
+    <p class="text-sm text-[#77838F] mb-6">Identificati per iniziare a creare guide e guadagnare punti.</p>
+    
+    <div class="flex flex-col gap-4 text-left">
+      <div>
+        <label class="block text-xs font-bold text-[#77838F] mb-1">Nome Operatore</label>
+        <input type="text" [(ngModel)]="regName" placeholder="Es. Marco R." class="w-full bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl px-4 py-2 text-sm text-[#1E2022] focus:outline-none focus:border-[#377DFF] focus:ring-1 focus:ring-[#377DFF] transition-all">
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-[#77838F] mb-1">Seleziona Avatar</label>
+        <div class="flex gap-2 justify-center flex-wrap">
+          <button *ngFor="let em of ['🧔','👩','🧑‍💻','🦸','🧙','🤖']" (click)="regEmoji = em" 
+                  class="text-2xl p-2 rounded-xl border transition-all cursor-pointer"
+                  [ngClass]="regEmoji === em ? 'bg-[#EAF1FF] border-[#377DFF]' : 'border-transparent hover:bg-slate-100'">
+            {{em}}
+          </button>
+        </div>
+      </div>
+      <button (click)="registerOp()" [disabled]="!regName.trim()" class="w-full bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-2 transition-all cursor-pointer">Registrati & Inizia</button>
+    </div>
+    
+    <div *ngIf="smartflow.operators.length > 0" class="mt-8 pt-6 border-t border-[#E2E8F0]">
+      <p class="text-xs text-[#77838F] mb-3">Oppure accedi con un profilo esistente:</p>
+      <div class="flex flex-wrap gap-2 justify-center">
+        <button *ngFor="let op of smartflow.operators" (click)="loginOp(op.id)" class="px-3 py-1.5 bg-[#F8FAFD] border border-[#E2E8F0] rounded-lg text-xs font-bold text-[#1E2022] hover:bg-[#EAF1FF] hover:border-[#377DFF] transition-all cursor-pointer">
+          {{op.emoji}} {{op.name}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
 

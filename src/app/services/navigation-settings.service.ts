@@ -28,25 +28,39 @@ export class NavigationSettingsService {
 
   constructor(private http: HttpClient) {
     this.loadSettings();
+
+    // Sincronizza automaticamente quando l'utente torna sulla scheda del browser
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focus', () => this.loadSettings());
+    }
   }
 
   loadSettings(): void {
-    this.http.get<MenuItemSetting[]>(this.apiUrl).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.warn('Failed to load navigation settings from API. Using fallback.', error.message);
-        let fallbackSettings = DEFAULT_SETTINGS;
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          try {
-            fallbackSettings = JSON.parse(stored);
-          } catch (e) {
-            console.error('Failed to parse settings from localStorage', e);
-          }
-        }
-        return of(fallbackSettings);
+    const timestamp = Date.now();
+    this.http.get<MenuItemSetting[]>(`${this.apiUrl}?t=${timestamp}`).pipe(
+      catchError(() => {
+        // Fallback 1: prova il file statico Data/navigation_settings.json
+        return this.http.get<MenuItemSetting[]>(`Data/navigation_settings.json?t=${timestamp}`).pipe(
+          catchError((error: HttpErrorResponse) => {
+            console.warn('Failed to load navigation settings from API and static file. Using localStorage/default.', error.message);
+            let fallbackSettings = DEFAULT_SETTINGS;
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+              try {
+                fallbackSettings = JSON.parse(stored);
+              } catch (e) {
+                console.error('Failed to parse settings from localStorage', e);
+              }
+            }
+            return of(fallbackSettings);
+          })
+        );
       })
     ).subscribe(settings => {
-      this.settingsSubject.next(settings);
+      if (settings && Array.isArray(settings) && settings.length > 0) {
+        this.settingsSubject.next(settings);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+      }
     });
   }
 

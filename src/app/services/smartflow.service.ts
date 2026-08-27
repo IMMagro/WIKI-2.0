@@ -5,6 +5,7 @@ import { GuideService } from './guide.service';
 
 @Injectable({ providedIn: 'root' })
 export class SmartflowService {
+  currentOperatorId: string | null = null;
   loaded = false;
   operators: SmartflowOperator[] = [];
   drafts: SmartflowDraft[] = [];
@@ -20,7 +21,25 @@ export class SmartflowService {
   kbEntries: KnowledgeEntry[] = [];
 
   constructor(private http: HttpClient, private guideService: GuideService) {
+    const savedOpId = localStorage.getItem('smartflow_operator_id');
+    if (savedOpId) {
+      this.currentOperatorId = savedOpId;
+    }
     this.load();
+  }
+
+  loginAs(id: string): void {
+    this.currentOperatorId = id;
+    localStorage.setItem('smartflow_operator_id', id);
+  }
+
+  logout(): void {
+    this.currentOperatorId = null;
+    localStorage.removeItem('smartflow_operator_id');
+  }
+
+  get currentOperator(): SmartflowOperator | undefined {
+    return this.currentOperatorId ? this.getOperator(this.currentOperatorId) : undefined;
   }
 
   load(): void {
