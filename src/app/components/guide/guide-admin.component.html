@@ -351,29 +351,7 @@
 </div>
 
 <!-- ===== TAB 3: SMARTFLOW ===== -->
-<div *ngIf="activeTab === 'smartflow'" class="space-y-6">
-  <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center">
-    <div class="w-16 h-16 rounded-2xl bg-[#EAF1FF] flex items-center justify-center mx-auto mb-4">
-      <span class="text-3xl">🚀</span>
-    </div>
-    <h3 class="text-xl font-bold text-[#1E2022] mb-2">SmartFlow</h3>
-    <p class="text-sm text-[#77838F] max-w-md mx-auto mb-6">Sistema intelligente di creazione documentazione.<br>Rispondi alle domande, il sistema genera la guida.</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-6">
-      <div class="p-4 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
-        <div class="text-2xl font-bold text-[#377DFF]">{{ smartflow.operators.length }}</div>
-        <div class="text-xs text-[#77838F] font-semibold mt-1">Operatori</div>
-      </div>
-      <div class="p-4 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0]">
-        <div class="text-2xl font-bold text-[#377DFF]">{{ smartflow.drafts.length }}</div>
-        <div class="text-xs text-[#77838F] font-semibold mt-1">Guide Create</div>
-      </div>
-      <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
-        <div class="text-2xl font-bold text-amber-600">{{ smartflow.pendingDrafts.length }}</div>
-        <div class="text-xs text-amber-700 font-semibold mt-1">In Attesa di Review</div>
-      </div>
-    </div>
-
-    <p class="text-xs text-[#A9B4BF] italic">Il wizard di creazione, la review e la leaderboard saranno attivati nelle prossime fasi.</p>
-  </div>
+<div *ngIf="activeTab === 'smartflow'">
+  <app-smartflow-wizard></app-smartflow-wizard>
 </div>
+

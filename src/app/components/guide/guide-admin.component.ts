@@ -5,11 +5,12 @@ import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
 import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
+import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 
 @Component({
   selector: 'app-guide-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SmartflowWizardComponent],
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
