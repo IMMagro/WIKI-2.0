@@ -64,6 +64,13 @@ export class SmartflowUsersComponent {
     this.showToast(`Animazione onboarding riattivata per ${op.name}`, 'success');
   }
 
+  delete(op: SmartflowOperator): void {
+    if (confirm(`Sei sicuro di voler eliminare definitivamente l'operatore "${op.name}"?`)) {
+      this.smartflow.deleteOperator(op.id);
+      this.showToast(`Operatore ${op.name} eliminato definitivamente.`, 'danger');
+    }
+  }
+
   getLevelColor(level: number): string {
     const lvl = this.smartflow.levels.find(l => l.level === level);
     return lvl ? lvl.color : '#377DFF';

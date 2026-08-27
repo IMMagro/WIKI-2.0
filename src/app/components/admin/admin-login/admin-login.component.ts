@@ -90,10 +90,10 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       return;
     }
     
-    if (this.loginEmail === 'admin') {
+    if (this.loginEmail.trim() === 'admin') {
       // Normal admin service login (Master Admin)
       this.loginLoading = true;
-      this.adminService.login(this.loginEmail, this.loginPassword).subscribe({
+      this.adminService.login(this.loginEmail.trim(), this.loginPassword).subscribe({
         next: () => {
           this.loginLoading = false;
           this.loginSuccess.emit();
@@ -105,7 +105,8 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       });
     } else {
       // Smartflow Operator login
-      const op = this.smartflow.operators.find(o => o.name === this.loginEmail && o.password === this.loginPassword);
+      const username = this.loginEmail.trim().toLowerCase();
+      const op = this.smartflow.operators.find(o => o.name.trim().toLowerCase() === username && o.password === this.loginPassword);
       if (!op) {
         this.loginError = 'Credenziali errate';
         return;
@@ -129,21 +130,29 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
     this.regError = '';
     this.regSuccess = '';
 
-    if (!this.regName || !this.regPassword || this.regPassword !== this.regConfirm) {
+    const name = this.regName.trim();
+    if (!name || !this.regPassword || this.regPassword !== this.regConfirm) {
       this.regError = 'Campi non validi o le password non coincidono';
       return;
     }
-    if (this.smartflow.operators.find(o => o.name === this.regName)) {
-      this.regError = 'Nome già in uso';
+    if (name.toLowerCase() === 'admin') {
+      this.regError = 'Il nome admin è riservato';
+      return;
+    }
+    if (this.smartflow.operators.find(o => o.name.trim().toLowerCase() === name.toLowerCase())) {
+      this.regError = 'Nome utente già in uso';
       return;
     }
 
-    this.smartflow.registerOperator(this.regName, this.regEmoji, this.regPassword);
-    this.regSuccess = 'Registrazione completata! Attendi approvazione.';
+    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword);
+    this.regSuccess = 'Registrazione completata! In attesa di approvazione.';
     setTimeout(() => {
       this.isSignUpMode = false;
       this.regSuccess = '';
-    }, 3000);
+      this.regName = '';
+      this.regPassword = '';
+      this.regConfirm = '';
+    }, 2500);
   }
 
   exitAdmin() {

@@ -44,19 +44,13 @@ export class SmartflowService {
 
   load(): void {
     this.http.get<SmartflowData>('Data/smartflow.json?v=' + Date.now()).subscribe({
-      next: (data) => {
-        if (data) {
-          this.operators = (data.operators || []).map(o => ({
-            ...o,
-            status: o.status || 'approved',
-            hasOnboarded: o.hasOnboarded !== undefined ? o.hasOnboarded : true
-          }));
-          this.drafts = data.drafts || [];
-          if (data.levels && data.levels.length) this.levels = data.levels;
-        }
-        this.loaded = true;
-      },
-      error: () => { this.loaded = true; }
+      next: (data) => this.applyData(data),
+      error: () => {
+        this.http.get<SmartflowData>('/api/save_smartflow.ashx?v=' + Date.now()).subscribe({
+          next: (data) => this.applyData(data),
+          error: () => { this.loaded = true; }
+        });
+      }
     });
 
     this.http.get<{ entries: KnowledgeEntry[] }>('Data/smartflow-kb.json?v=' + Date.now()).subscribe({
@@ -65,6 +59,19 @@ export class SmartflowService {
       },
       error: () => {}
     });
+  }
+
+  private applyData(data: SmartflowData): void {
+    if (data) {
+      this.operators = (data.operators || []).map(o => ({
+        ...o,
+        status: o.status || 'pending',
+        hasOnboarded: o.hasOnboarded !== undefined ? o.hasOnboarded : false
+      }));
+      this.drafts = data.drafts || [];
+      if (data.levels && data.levels.length) this.levels = data.levels;
+    }
+    this.loaded = true;
   }
 
   saveToBackend(): void {
@@ -104,6 +111,14 @@ export class SmartflowService {
   saveOperator(op: SmartflowOperator): void {
     const existing = this.operators.findIndex(o => o.id === op.id);
     if (existing >= 0) this.operators[existing] = op;
+    this.saveToBackend();
+  }
+
+  deleteOperator(id: string): void {
+    this.operators = this.operators.filter(o => o.id !== id);
+    if (this.currentOperatorId === id) {
+      this.logout();
+    }
     this.saveToBackend();
   }
 
