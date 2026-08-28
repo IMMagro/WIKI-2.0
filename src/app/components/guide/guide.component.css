@@ -1215,9 +1215,11 @@ h1.page.sm {
 
 /* Quando c'è un'immagine reale caricata */
 .media.img.has-img {
+  width: fit-content;
+  max-width: 100%;
   height: auto;
   max-height: none;
-  display: block;
+  display: inline-block;
   background: #ffffff;
   position: relative;
   cursor: zoom-in;
@@ -1232,7 +1234,8 @@ h1.page.sm {
 }
 
 .media.img.has-img img {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
   max-height: 520px;
   object-fit: contain;
