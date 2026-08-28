@@ -69,14 +69,26 @@ export class SmartflowReviewComponent {
       q: 'Procedura Principale',
       tags: [],
       updated: new Date().toLocaleDateString('it-IT'),
-      steps: this.selectedDraft.steps.map(s => ({ t: s.t, img: s.img, video: s.video }))
+      steps: (this.selectedDraft.steps || []).map(s => ({
+        t: s.t,
+        img: s.img,
+        imgUrl: s.imgUrl,
+        video: s.video,
+        videoUrl: s.videoUrl
+      }))
     };
 
     const extraFaqs: Faq[] = (this.selectedDraft.faqs || []).map(f => ({
       q: f.q,
       tags: [],
       updated: new Date().toLocaleDateString('it-IT'),
-      steps: [{ t: f.a }],
+      steps: [{
+        t: f.a,
+        img: f.img,
+        imgUrl: f.imgUrl,
+        video: f.video,
+        videoUrl: f.videoUrl
+      }],
       extra: true
     }));
 
@@ -90,9 +102,11 @@ export class SmartflowReviewComponent {
       faqs: []
     };
 
+    // Always include mainFaq (steps) if present
     if (this.selectedDraft.steps && this.selectedDraft.steps.length > 0) {
       newGuide.faqs.push(mainFaq);
     }
+    // Always include FAQ accordion items
     if (extraFaqs && extraFaqs.length > 0) {
       newGuide.faqs.push(...extraFaqs);
     }
@@ -205,10 +219,6 @@ export class SmartflowReviewComponent {
       // No valid frontmatter found, just use the whole text as overview
       this.selectedDraft.overview = this.importedText;
     }
-
-    // Clear steps and faqs so they aren't duplicated by approve()
-    this.selectedDraft.steps = [];
-    this.selectedDraft.faqs = [];
 
     this.showImportModal = false;
     alert('Importazione completata con successo! Clicca "Approva e Pubblica" per finalizzare.');
