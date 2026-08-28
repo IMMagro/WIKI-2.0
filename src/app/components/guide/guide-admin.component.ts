@@ -192,9 +192,13 @@ export class GuideAdminComponent {
   }
 
   // ----- FAQ / step -----
+  addProcedure() {
+    if (!this.selGuide) return;
+    this.selGuide.faqs.push({ q: 'Procedura', tags: [], updated: this.today(), extra: false, steps: [{ t: '' }] });
+  }
   addFaq() {
     if (!this.selGuide) return;
-    this.selGuide.faqs.push({ q: 'Nuova domanda', tags: [], updated: this.today(), steps: [{ t: '' }] });
+    this.selGuide.faqs.push({ q: 'Nuova domanda', tags: [], updated: this.today(), extra: true, steps: [{ t: '' }] });
   }
   deleteFaq(f: Faq) {
     if (!this.selGuide) return;
