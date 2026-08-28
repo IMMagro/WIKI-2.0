@@ -22,18 +22,26 @@ export class GuideComponent implements OnDestroy {
 
   // Lightbox Zoom Notion-style
   lightboxImg: string | null = null;
+  lightboxVideo: string | null = null;
   lightboxTitle: string = '';
   lightboxZoom: number = 1;
 
-  openLightbox(url: string, title?: string, ev?: Event) {
+  openLightbox(url: string, title: string, type: 'img' | 'video', ev?: Event) {
     if (ev) ev.stopPropagation();
-    this.lightboxImg = url;
-    this.lightboxTitle = title || 'Screenshot procedura';
+    this.lightboxTitle = title || 'Media';
     this.lightboxZoom = 1;
+    if (type === 'video') {
+      this.lightboxVideo = url;
+      this.lightboxImg = null;
+    } else {
+      this.lightboxImg = url;
+      this.lightboxVideo = null;
+    }
   }
 
   closeLightbox() {
     this.lightboxImg = null;
+    this.lightboxVideo = null;
     this.lightboxZoom = 1;
   }
 
@@ -59,7 +67,7 @@ export class GuideComponent implements OnDestroy {
 
   @HostListener('document:keydown.escape')
   onEscapePress() {
-    if (this.lightboxImg) {
+    if (this.lightboxImg || this.lightboxVideo) {
       this.closeLightbox();
     }
   }

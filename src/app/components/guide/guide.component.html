@@ -147,21 +147,15 @@
                     <div class="num">{{ si + 1 }}</div>
                     <div class="body">
                       <p [innerHTML]="s.t"></p>
-                      <div class="media img" [class.has-img]="s.imgUrl" *ngIf="s.img" (click)="s.imgUrl ? openLightbox(s.imgUrl, 'Screenshot passo ' + (si + 1), $event) : null">
-                        <img *ngIf="s.imgUrl" [src]="s.imgUrl" alt="Screenshot procedura" loading="lazy" />
-                        <span *ngIf="!s.imgUrl" class="cap">&#128247; Screenshot procedura</span>
-                        <div *ngIf="s.imgUrl" class="zoom-badge">
-                          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
-                          <span>Ingrandisci</span>
-                        </div>
-                      </div>
-                      <div class="media video" *ngIf="s.video">
-                        <video *ngIf="s.videoUrl" [src]="s.videoUrl" controls style="width: 100%; border-radius: 12px; margin-top: 10px;"></video>
-                        <ng-container *ngIf="!s.videoUrl">
-                          <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
-                          <span class="cap">&#9654; Video &middot; 0:42</span>
-                        </ng-container>
-                      </div>
+                      <button *ngIf="s.img" class="media-chip img-chip" [class.disabled]="!s.imgUrl" (click)="s.imgUrl ? openLightbox(s.imgUrl, 'Screenshot', 'img', $event) : null">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>Visualizza immagine</span>
+                      </button>
+                      
+                      <button *ngIf="s.video" class="media-chip vid-chip" [class.disabled]="!s.videoUrl" (click)="s.videoUrl ? openLightbox(s.videoUrl, 'Video', 'video', $event) : null">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Visualizza video</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -189,21 +183,15 @@
                         <div class="num">{{ si + 1 }}</div>
                         <div class="body">
                           <p [innerHTML]="s.t"></p>
-                          <div class="media img" [class.has-img]="s.imgUrl" *ngIf="s.img" (click)="s.imgUrl ? openLightbox(s.imgUrl, f.q, $event) : null">
-                            <img *ngIf="s.imgUrl" [src]="s.imgUrl" alt="Screenshot FAQ" loading="lazy" />
-                            <span *ngIf="!s.imgUrl" class="cap">&#128247; Screenshot procedura</span>
-                            <div *ngIf="s.imgUrl" class="zoom-badge">
-                              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
-                              <span>Ingrandisci</span>
-                            </div>
-                          </div>
-                          <div class="media video" *ngIf="s.video">
-                            <video *ngIf="s.videoUrl" [src]="s.videoUrl" controls style="width: 100%; border-radius: 12px; margin-top: 10px;"></video>
-                            <ng-container *ngIf="!s.videoUrl">
-                              <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
-                              <span class="cap">&#9654; Video &middot; 0:42</span>
-                            </ng-container>
-                          </div>
+                          <button *ngIf="s.img" class="media-chip img-chip" [class.disabled]="!s.imgUrl" (click)="s.imgUrl ? openLightbox(s.imgUrl, f.q, 'img', $event) : null">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            <span>Visualizza immagine</span>
+                          </button>
+                          
+                          <button *ngIf="s.video" class="media-chip vid-chip" [class.disabled]="!s.videoUrl" (click)="s.videoUrl ? openLightbox(s.videoUrl, f.q, 'video', $event) : null">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>Visualizza video</span>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -242,41 +230,50 @@
 </div>
 
 <!-- ===== Notion-Style Lightbox Modal ===== -->
-<div *ngIf="lightboxImg" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-slate-950/80 backdrop-blur-md animate-fade-in" (click)="closeLightbox()">
+<div *ngIf="lightboxImg || lightboxVideo" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-slate-950/80 backdrop-blur-md animate-fade-in" (click)="closeLightbox()">
   
-  <!-- Floating Top Controls Bar -->
+  <!-- Floating Top Controls Bar (Only show zoom for images) -->
   <div class="absolute top-5 right-5 flex items-center gap-2 z-10" (click)="$event.stopPropagation()">
-    <!-- Zoom Out -->
-    <button (click)="zoomOut($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Riduci (-)">
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
-    </button>
-    <!-- Zoom Indicator & Reset -->
-    <button (click)="resetZoom($event)" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 text-xs font-bold transition-all cursor-pointer shadow-lg" title="Reimposta zoom (100%)">
-      {{ (lightboxZoom * 100).toFixed(0) }}%
-    </button>
-    <!-- Zoom In -->
-    <button (click)="zoomIn($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Ingrandisci (+)">
-      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-    </button>
+    <ng-container *ngIf="lightboxImg">
+      <!-- Zoom Out -->
+      <button (click)="zoomOut($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Riduci (-)">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+      </button>
+      <!-- Zoom Indicator & Reset -->
+      <button (click)="resetZoom($event)" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 text-xs font-bold transition-all cursor-pointer shadow-lg" title="Reimposta zoom (100%)">
+        {{ (lightboxZoom * 100).toFixed(0) }}%
+      </button>
+      <!-- Zoom In -->
+      <button (click)="zoomIn($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Ingrandisci (+)">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      </button>
+    </ng-container>
     <!-- Close Button -->
     <button (click)="closeLightbox()" class="p-2.5 rounded-xl bg-white/20 hover:bg-rose-600 text-white backdrop-blur-lg border border-white/20 transition-all cursor-pointer shadow-lg ml-2" title="Chiudi (Esc)">
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
 
-  <!-- Image Display Box -->
+  <!-- Media Display Box -->
   <div class="relative max-w-[92vw] max-h-[85vh] overflow-auto flex items-center justify-center p-2 select-none" (click)="$event.stopPropagation()">
-    <img [src]="lightboxImg" [alt]="lightboxTitle" 
+    
+    <img *ngIf="lightboxImg" [src]="lightboxImg" [alt]="lightboxTitle" 
          class="rounded-2xl shadow-2xl transition-transform duration-200 ease-out max-w-full max-h-[80vh] object-contain border border-white/15 bg-white" 
          [style.transform]="'scale(' + lightboxZoom + ')'" 
          [style.cursor]="lightboxZoom === 1 ? 'zoom-in' : 'zoom-out'"
          (click)="toggleZoom($event)" />
+
+    <video *ngIf="lightboxVideo" [src]="lightboxVideo" controls autoplay 
+           class="rounded-2xl shadow-2xl max-w-full max-h-[80vh] object-contain border border-white/15 bg-black">
+    </video>
+
   </div>
 
   <!-- Bottom Floating Info Bar -->
   <div class="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-slate-900/70 backdrop-blur-md border border-white/15 text-xs text-white/90 font-medium pointer-events-none shadow-xl flex items-center gap-2">
-    <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    <span>{{ lightboxTitle }} &bull; Clicca sull'immagine per zoomare, o premi ESC per uscire</span>
+    <svg *ngIf="lightboxImg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <svg *ngIf="lightboxVideo" class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+    <span>{{ lightboxTitle }} &bull; {{ lightboxImg ? "Clicca sull'immagine per zoomare, o premi ESC per uscire" : "Premi ESC per chiudere il video" }}</span>
   </div>
 
 </div>
