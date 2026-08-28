@@ -1,5 +1,5 @@
 // Modello contenuti condiviso: Categoria -> Guida -> FAQ -> step
-export interface Step { t: string; img?: boolean; imgUrl?: string; video?: boolean; videoUrl?: string; }
+export interface Step { t: string; img?: boolean; imgUrl?: string; video?: boolean; videoUrl?: string; _expanded?: boolean; }
 export interface Service { name: string; desc: string; }
 export interface Faq { q: string; tags: string[]; read?: boolean; expanded?: boolean; updated: string; steps: Step[]; service?: Service; extra?: boolean; }
 export interface Guide { id: string; title: string; status: 'pub' | 'draft'; updated: string; desc: string; overview?: string; service?: Service; faqs: Faq[]; }
@@ -52,6 +52,7 @@ export interface SmartflowDraftStep {
   imgUrl?: string;
   video?: boolean;
   videoUrl?: string;
+  _expanded?: boolean;
 }
 
 export interface SmartflowDraftFaq {

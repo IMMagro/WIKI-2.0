@@ -11,20 +11,33 @@ Questa skill ti aiuta a scrivere file C# `.ashx` in modo pulito e omogeneo, gara
 
 Quando generi un nuovo file `.ashx`, devi **sempre** rispettare questo template standard:
 
-1. **Intestazioni CORS e Content-Type**
+1. **Intestazioni CORS, Content-Type e Auth Validation**
    - Assicurati di includere gli header per permettere l'accesso se il frontend è su una porta diversa in fase di sviluppo (es. `Access-Control-Allow-Origin: *`).
+   - Gestisci sempre la preflight request (`OPTIONS`) restituendo `StatusCode = 200`.
    - Imposta sempre `context.Response.ContentType = "application/json";`.
+   - **Autenticazione Obbligatoria su scritture**: Tutte le operazioni modificative (`POST`, `PUT`, `DELETE`) DEVONO verificare l'autorizzazione tramite `Auth.IsAuthorized(context)`:
+     ```csharp
+     if (!Auth.IsAuthorized(context)) {
+         context.Response.StatusCode = 401;
+         context.Response.Write("{\"error\": \"Non autorizzato: sessione mancante, non valida o scaduta\"}");
+         return;
+     }
+     ```
 
-2. **Gestione dei Verbi HTTP (GET, POST, PUT, DELETE)**
+2. **Compatibilità C# (IIS .NET 4.0)**
+   - **MAI usare sintassi C# 6.0+**: NO string interpolation (`$""`), NO null-conditional (`?.`), NO expression bodies (`=>`), NO `nameof()`.
+   - Usa sempre `string.Format("...", arg0, arg1)` o concatenazione per comporre stringhe e percorsi.
+
+3. **Gestione dei Verbi HTTP (GET, POST, PUT, DELETE)**
    - Usa `context.Request.HttpMethod` per discriminare l'operazione da eseguire.
    - Ad esempio: se è `GET`, leggi il file JSON. Se è `POST`, scrivi/aggiorna il file JSON.
 
-3. **Lettura e Scrittura File JSON**
+4. **Lettura e Scrittura File JSON**
    - I dati devono sempre essere salvati in percorsi relativi alla root del server: `context.Server.MapPath("~/Data/nomefile.json")`.
    - Utilizza i metodi standard di `System.IO.File` (`ReadAllText`, `WriteAllText`).
    - Gestisci le eccezioni: se il file non esiste, crealo al volo come array vuoto `[]`.
 
-4. **Gestione degli Errori**
+5. **Gestione degli Errori**
    - Avvolgi la logica in un blocco `try-catch`.
    - In caso di eccezione, restituisci uno status code `500` con un JSON contenente `{"error": "messaggio di errore"}`.
 
@@ -43,6 +56,12 @@ public class ApiHandler : IHttpHandler {
         context.Response.ContentType = "application/json";
         context.Response.AddHeader("Access-Control-Allow-Origin", "*");
         
+        if (context.Request.HttpMethod == "OPTIONS") {
+            context.Response.AddHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+            context.Response.StatusCode = 200;
+            return;
+        }
+
         string dataPath = context.Server.MapPath("~/Data/example.json");
         
         try {
@@ -54,6 +73,13 @@ public class ApiHandler : IHttpHandler {
                 }
             } 
             else if (context.Request.HttpMethod == "POST") {
+                // Controllo Auth su tutte le scritture
+                if (!Auth.IsAuthorized(context)) {
+                    context.Response.StatusCode = 401;
+                    context.Response.Write("{\"error\": \"Non autorizzato\"}");
+                    return;
+                }
+
                 using (var reader = new StreamReader(context.Request.InputStream)) {
                     string jsonBody = reader.ReadToEnd();
                     File.WriteAllText(dataPath, jsonBody);

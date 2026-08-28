@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
 import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
+import { parseAiDocument } from '../../services/ai-parser.util';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
@@ -99,10 +100,105 @@ export class GuideAdminComponent {
     if (this.selGuide === g) this.selGuide = null;
   }
 
+  // ----- Importazione Diretta da AI -----
+  showAiModal = false;
+  aiImportText = '';
+  targetCategoryForAi: Category | null = null;
+  isCreatingNewViaAi = false;
+
+  openAiImport(cat?: Category) {
+    if (cat) {
+      this.targetCategoryForAi = cat;
+      this.isCreatingNewViaAi = true;
+    } else {
+      this.targetCategoryForAi = this.selCat;
+      this.isCreatingNewViaAi = false;
+    }
+    this.aiImportText = '';
+    this.showAiModal = true;
+  }
+
+  applyAiImport() {
+    if (!this.aiImportText.trim()) return;
+
+    const parsed = parseAiDocument(this.aiImportText);
+
+    // Costruisci le FAQ strutturate (Procedura Principale + FAQ extra)
+    const builtFaqs: Faq[] = [];
+
+    // Se ci sono passaggi, crea la Procedura Principale (extra: false)
+    if (parsed.steps && parsed.steps.length > 0) {
+      builtFaqs.push({
+        q: 'Procedura Principale',
+        tags: [],
+        updated: this.today(),
+        steps: parsed.steps.map(s => ({
+          t: s.t,
+          img: s.img,
+          imgUrl: s.imgUrl,
+          video: s.video,
+          videoUrl: s.videoUrl
+        })),
+        extra: false
+      });
+    }
+
+    // Aggiungi le FAQ (extra: true)
+    if (parsed.faqs && parsed.faqs.length > 0) {
+      parsed.faqs.forEach(f => {
+        builtFaqs.push({
+          q: f.q,
+          tags: [],
+          updated: this.today(),
+          steps: [{
+            t: f.a,
+            img: f.img,
+            imgUrl: f.imgUrl,
+            video: f.video,
+            videoUrl: f.videoUrl
+          }],
+          extra: true
+        });
+      });
+    }
+
+    if (this.isCreatingNewViaAi && this.targetCategoryForAi) {
+      const title = parsed.title || 'Nuova Guida AI';
+      const id = this.uniqueId(title, this.targetCategoryForAi.manuals.map(g => g.id));
+      const newGuide: Guide = {
+        id,
+        title,
+        status: 'pub',
+        updated: this.today(),
+        desc: parsed.description,
+        overview: parsed.overview,
+        faqs: builtFaqs
+      };
+      this.targetCategoryForAi.manuals.push(newGuide);
+      this.expanded[this.targetCategoryForAi.id] = true;
+      this.selCat = this.targetCategoryForAi;
+      this.selGuide = newGuide;
+    } else if (this.selGuide) {
+      if (parsed.title) this.selGuide.title = parsed.title;
+      if (parsed.description) this.selGuide.desc = parsed.description;
+      this.selGuide.overview = parsed.overview;
+      if (builtFaqs.length > 0) {
+        this.selGuide.faqs = builtFaqs;
+      }
+    }
+
+    this.showAiModal = false;
+    this.aiImportText = '';
+  }
+
   // ----- FAQ / step -----
+  addProcedure() {
+    if (!this.selGuide) return;
+    this.selGuide.faqs.push({ q: 'Procedura', tags: [], updated: this.today(), extra: false, steps: [{ t: '' }] });
+  }
   addFaq() {
     if (!this.selGuide) return;
-    this.selGuide.faqs.push({ q: 'Nuova domanda', tags: [], updated: this.today(), steps: [{ t: '' }] });
+    this.selGuide.faqs.push({ q: 'Nuova domanda', tags: [], updated: this.today(), extra: true, steps: [{ t: '' }] });
   }
   deleteFaq(f: Faq) {
     if (!this.selGuide) return;

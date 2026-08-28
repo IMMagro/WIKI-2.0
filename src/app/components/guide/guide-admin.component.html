@@ -120,7 +120,13 @@
       <div class="mt-6 pt-5 border-t border-[#E2E8F0]">
         <div class="flex items-center justify-between mb-3">
           <span class="text-xs font-bold text-[#77838F] uppercase tracking-wide">Guide della categoria ({{ selCat.manuals.length }})</span>
-          <button (click)="addGuide(selCat)" class="text-xs font-semibold text-[#377DFF] hover:underline">+ Nuova guida</button>
+          <div class="flex items-center gap-2">
+            <button (click)="openAiImport(selCat)" class="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-all cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              Crea da AI
+            </button>
+            <button (click)="addGuide(selCat)" class="text-xs font-semibold text-[#377DFF] hover:underline">+ Nuova guida</button>
+          </div>
         </div>
         <div *ngIf="selCat.manuals.length === 0" class="text-sm text-[#A9B4BF]">Nessuna guida. Creane una.</div>
         <button *ngFor="let g of selCat.manuals" (click)="selectGuide(selCat, g)" class="flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-xl hover:bg-[#F8FAFD] border border-transparent hover:border-[#E2E8F0] transition-all mb-1">
@@ -135,15 +141,21 @@
     <div *ngIf="selGuide" class="space-y-6">
       <!-- Campi guida -->
       <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-        <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
           <h3 class="text-sm font-bold text-[#1E2022] uppercase tracking-wider">Guida <span class="text-[#A9B4BF] font-medium normal-case">· {{ selCat?.name }}</span></h3>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-[#77838F]">Stato</span>
-            <button (click)="selGuide.status = selGuide.status === 'pub' ? 'draft' : 'pub'"
-                    class="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
-                    [ngClass]="selGuide.status === 'pub' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
-              {{ selGuide.status === 'pub' ? 'Pubblicato' : 'Bozza' }}
+          <div class="flex items-center gap-3">
+            <button (click)="openAiImport()" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 rounded-xl text-xs font-bold transition-all cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              Importa da AI
             </button>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-[#77838F]">Stato</span>
+              <button (click)="selGuide.status = selGuide.status === 'pub' ? 'draft' : 'pub'"
+                      class="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
+                      [ngClass]="selGuide.status === 'pub' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'">
+                {{ selGuide.status === 'pub' ? 'Pubblicato' : 'Bozza' }}
+              </button>
+            </div>
           </div>
         </div>
         <div class="grid gap-5">
@@ -165,22 +177,33 @@
       <!-- FAQ -->
       <div class="bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-sm font-bold text-[#1E2022] uppercase tracking-wider">Domande (FAQ) · {{ selGuide.faqs.length }}</h3>
-          <button (click)="addFaq()" class="flex items-center gap-1.5 text-sm font-semibold text-[#377DFF] hover:bg-[#F0F5FF] px-3 py-1.5 rounded-lg transition-colors">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            Nuova FAQ
-          </button>
+          <h3 class="text-sm font-bold text-[#1E2022] uppercase tracking-wider">Blocchi (Procedure e FAQ) • {{ selGuide.faqs.length }}</h3>
+          <div class="flex items-center gap-2">
+            <button (click)="addProcedure()" class="flex items-center gap-1.5 text-sm font-semibold text-[#10B981] hover:bg-[#D1FAE5] px-3 py-1.5 rounded-lg transition-colors">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              Nuova Procedura
+            </button>
+            <button (click)="addFaq()" class="flex items-center gap-1.5 text-sm font-semibold text-[#377DFF] hover:bg-[#F0F5FF] px-3 py-1.5 rounded-lg transition-colors">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              Nuova FAQ
+            </button>
+          </div>
         </div>
 
-        <div *ngIf="selGuide.faqs.length === 0" class="text-sm text-[#A9B4BF] py-4">Nessuna FAQ. Aggiungi la prima domanda.</div>
+        <div *ngIf="selGuide.faqs.length === 0" class="text-sm text-[#A9B4BF] py-4">Nessun blocco. Aggiungi una procedura o una FAQ.</div>
 
-        <div *ngFor="let f of selGuide.faqs; let fi = index" class="border border-[#E2E8F0] rounded-2xl p-4 mb-4 bg-[#F8FAFD]/40">
-          <div class="flex items-start gap-3 mb-3">
+        <div *ngFor="let f of selGuide.faqs; let fi = index" class="border border-[#E2E8F0] rounded-2xl p-4 mb-4 bg-[#F8FAFD]/40 relative" [ngClass]="{'border-l-4 border-l-[#10B981]': !f.extra, 'border-l-4 border-l-[#377DFF]': f.extra}">
+          <div class="flex items-start gap-3 mb-2">
             <span class="w-7 h-7 rounded-lg bg-[#EAF1FF] text-[#377DFF] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{{ fi + 1 }}</span>
-            <input type="text" [(ngModel)]="f.q" placeholder="Domanda" class="flex-1 px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] font-semibold">
-            <button (click)="deleteFaq(f)" title="Elimina FAQ" class="p-2 text-[#A9B4BF] hover:text-[#FF4757] transition-colors shrink-0">
+            <input type="text" [(ngModel)]="f.q" placeholder="Titolo (o Domanda FAQ)" class="flex-1 px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-[#1E2022] font-semibold">
+            <button (click)="deleteFaq(f)" title="Elimina Blocco" class="p-2 text-[#A9B4BF] hover:text-[#FF4757] transition-colors shrink-0">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
+          </div>
+
+          <div class="ml-10 mb-3 flex items-center gap-2">
+            <input type="checkbox" [(ngModel)]="f.extra" id="extra_{{fi}}" class="w-4 h-4 text-[#377DFF] rounded border-gray-300 focus:ring-[#377DFF]">
+            <label for="extra_{{fi}}" class="text-xs font-semibold text-[#4A5568]">Mostra come FAQ aggiuntiva (menu a tendina)</label>
           </div>
 
           <label class="block ml-10 mb-3">
@@ -205,8 +228,18 @@
                       Immagine
                     </label>
                     <div *ngIf="s.img" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
-                      <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#EAF1FF] file:text-[#377DFF] hover:file:bg-[#D6E4FF]" />
-                      <span *ngIf="s.imgUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.imgUrl}}">Caricata</span>
+                      <ng-container *ngIf="!s.imgUrl">
+                        <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#EAF1FF] file:text-[#377DFF] hover:file:bg-[#D6E4FF]" />
+                      </ng-container>
+                      <ng-container *ngIf="s.imgUrl">
+                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="{{s.imgUrl}}">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Inclusa
+                        </span>
+                        <label class="text-[10px] font-semibold text-[#377DFF] hover:underline cursor-pointer ml-1">
+                          Modifica
+                          <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="hidden" />
+                        </label>
+                      </ng-container>
                     </div>
                   </div>
                   
@@ -217,8 +250,18 @@
                       Video
                     </label>
                     <div *ngIf="s.video" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
-                      <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#FFE9F4] file:text-[#F80086] hover:file:bg-[#FFD4E9]" />
-                      <span *ngIf="s.videoUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.videoUrl}}">Caricato</span>
+                      <ng-container *ngIf="!s.videoUrl">
+                        <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#FFE9F4] file:text-[#F80086] hover:file:bg-[#FFD4E9]" />
+                      </ng-container>
+                      <ng-container *ngIf="s.videoUrl">
+                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="{{s.videoUrl}}">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Incluso
+                        </span>
+                        <label class="text-[10px] font-semibold text-[#F80086] hover:underline cursor-pointer ml-1">
+                          Modifica
+                          <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="hidden" />
+                        </label>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
@@ -412,5 +455,39 @@
     <app-smartflow-leaderboard></app-smartflow-leaderboard>
   </div>
 
+</div>
+
+<!-- Modal Importa Direttamente da AI -->
+<div *ngIf="showAiModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+  <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-slate-100 flex flex-col gap-5">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+        <div>
+          <h4 class="text-base font-bold text-[#1E2022]">Importa Guida da AI</h4>
+          <p class="text-xs text-[#77838F]">Incolla il testo MDX generato dall'assistente per compilare automaticamente la guida</p>
+        </div>
+      </div>
+      <button (click)="showAiModal = false" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <div>
+      <textarea [(ngModel)]="aiImportText" rows="12" placeholder="Incolla qui il codice MDX (con frontmatter YAML e corpo HTML)..." class="w-full bg-[#F8FAFD] border border-[#E2E8F0] rounded-2xl p-4 text-xs font-mono text-[#1E2022] focus:outline-none focus:border-[#377DFF] focus:ring-1 focus:ring-[#377DFF] resize-y"></textarea>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-2 border-t border-[#E2E8F0]">
+      <button (click)="showAiModal = false" class="px-5 py-2.5 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#77838F] hover:bg-slate-50 transition-colors cursor-pointer">
+        Annulla
+      </button>
+      <button (click)="applyAiImport()" [disabled]="!aiImportText.trim()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-xs font-bold text-white shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+        Conferma e Applica
+      </button>
+    </div>
+  </div>
 </div>
 

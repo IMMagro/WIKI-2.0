@@ -1190,8 +1190,8 @@ h1.page.sm {
 }
 
 .media {
-  margin-top: 10px;
-  border-radius: 12px;
+  margin-top: 12px;
+  border-radius: 14px;
   border: 1px solid var(--line);
   overflow: hidden;
   width: 100%;
@@ -1212,6 +1212,66 @@ h1.page.sm {
     max-height: 240px;
   }
 }
+
+/* Quando c'è un'immagine reale caricata */
+.media.img.has-img {
+  width: fit-content;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  display: inline-block;
+  background: #ffffff;
+  position: relative;
+  cursor: zoom-in;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.05);
+}
+
+.media.img.has-img:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -6px rgba(55, 125, 255, 0.15);
+  border-color: rgba(55, 125, 255, 0.4);
+}
+
+.media.img.has-img img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 520px;
+  object-fit: contain;
+  display: block;
+  border-radius: 13px;
+  margin: 0;
+  padding: 0;
+}
+
+.media.img.has-img .zoom-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(30, 32, 34, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.media.img.has-img:hover .zoom-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .media.img .cap {
   color: var(--muted);
   font-size: 10.5px;
