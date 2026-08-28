@@ -139,7 +139,11 @@ export class SmartflowReviewComponent {
     if (d.faqs && d.faqs.length > 0) {
       txt += `\n## FAQ Collegate\n`;
       d.faqs.forEach(f => {
-        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n\n`;
+        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n`;
+        if (f.img || f.video) {
+          txt += `   *(Media richiesti: ${f.img ? 'Screenshot ' : ''}${f.video ? 'Video ' : ''})*\n`;
+        }
+        txt += `\n`;
       });
     }
     navigator.clipboard.writeText(txt).then(() => {
