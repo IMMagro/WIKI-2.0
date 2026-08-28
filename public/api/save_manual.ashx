@@ -53,7 +53,7 @@ public class SaveManual : IHttpHandler {
                         return;
                     }
 
-                    string folderPath = context.Server.MapPath($"~/Data/docs/{category}/{id}");
+                    string folderPath = context.Server.MapPath(string.Format("~/Data/docs/{0}/{1}", category, id));
                     if (!Directory.Exists(folderPath)) {
                         Directory.CreateDirectory(folderPath);
                     }
