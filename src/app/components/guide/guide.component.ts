@@ -61,6 +61,9 @@ export class GuideComponent implements OnDestroy {
   get extraFaqs(): Faq[] {
     return (this.curGuide?.faqs || []).filter((f: Faq) => f.extra === true);
   }
+  get mainProcedure(): Faq | undefined {
+    return (this.curGuide?.faqs || []).find((f: Faq) => !f.extra);
+  }
   get hasExtraFaqs(): boolean {
     return this.extraFaqs.length > 0;
   }

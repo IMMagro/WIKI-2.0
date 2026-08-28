@@ -132,7 +132,37 @@
                 <span class="qtag man">Guida</span>
               </div>
               <h2 class="artTitle">{{ g.title }}</h2>
-              <div class="prose" [innerHTML]="g.overview || ('<p>' + g.desc + '</p>')"></div>
+              
+              <!-- Se c'è una panoramica MDX, mostrala -->
+              <div *ngIf="g.overview" class="prose" [innerHTML]="g.overview"></div>
+              
+              <!-- Altrimenti mostra la descrizione breve e la procedura principale -->
+              <ng-container *ngIf="!g.overview">
+                <div class="prose"><p>{{ g.desc }}</p></div>
+                
+                <div *ngIf="mainProcedure && mainProcedure.steps && mainProcedure.steps.length > 0" class="mt-8">
+                  <div class="faqhead" style="margin-bottom: 20px;">Passaggi Operativi <span class="ln"></span></div>
+                  <div class="steps" style="margin-top: 0;">
+                    <div class="step" *ngFor="let s of mainProcedure.steps; let si = index; trackBy: trackByStep">
+                      <div class="num">{{ si + 1 }}</div>
+                      <div class="body">
+                        <p [innerHTML]="s.t"></p>
+                        <div class="media img" *ngIf="s.img">
+                          <img *ngIf="s.imgUrl" [src]="s.imgUrl" alt="Screenshot" style="width: 100%; border-radius: 8px; margin-top: 10px;" />
+                          <span *ngIf="!s.imgUrl" class="cap">&#128247; Screenshot procedura</span>
+                        </div>
+                        <div class="media video" *ngIf="s.video">
+                          <video *ngIf="s.videoUrl" [src]="s.videoUrl" controls style="width: 100%; border-radius: 8px; margin-top: 10px;"></video>
+                          <ng-container *ngIf="!s.videoUrl">
+                            <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
+                            <span class="cap">&#9654; Video &middot; 0:42</span>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
               
               <ng-container *ngIf="hasExtraFaqs">
                 <div class="faqhead">Domande e casi particolari <span class="ln"></span></div>
@@ -156,10 +186,16 @@
                         <div class="num">{{ si + 1 }}</div>
                         <div class="body">
                           <p [innerHTML]="s.t"></p>
-                          <div class="media img" *ngIf="s.img"><span class="cap">&#128247; Screenshot procedura</span></div>
+                          <div class="media img" *ngIf="s.img">
+                            <img *ngIf="s.imgUrl" [src]="s.imgUrl" alt="Screenshot" style="width: 100%; border-radius: 8px; margin-top: 10px;" />
+                            <span *ngIf="!s.imgUrl" class="cap">&#128247; Screenshot procedura</span>
+                          </div>
                           <div class="media video" *ngIf="s.video">
-                            <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
-                            <span class="cap">&#9654; Video &middot; 0:42</span>
+                            <video *ngIf="s.videoUrl" [src]="s.videoUrl" controls style="width: 100%; border-radius: 8px; margin-top: 10px;"></video>
+                            <ng-container *ngIf="!s.videoUrl">
+                              <div class="play"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></div>
+                              <span class="cap">&#9654; Video &middot; 0:42</span>
+                            </ng-container>
                           </div>
                         </div>
                       </div>

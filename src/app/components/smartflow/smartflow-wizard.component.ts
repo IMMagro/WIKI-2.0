@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SmartflowService } from '../../services/smartflow.service';
 import { GuideService } from '../../services/guide.service';
+import { HttpClient } from '@angular/common/http';
 import { SmartflowDraft, SmartflowDraftStep, SmartflowDraftFaq, Category } from '../guide/guide.models';
 
 @Component({
@@ -89,7 +90,7 @@ export class SmartflowWizardComponent {
     return this.iconPaths[name] || this.iconPaths['book'];
   }
 
-  constructor(public smartflow: SmartflowService, public guideService: GuideService) {}
+  constructor(public smartflow: SmartflowService, public guideService: GuideService, private http: HttpClient) {}
 
   selectCategory(catId: string): void {
     this.selectedCategoryId = catId;
@@ -201,6 +202,35 @@ export class SmartflowWizardComponent {
 
     this.smartflow.saveDraft(draft);
     this.wizardComplete = true;
+  }
+
+  async uploadMedia(event: any, type: 'img' | 'video', item: SmartflowDraftStep | SmartflowDraftFaq) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Use a placeholder ID for drafts since they aren't published guides yet
+    const draftId = 'draft-' + Date.now();
+    const category = this.selectedCategoryId || 'new-category';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category', category);
+    formData.append('id', draftId);
+
+    try {
+      const res = await this.http.post<{success: boolean, url: string}>('api/upload_asset.ashx', formData).toPromise();
+      if (res && res.success) {
+         if (type === 'img') {
+           item.img = true;
+           (item as any).imgUrl = res.url;
+         } else {
+           item.video = true;
+           (item as any).videoUrl = res.url;
+         }
+      }
+    } catch(e) {
+      alert("Errore durante il caricamento del file.");
+    }
   }
 
   // Reset wizard for another draft
