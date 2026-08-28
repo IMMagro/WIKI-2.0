@@ -228,8 +228,18 @@
                       Immagine
                     </label>
                     <div *ngIf="s.img" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
-                      <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#EAF1FF] file:text-[#377DFF] hover:file:bg-[#D6E4FF]" />
-                      <span *ngIf="s.imgUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.imgUrl}}">Caricata</span>
+                      <ng-container *ngIf="!s.imgUrl">
+                        <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#EAF1FF] file:text-[#377DFF] hover:file:bg-[#D6E4FF]" />
+                      </ng-container>
+                      <ng-container *ngIf="s.imgUrl">
+                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="{{s.imgUrl}}">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Inclusa
+                        </span>
+                        <label class="text-[10px] font-semibold text-[#377DFF] hover:underline cursor-pointer ml-1">
+                          Modifica
+                          <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="hidden" />
+                        </label>
+                      </ng-container>
                     </div>
                   </div>
                   
@@ -240,8 +250,18 @@
                       Video
                     </label>
                     <div *ngIf="s.video" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
-                      <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#FFE9F4] file:text-[#F80086] hover:file:bg-[#FFD4E9]" />
-                      <span *ngIf="s.videoUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.videoUrl}}">Caricato</span>
+                      <ng-container *ngIf="!s.videoUrl">
+                        <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#FFE9F4] file:text-[#F80086] hover:file:bg-[#FFD4E9]" />
+                      </ng-container>
+                      <ng-container *ngIf="s.videoUrl">
+                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md flex items-center gap-1" title="{{s.videoUrl}}">
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg> Incluso
+                        </span>
+                        <label class="text-[10px] font-semibold text-[#F80086] hover:underline cursor-pointer ml-1">
+                          Modifica
+                          <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="hidden" />
+                        </label>
+                      </ng-container>
                     </div>
                   </div>
                 </div>
