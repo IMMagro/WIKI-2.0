@@ -89,7 +89,7 @@ export class GuideService {
   /** Carica l'albero reale da /Data/guides.json o /api/get_guides.ashx. */
   load(): void {
     // Prova prima il file statico Data/guides.json (funziona sia su ng serve che su IIS)
-    this.http.get<any>('Data/guides.json?v=' + Date.now()).subscribe({
+    this.http.get<any>('/Data/guides.json?v=' + Date.now()).subscribe({
       next: (data) => {
         if (data && Array.isArray(data.categories) && data.categories.length) {
           this.categories = data.categories;

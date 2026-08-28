@@ -212,7 +212,7 @@ export class GuideAdminComponent {
     try {
       const token = sessionStorage.getItem('adminToken');
       const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
-      const res = await this.http.post<{success: boolean, url: string}>('api/upload_asset.ashx', formData, { headers }).toPromise();
+      const res = await this.http.post<{success: boolean, url: string}>('/api/upload_asset.ashx', formData, { headers }).toPromise();
       if (res && res.success) {
          if (type === 'img') {
            step.img = true;

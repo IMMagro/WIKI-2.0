@@ -43,7 +43,7 @@ export class SmartflowService {
   }
 
   load(): void {
-    this.http.get<SmartflowData>('Data/smartflow.json?v=' + Date.now()).subscribe({
+    this.http.get<SmartflowData>('/Data/smartflow.json?v=' + Date.now()).subscribe({
       next: (data) => this.applyData(data),
       error: () => {
         this.http.get<SmartflowData>('/api/save_smartflow.ashx?v=' + Date.now()).subscribe({
@@ -53,7 +53,7 @@ export class SmartflowService {
       }
     });
 
-    this.http.get<{ entries: KnowledgeEntry[] }>('Data/smartflow-kb.json?v=' + Date.now()).subscribe({
+    this.http.get<{ entries: KnowledgeEntry[] }>('/Data/smartflow-kb.json?v=' + Date.now()).subscribe({
       next: (data) => {
         if (data && data.entries) this.kbEntries = data.entries;
       },
