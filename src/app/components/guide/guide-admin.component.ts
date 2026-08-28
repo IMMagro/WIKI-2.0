@@ -99,6 +99,76 @@ export class GuideAdminComponent {
     if (this.selGuide === g) this.selGuide = null;
   }
 
+  // ----- Importazione Diretta da AI -----
+  showAiModal = false;
+  aiImportText = '';
+  targetCategoryForAi: Category | null = null;
+  isCreatingNewViaAi = false;
+
+  openAiImport(cat?: Category) {
+    if (cat) {
+      this.targetCategoryForAi = cat;
+      this.isCreatingNewViaAi = true;
+    } else {
+      this.targetCategoryForAi = this.selCat;
+      this.isCreatingNewViaAi = false;
+    }
+    this.aiImportText = '';
+    this.showAiModal = true;
+  }
+
+  applyAiImport() {
+    if (!this.aiImportText.trim()) return;
+
+    let parsedTitle = '';
+    let parsedDesc = '';
+    let parsedOverview = '';
+
+    // Parse YAML frontmatter
+    const titleMatch = this.aiImportText.match(/title:\s*"(.*?)"/);
+    if (titleMatch && titleMatch[1]) {
+      parsedTitle = titleMatch[1];
+    }
+
+    const descMatch = this.aiImportText.match(/description:\s*"(.*?)"/);
+    if (descMatch && descMatch[1]) {
+      parsedDesc = descMatch[1];
+    }
+
+    // Extract HTML body (everything after the second ---)
+    const parts = this.aiImportText.split('---');
+    if (parts.length >= 3) {
+      parsedOverview = parts.slice(2).join('---').trim();
+    } else {
+      parsedOverview = this.aiImportText.trim();
+    }
+
+    if (this.isCreatingNewViaAi && this.targetCategoryForAi) {
+      const title = parsedTitle || 'Nuova Guida AI';
+      const id = this.uniqueId(title, this.targetCategoryForAi.manuals.map(g => g.id));
+      const newGuide: Guide = {
+        id,
+        title,
+        status: 'pub',
+        updated: this.today(),
+        desc: parsedDesc,
+        overview: parsedOverview,
+        faqs: []
+      };
+      this.targetCategoryForAi.manuals.push(newGuide);
+      this.expanded[this.targetCategoryForAi.id] = true;
+      this.selCat = this.targetCategoryForAi;
+      this.selGuide = newGuide;
+    } else if (this.selGuide) {
+      if (parsedTitle) this.selGuide.title = parsedTitle;
+      if (parsedDesc) this.selGuide.desc = parsedDesc;
+      this.selGuide.overview = parsedOverview;
+    }
+
+    this.showAiModal = false;
+    this.aiImportText = '';
+  }
+
   // ----- FAQ / step -----
   addFaq() {
     if (!this.selGuide) return;
@@ -210,7 +280,9 @@ export class GuideAdminComponent {
     formData.append('id', this.selGuide.id);
 
     try {
-      const res = await this.http.post<{success: boolean, url: string}>('api/upload_asset.ashx', formData).toPromise();
+      const token = sessionStorage.getItem('adminToken');
+      const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+      const res = await this.http.post<{success: boolean, url: string}>('/api/upload_asset.ashx', formData, { headers }).toPromise();
       if (res && res.success) {
          if (type === 'img') {
            step.img = true;
