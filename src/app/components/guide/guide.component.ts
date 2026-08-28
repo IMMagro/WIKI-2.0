@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GuideService } from '../../services/guide.service';
 import { GuideTrackerService } from '../../services/guide-tracker.service';
@@ -19,6 +19,50 @@ export class GuideComponent implements OnDestroy {
   selCat: string | null = null;
   selGuide: string | null = null;
   selFaq = -1; // -1 = panoramica della guida
+
+  // Lightbox Zoom Notion-style
+  lightboxImg: string | null = null;
+  lightboxTitle: string = '';
+  lightboxZoom: number = 1;
+
+  openLightbox(url: string, title?: string, ev?: Event) {
+    if (ev) ev.stopPropagation();
+    this.lightboxImg = url;
+    this.lightboxTitle = title || 'Screenshot procedura';
+    this.lightboxZoom = 1;
+  }
+
+  closeLightbox() {
+    this.lightboxImg = null;
+    this.lightboxZoom = 1;
+  }
+
+  zoomIn(e?: Event) {
+    if (e) e.stopPropagation();
+    this.lightboxZoom = Math.min(+(this.lightboxZoom + 0.25).toFixed(2), 3);
+  }
+
+  zoomOut(e?: Event) {
+    if (e) e.stopPropagation();
+    this.lightboxZoom = Math.max(+(this.lightboxZoom - 0.25).toFixed(2), 0.5);
+  }
+
+  resetZoom(e?: Event) {
+    if (e) e.stopPropagation();
+    this.lightboxZoom = 1;
+  }
+
+  toggleZoom(e?: Event) {
+    if (e) e.stopPropagation();
+    this.lightboxZoom = this.lightboxZoom === 1 ? 1.75 : 1;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapePress() {
+    if (this.lightboxImg) {
+      this.closeLightbox();
+    }
+  }
 
   // Popup servizio consigliato
   svcVisible = false;
