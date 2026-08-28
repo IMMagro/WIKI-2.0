@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
 import { SmartflowService } from '../../services/smartflow.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
+import { parseAiDocument } from '../../services/ai-parser.util';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
@@ -120,49 +121,70 @@ export class GuideAdminComponent {
   applyAiImport() {
     if (!this.aiImportText.trim()) return;
 
-    let parsedTitle = '';
-    let parsedDesc = '';
-    let parsedOverview = '';
+    const parsed = parseAiDocument(this.aiImportText);
 
-    // Parse YAML frontmatter
-    const titleMatch = this.aiImportText.match(/title:\s*"(.*?)"/);
-    if (titleMatch && titleMatch[1]) {
-      parsedTitle = titleMatch[1];
+    // Costruisci le FAQ strutturate (Procedura Principale + FAQ extra)
+    const builtFaqs: Faq[] = [];
+
+    // Se ci sono passaggi, crea la Procedura Principale (extra: false)
+    if (parsed.steps && parsed.steps.length > 0) {
+      builtFaqs.push({
+        q: 'Procedura Principale',
+        tags: [],
+        updated: this.today(),
+        steps: parsed.steps.map(s => ({
+          t: s.t,
+          img: s.img,
+          imgUrl: s.imgUrl,
+          video: s.video,
+          videoUrl: s.videoUrl
+        })),
+        extra: false
+      });
     }
 
-    const descMatch = this.aiImportText.match(/description:\s*"(.*?)"/);
-    if (descMatch && descMatch[1]) {
-      parsedDesc = descMatch[1];
-    }
-
-    // Extract HTML body (everything after the second ---)
-    const parts = this.aiImportText.split('---');
-    if (parts.length >= 3) {
-      parsedOverview = parts.slice(2).join('---').trim();
-    } else {
-      parsedOverview = this.aiImportText.trim();
+    // Aggiungi le FAQ (extra: true)
+    if (parsed.faqs && parsed.faqs.length > 0) {
+      parsed.faqs.forEach(f => {
+        builtFaqs.push({
+          q: f.q,
+          tags: [],
+          updated: this.today(),
+          steps: [{
+            t: f.a,
+            img: f.img,
+            imgUrl: f.imgUrl,
+            video: f.video,
+            videoUrl: f.videoUrl
+          }],
+          extra: true
+        });
+      });
     }
 
     if (this.isCreatingNewViaAi && this.targetCategoryForAi) {
-      const title = parsedTitle || 'Nuova Guida AI';
+      const title = parsed.title || 'Nuova Guida AI';
       const id = this.uniqueId(title, this.targetCategoryForAi.manuals.map(g => g.id));
       const newGuide: Guide = {
         id,
         title,
         status: 'pub',
         updated: this.today(),
-        desc: parsedDesc,
-        overview: parsedOverview,
-        faqs: []
+        desc: parsed.description,
+        overview: parsed.overview,
+        faqs: builtFaqs
       };
       this.targetCategoryForAi.manuals.push(newGuide);
       this.expanded[this.targetCategoryForAi.id] = true;
       this.selCat = this.targetCategoryForAi;
       this.selGuide = newGuide;
     } else if (this.selGuide) {
-      if (parsedTitle) this.selGuide.title = parsedTitle;
-      if (parsedDesc) this.selGuide.desc = parsedDesc;
-      this.selGuide.overview = parsedOverview;
+      if (parsed.title) this.selGuide.title = parsed.title;
+      if (parsed.description) this.selGuide.desc = parsed.description;
+      this.selGuide.overview = parsed.overview;
+      if (builtFaqs.length > 0) {
+        this.selGuide.faqs = builtFaqs;
+      }
     }
 
     this.showAiModal = false;

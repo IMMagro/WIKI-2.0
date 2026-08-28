@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SmartflowService } from '../../services/smartflow.service';
 import { GuideService } from '../../services/guide.service';
 import { SmartflowDraft, Guide, Faq, Step, SmartflowOperator } from '../guide/guide.models';
+import { parseAiDocument } from '../../services/ai-parser.util';
 
 @Component({
   selector: 'app-smartflow-review',
@@ -196,28 +197,35 @@ export class SmartflowReviewComponent {
   importFromAI() {
     if (!this.selectedDraft || !this.importedText) return;
     
-    // Parse YAML frontmatter
-    const titleMatch = this.importedText.match(/title:\s*"(.*?)"/);
-    if (titleMatch && titleMatch[1]) {
-      this.selectedDraft.title = titleMatch[1];
+    const parsed = parseAiDocument(this.importedText);
+
+    if (parsed.title) {
+      this.selectedDraft.title = parsed.title;
+    }
+    if (parsed.description) {
+      this.selectedDraft.description = parsed.description;
+    }
+    this.selectedDraft.overview = parsed.overview;
+
+    if (parsed.steps && parsed.steps.length > 0) {
+      this.selectedDraft.steps = parsed.steps.map(s => ({
+        t: s.t,
+        img: s.img,
+        imgUrl: s.imgUrl,
+        video: s.video,
+        videoUrl: s.videoUrl
+      }));
     }
 
-    const descMatch = this.importedText.match(/description:\s*"(.*?)"/);
-    if (descMatch && descMatch[1]) {
-      this.selectedDraft.description = descMatch[1];
-    }
-
-    // Extract HTML body (everything after the second ---)
-    const parts = this.importedText.split('---');
-    if (parts.length >= 3) {
-      // The first part is empty (before first ---)
-      // The second part is frontmatter
-      // The rest is the body
-      const body = parts.slice(2).join('---').trim();
-      this.selectedDraft.overview = body;
-    } else {
-      // No valid frontmatter found, just use the whole text as overview
-      this.selectedDraft.overview = this.importedText;
+    if (parsed.faqs && parsed.faqs.length > 0) {
+      this.selectedDraft.faqs = parsed.faqs.map(f => ({
+        q: f.q,
+        a: f.a,
+        img: f.img,
+        imgUrl: f.imgUrl,
+        video: f.video,
+        videoUrl: f.videoUrl
+      }));
     }
 
     this.showImportModal = false;
