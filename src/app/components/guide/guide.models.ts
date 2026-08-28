@@ -1,7 +1,7 @@
 // Modello contenuti condiviso: Categoria -> Guida -> FAQ -> step
-export interface Step { t: string; img?: boolean; video?: boolean; }
+export interface Step { t: string; img?: boolean; imgUrl?: string; video?: boolean; videoUrl?: string; }
 export interface Service { name: string; desc: string; }
-export interface Faq { q: string; tags: string[]; read?: boolean; updated: string; steps: Step[]; service?: Service; extra?: boolean; }
+export interface Faq { q: string; tags: string[]; read?: boolean; expanded?: boolean; updated: string; steps: Step[]; service?: Service; extra?: boolean; }
 export interface Guide { id: string; title: string; status: 'pub' | 'draft'; updated: string; desc: string; overview?: string; service?: Service; faqs: Faq[]; }
 export interface Category { id: string; name: string; icon: string; emoji?: string; accent: 'blue' | 'magenta'; desc: string; manuals: Guide[]; }
 export interface Ref { type: 'category' | 'guide' | 'faq' | 'home'; cat?: string; man?: string; faq?: number; }
@@ -33,6 +33,7 @@ export interface SmartflowOperator {
   id: string;
   name: string;
   emoji: string;
+  avatar?: string;
   password?: string;
   score: number;
   level: number;
@@ -48,12 +49,18 @@ export interface SmartflowOperator {
 export interface SmartflowDraftStep {
   t: string;
   img?: boolean;
+  imgUrl?: string;
   video?: boolean;
+  videoUrl?: string;
 }
 
 export interface SmartflowDraftFaq {
   q: string;
   a: string;
+  img?: boolean;
+  imgUrl?: string;
+  video?: boolean;
+  videoUrl?: string;
 }
 
 export interface SmartflowDraft {
@@ -70,6 +77,7 @@ export interface SmartflowDraft {
   faqs: SmartflowDraftFaq[];
   status: 'pending' | 'approved' | 'rejected';
   rejectionNote?: string;
+  overview?: string;
   createdAt: string;
   kbEntriesUsed: string[];
 }

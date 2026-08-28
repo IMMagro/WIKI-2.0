@@ -45,6 +45,7 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
   isSignUpMode = false;
   regName = '';
   regEmoji = '🧑‍💻';
+  regAvatar: string | null = null;
   regPassword = '';
   regConfirm = '';
   regError = '';
@@ -144,7 +145,7 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword);
+    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword, this.regAvatar || undefined);
     this.regSuccess = 'Registrazione completata! In attesa di approvazione.';
     setTimeout(() => {
       this.isSignUpMode = false;
@@ -152,7 +153,19 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       this.regName = '';
       this.regPassword = '';
       this.regConfirm = '';
+      this.regAvatar = null;
     }, 2500);
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.regAvatar = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   exitAdmin() {

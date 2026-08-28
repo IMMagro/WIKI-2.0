@@ -9,6 +9,7 @@ import { GuideAdminComponent } from '../../guide/guide-admin.component';
 import { AdminLegalComponent } from '../admin-legal/admin-legal.component';
 import { SmartflowUsersComponent } from '../../smartflow/smartflow-users.component';
 import { SmartflowOnboardingComponent } from '../../smartflow/smartflow-onboarding.component';
+import { SmartflowLeaderboardComponent } from '../../smartflow/smartflow-leaderboard.component';
 import { ThemeService } from '../../../services/theme.service';
 import { LegalService } from '../../../services/legal.service';
 import { NavigationSettingsService } from '../../../services/navigation-settings.service';
@@ -24,7 +25,8 @@ import { NavigationSettingsService } from '../../../services/navigation-settings
     GuideAdminComponent,
     AdminLegalComponent,
     SmartflowUsersComponent,
-    SmartflowOnboardingComponent
+    SmartflowOnboardingComponent,
+    SmartflowLeaderboardComponent
   ],
   templateUrl: './admin-layout.component.html'
 })
@@ -32,6 +34,7 @@ export class AdminLayoutComponent implements OnInit {
   @Output() exitAdmin = new EventEmitter<void>();
   activeAdminTab: string = 'dashboard';
   showOnboarding = false;
+  showProfileModal = false;
 
   menuItemsMetadata = [
     { id: 'home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', label: 'Home', description: 'La pagina principale con la dashboard e i widget rapidi.' },

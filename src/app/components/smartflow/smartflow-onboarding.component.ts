@@ -10,14 +10,14 @@ import { CommonModule } from '@angular/common';
       <!-- Cool hacker/setup animation -->
       <div class="mb-8 w-24 h-24 rounded-full border-4 border-[#377DFF] border-t-transparent animate-spin"></div>
       
-      <div class="text-3xl font-bold mb-4 tracking-wider animate-pulse text-[#F8FAFD]">SMARTFLOW INIT</div>
+      <div class="text-3xl font-bold mb-4 tracking-wider animate-pulse text-[#F8FAFD]">WIKI 2.0 INIT</div>
       
       <div class="h-6 overflow-hidden w-64 text-center text-[#94A3B8] font-mono text-sm">
         <div class="transition-transform duration-500" [style.transform]="'translateY(' + (-stepIndex * 24) + 'px)'">
-          <div class="h-6">Autenticazione completata...</div>
-          <div class="h-6">Sincronizzazione Knowledge Base...</div>
-          <div class="h-6">Generazione profili AI...</div>
-          <div class="h-6">Configurazione ambiente pronta.</div>
+          <div class="h-6">Autenticazione operatore...</div>
+          <div class="h-6">Inizializzazione servizi...</div>
+          <div class="h-6">Caricamento database...</div>
+          <div class="h-6">Area Riservata pronta.</div>
         </div>
       </div>
       

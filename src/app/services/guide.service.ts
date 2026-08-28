@@ -28,6 +28,19 @@ export class GuideService {
     this.recomputeDerived();
   }
 
+  saveToBackend(onSuccess?: () => void, onError?: () => void): void {
+    const token = sessionStorage.getItem('adminToken');
+    const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+    this.http.post('/api/get_guides.ashx', {
+      categories: this.categories,
+      journey: this.journey,
+      homePills: this.homePills
+    }, { headers }).subscribe({
+      next: () => { if (onSuccess) onSuccess(); },
+      error: () => { if (onError) onError(); }
+    });
+  }
+
   journey: Journey = {
     intro: 'Benvenuto in Quaderno Elettronico! Segui questo percorso guidato per apprendere le operazioni fondamentali passo dopo passo.',
     steps: [

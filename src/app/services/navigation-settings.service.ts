@@ -68,7 +68,9 @@ export class NavigationSettingsService {
     this.settingsSubject.next(settings);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
 
-    return this.http.post(this.apiUrl, settings).pipe(
+    const token = sessionStorage.getItem('adminToken');
+    const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+    return this.http.post(this.apiUrl, settings, { headers }).pipe(
       catchError(error => {
         console.warn('Failed to save settings to API.', error.message);
         return of({ success: false, fallback: true });

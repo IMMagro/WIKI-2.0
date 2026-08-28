@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -22,7 +22,7 @@ import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboar
   templateUrl: './guide-admin.component.html'
 })
 export class GuideAdminComponent {
-  activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
+  @Input() activeTab: 'manuals' | 'pills' | 'smartflow' = 'manuals';
   sfView: 'wizard' | 'review' | 'leaderboard' = 'wizard';
 
   selCat: Category | null = null;
@@ -198,5 +198,32 @@ export class GuideAdminComponent {
       next: () => { this.saving = false; this.saveOk = true; this.saveMsg = 'Modifiche salvate'; setTimeout(() => this.saveMsg = '', 3500); },
       error: () => { this.saving = false; this.saveOk = false; this.saveMsg = 'Errore nel salvataggio (serve login admin e ambiente IIS)'; }
     });
+  }
+
+  async uploadMedia(event: any, type: 'img' | 'video', step: Step) {
+    const file = event.target.files[0];
+    if (!file || !this.selCat || !this.selGuide) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category', this.selCat.id);
+    formData.append('id', this.selGuide.id);
+
+    try {
+      const token = sessionStorage.getItem('adminToken');
+      const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+      const res = await this.http.post<{success: boolean, url: string}>('api/upload_asset.ashx', formData, { headers }).toPromise();
+      if (res && res.success) {
+         if (type === 'img') {
+           step.img = true;
+           step.imgUrl = res.url;
+         } else {
+           step.video = true;
+           step.videoUrl = res.url;
+         }
+      }
+    } catch(e) {
+      alert("Errore durante il caricamento del file.");
+    }
   }
 }

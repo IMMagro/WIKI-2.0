@@ -79,17 +79,22 @@
                 <input type="text" [(ngModel)]="regName" placeholder="Nome Utente" class="w-full py-3 bg-transparent border-none focus:outline-none text-white placeholder-[#94A3B8] text-sm font-medium">
               </div>
 
-              <!-- Emoji Avatar Selector -->
+              <!-- Avatar Selector -->
               <div class="flex items-center justify-between px-3 py-2 rounded-2xl bg-[#0F172A]/40 border border-white/10">
                 <span class="text-xs text-[#94A3B8] font-medium pl-1">Avatar:</span>
                 <div class="flex gap-1.5 flex-wrap">
                   <button *ngFor="let em of ['🧑‍💻','👩','🧔','🦸','🧙','🤖']" 
-                          (click)="regEmoji = em" 
+                          (click)="regEmoji = em; regAvatar = null" 
                           type="button"
                           class="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all cursor-pointer"
-                          [ngClass]="regEmoji === em ? 'bg-[#377DFF] scale-110 shadow-md shadow-blue-500/40 border border-white/40' : 'bg-white/5 hover:bg-white/15 border border-white/5'">
+                          [ngClass]="regEmoji === em && !regAvatar ? 'bg-[#377DFF] scale-110 shadow-md shadow-blue-500/40 border border-white/40' : 'bg-white/5 hover:bg-white/15 border border-white/5'">
                     {{em}}
                   </button>
+                  <label class="w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all cursor-pointer bg-white/5 hover:bg-white/15 border border-white/5 overflow-hidden" [ngClass]="regAvatar ? 'border-[#377DFF] ring-2 ring-[#377DFF]/50' : ''" title="Carica foto">
+                    <img *ngIf="regAvatar" [src]="regAvatar" class="w-full h-full object-cover">
+                    <span *ngIf="!regAvatar">📷</span>
+                    <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)">
+                  </label>
                 </div>
               </div>
 

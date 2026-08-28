@@ -15,6 +15,8 @@ export class SmartflowReviewComponent {
   selectedDraft: SmartflowDraft | null = null;
   rejectionNote = '';
   showRejectModal = false;
+  showImportModal = false;
+  importedText = '';
 
   constructor(public smartflow: SmartflowService, public guideService: GuideService) {}
 
@@ -37,14 +39,14 @@ export class SmartflowReviewComponent {
     return this.smartflow.getOperator(id);
   }
 
-  getTypeBadgeInfo(type: 'breve' | 'standard' | 'lunga'): { label: string; emoji: string; colorClass: string; points: number } {
+  getTypeBadgeInfo(type: 'breve' | 'standard' | 'lunga'): { label: string; colorClass: string; points: number } {
     if (type === 'breve') {
-      return { label: 'Guida Breve', emoji: '📗', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', points: 10 };
+      return { label: 'Guida Breve', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200', points: 10 };
     }
     if (type === 'standard') {
-      return { label: 'Guida Standard', emoji: '📘', colorClass: 'bg-[#EAF1FF] text-[#377DFF] border-blue-200', points: 25 };
+      return { label: 'Guida Standard', colorClass: 'bg-[#EAF1FF] text-[#377DFF] border-blue-200', points: 25 };
     }
-    return { label: 'Guida Lunga', emoji: '📕', colorClass: 'bg-[#FFE9F4] text-[#F80086] border-pink-200', points: 50 };
+    return { label: 'Guida Lunga', colorClass: 'bg-[#FFE9F4] text-[#F80086] border-pink-200', points: 50 };
   }
 
   approve() {
@@ -84,8 +86,16 @@ export class SmartflowReviewComponent {
       status: 'pub',
       updated: new Date().toLocaleDateString('it-IT'),
       desc: introText,
-      faqs: [mainFaq, ...extraFaqs]
+      overview: this.selectedDraft.overview,
+      faqs: []
     };
+
+    if (this.selectedDraft.steps && this.selectedDraft.steps.length > 0) {
+      newGuide.faqs.push(mainFaq);
+    }
+    if (extraFaqs && extraFaqs.length > 0) {
+      newGuide.faqs.push(...extraFaqs);
+    }
 
     // Add to category
     let cat = this.guideService.categories.find(c => c.id === this.selectedDraft!.targetCategory || c.name.toLowerCase() === this.selectedDraft!.targetCategory.toLowerCase());
@@ -102,6 +112,9 @@ export class SmartflowReviewComponent {
       this.guideService.categories.push(cat);
     }
     cat.manuals.push(newGuide);
+
+    // Save the new guide to backend immediately
+    this.guideService.saveToBackend();
 
     // Award points
     const points = this.smartflow.getPointsForType(this.selectedDraft.type);
@@ -126,17 +139,28 @@ export class SmartflowReviewComponent {
       txt += `**Causa**: ${d.cause}\n\n`;
       txt += `**Soluzione**: ${d.solution}\n\n`;
     }
-    txt += `## Passaggi Operativi\n`;
-    d.steps.forEach((s, i) => {
-      txt += `${i + 1}. ${s.t}\n`;
-      if (s.img || s.video) {
-        txt += `   *(Media richiesti: ${s.img ? 'Screenshot' : ''} ${s.video ? 'Video' : ''})*\n`;
-      }
-    });
+    if (d.steps && d.steps.length > 0) {
+      txt += `\n## Passaggi Operativi\n`;
+      d.steps.forEach((s, i) => {
+        txt += `${i + 1}. ${s.t}\n`;
+        if (s.img || s.video) {
+          txt += `   *(Media richiesti: ${s.img ? 'Screenshot ' : ''}${s.video ? 'Video ' : ''})*\n`;
+          if (s.imgUrl) txt += `   *(URL Immagine: ${s.imgUrl})*\n`;
+          if (s.videoUrl) txt += `   *(URL Video: ${s.videoUrl})*\n`;
+        }
+      });
+    }
+
     if (d.faqs && d.faqs.length > 0) {
       txt += `\n## FAQ Collegate\n`;
       d.faqs.forEach(f => {
-        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n\n`;
+        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n`;
+        if (f.img || f.video) {
+          txt += `   *(Media richiesti: ${f.img ? 'Screenshot ' : ''}${f.video ? 'Video ' : ''})*\n`;
+          if (f.imgUrl) txt += `   *(URL Immagine: ${f.imgUrl})*\n`;
+          if (f.videoUrl) txt += `   *(URL Video: ${f.videoUrl})*\n`;
+        }
+        txt += `\n`;
       });
     }
     navigator.clipboard.writeText(txt).then(() => {
@@ -153,5 +177,40 @@ export class SmartflowReviewComponent {
     this.smartflow.saveDraft(this.selectedDraft);
     this.selectedDraft = null;
     this.showRejectModal = false;
+  }
+
+  importFromAI() {
+    if (!this.selectedDraft || !this.importedText) return;
+    
+    // Parse YAML frontmatter
+    const titleMatch = this.importedText.match(/title:\s*"(.*?)"/);
+    if (titleMatch && titleMatch[1]) {
+      this.selectedDraft.title = titleMatch[1];
+    }
+
+    const descMatch = this.importedText.match(/description:\s*"(.*?)"/);
+    if (descMatch && descMatch[1]) {
+      this.selectedDraft.description = descMatch[1];
+    }
+
+    // Extract HTML body (everything after the second ---)
+    const parts = this.importedText.split('---');
+    if (parts.length >= 3) {
+      // The first part is empty (before first ---)
+      // The second part is frontmatter
+      // The rest is the body
+      const body = parts.slice(2).join('---').trim();
+      this.selectedDraft.overview = body;
+    } else {
+      // No valid frontmatter found, just use the whole text as overview
+      this.selectedDraft.overview = this.importedText;
+    }
+
+    // Clear steps and faqs so they aren't duplicated by approve()
+    this.selectedDraft.steps = [];
+    this.selectedDraft.faqs = [];
+
+    this.showImportModal = false;
+    alert('Importazione completata con successo! Clicca "Approva e Pubblica" per finalizzare.');
   }
 }

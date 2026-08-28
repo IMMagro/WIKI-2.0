@@ -80,7 +80,9 @@ export class SmartflowService {
       drafts: this.drafts,
       levels: this.levels
     };
-    this.http.post('/api/save_smartflow.ashx', payload).subscribe({
+    const token = sessionStorage.getItem('adminToken');
+    const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+    this.http.post('/api/save_smartflow.ashx', payload, { headers }).subscribe({
       next: () => console.log('Smartflow data saved successfully.'),
       error: (err) => console.error('Failed to save smartflow data', err)
     });
@@ -122,11 +124,11 @@ export class SmartflowService {
     this.saveToBackend();
   }
 
-  registerOperator(name: string, emoji: string, password?: string): SmartflowOperator {
+  registerOperator(name: string, emoji: string, password?: string, avatar?: string): SmartflowOperator {
     const id = 'op-' + Date.now();
     const now = this.today();
     const op: SmartflowOperator = {
-      id, name, emoji, password, score: 0, level: 1, levelName: 'Barba',
+      id, name, emoji, avatar, password, score: 0, level: 1, levelName: 'Barba',
       guidesCreated: 0, guidesApproved: 0, lastActivity: now, registeredAt: now,
       status: 'pending',
       hasOnboarded: false

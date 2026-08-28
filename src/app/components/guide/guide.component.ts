@@ -61,6 +61,9 @@ export class GuideComponent implements OnDestroy {
   get extraFaqs(): Faq[] {
     return (this.curGuide?.faqs || []).filter((f: Faq) => f.extra === true);
   }
+  get mainProcedure(): Faq | undefined {
+    return (this.curGuide?.faqs || []).find((f: Faq) => !f.extra);
+  }
   get hasExtraFaqs(): boolean {
     return this.extraFaqs.length > 0;
   }
@@ -135,10 +138,31 @@ export class GuideComponent implements OnDestroy {
   openFaq(i: number) {
     const list = this.extraFaqs;
     if (i < -1 || i >= list.length) return;
-    if (i >= 0) list[i].read = true;
+    
+    if (i === -1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    
+    const f = list[i] as any;
+    f.read = true;
+    f.expanded = true;
     this.selFaq = i;
-    if (i >= 0) { const svc = list[i].service || this.curGuide?.service; if (svc) this.showSvc(svc); else this.hideSvc(); }
-    else this.hideSvc();
+    
+    setTimeout(() => {
+      const elements = document.querySelectorAll('.faq-accordion-item');
+      if (elements && elements[i]) {
+        elements[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+    
+    const svc = f.service || this.curGuide?.service;
+    if (svc) this.showSvc(svc); else this.hideSvc();
+  }
+
+  toggleFaq(f: any) {
+    f.read = true;
+    f.expanded = !f.expanded;
   }
 
   openRef(step: JourneyStep) {

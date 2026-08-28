@@ -1,37 +1,26 @@
-<header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
+<header *ngIf="activeTab !== 'smartflow'" class="flex justify-between items-center mb-6 gap-4 flex-wrap">
   <div>
-    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide, Pills & SmartFlow</span></h1>
+    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Gestione <span class="font-bold text-[#377DFF]">Guide & Pills</span></h1>
     <p class="text-[#77838F] mt-1 font-medium">Crea e organizza categorie, guide, FAQ e le pill in evidenza nella Home.</p>
     
     <!-- Tab Switcher -->
     <div class="flex items-center gap-2 mt-4">
-      <button (click)="activeTab = 'manuals'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer"
+      <button (click)="activeTab = 'manuals'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="activeTab === 'manuals' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        📁 Categorie & Guide
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+        Categorie & Guide
       </button>
       <button (click)="activeTab = 'pills'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="activeTab === 'pills' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        ✨ Pills Home & Ricerche Frequenti
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+        Pills Home & Ricerche Frequenti
         <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'pills' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ homePills.length }}</span>
-      </button>
-      <button (click)="activeTab = 'smartflow'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
-              [ngClass]="activeTab === 'smartflow' ? 'bg-[#377DFF] text-white shadow-md shadow-blue-500/20' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        🚀 SmartFlow
-        <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="activeTab === 'smartflow' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'">{{ smartflow.pendingDrafts.length }}</span>
       </button>
     </div>
   </div>
 
 
   <div class="flex items-center gap-3">
-    <div *ngIf="smartflow.currentOperator" class="flex items-center gap-2 bg-[#F8FAFD] border border-[#E2E8F0] px-3 py-1.5 rounded-xl mr-4">
-      <span class="text-xl">{{ smartflow.currentOperator.emoji }}</span>
-      <div class="flex flex-col">
-        <span class="text-xs font-bold text-[#1E2022] leading-tight">{{ smartflow.currentOperator.name }}</span>
-        <span class="text-[10px] font-semibold" [style.color]="smartflow.getLevelForScore(smartflow.currentOperator.score).color">{{ smartflow.currentOperator.levelName }} • {{ smartflow.currentOperator.score }} pt</span>
-      </div>
-      <button (click)="logoutOp()" class="ml-2 text-xs text-[#77838F] hover:text-[#FF4757] cursor-pointer" title="Esci">❌</button>
-    </div>
     <span *ngIf="saveMsg" class="text-sm font-semibold" [ngClass]="saveOk ? 'text-emerald-600' : 'text-[#FF4757]'">{{ saveMsg }}</span>
     <button (click)="save()" [disabled]="saving"
             class="flex items-center gap-2 bg-[#377DFF] hover:bg-[#2563EB] disabled:opacity-60 text-white px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20 font-medium cursor-pointer">
@@ -208,13 +197,30 @@
               <span class="w-6 h-6 rounded-full bg-[#377DFF] text-white flex items-center justify-center text-[11px] font-bold shrink-0 mt-1">{{ si + 1 }}</span>
               <div class="flex-1">
                 <textarea [(ngModel)]="s.t" rows="2" placeholder="Testo dello step (puoi usare &lt;b&gt;…&lt;/b&gt;)" class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#377DFF]/20 focus:border-[#377DFF] text-sm text-[#1E2022] resize-y"></textarea>
-                <div class="flex items-center gap-4 mt-1.5">
-                  <label class="flex items-center gap-1.5 text-xs text-[#77838F] cursor-pointer">
-                    <input type="checkbox" [(ngModel)]="s.img" class="accent-[#377DFF]"> Immagine
-                  </label>
-                  <label class="flex items-center gap-1.5 text-xs text-[#77838F] cursor-pointer">
-                    <input type="checkbox" [(ngModel)]="s.video" class="accent-[#377DFF]"> Video
-                  </label>
+                <div class="flex items-center gap-4 mt-1.5 flex-wrap">
+                  <div class="flex items-center gap-2 bg-[#F8FAFD] px-2 py-1.5 rounded-lg border border-[#E2E8F0]">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-[#1E2022] cursor-pointer">
+                      <input type="checkbox" [(ngModel)]="s.img" class="accent-[#377DFF] w-3.5 h-3.5">
+                      <svg class="w-3.5 h-3.5 text-[#377DFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                      Immagine
+                    </label>
+                    <div *ngIf="s.img" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
+                      <input type="file" accept="image/*" (change)="uploadMedia($event, 'img', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#EAF1FF] file:text-[#377DFF] hover:file:bg-[#D6E4FF]" />
+                      <span *ngIf="s.imgUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.imgUrl}}">Caricata</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center gap-2 bg-[#F8FAFD] px-2 py-1.5 rounded-lg border border-[#E2E8F0]">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-[#1E2022] cursor-pointer">
+                      <input type="checkbox" [(ngModel)]="s.video" class="accent-[#F80086] w-3.5 h-3.5">
+                      <svg class="w-3.5 h-3.5 text-[#F80086]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                      Video
+                    </label>
+                    <div *ngIf="s.video" class="flex items-center gap-1.5 ml-2 border-l border-[#E2E8F0] pl-2">
+                      <input type="file" accept="video/*" (change)="uploadMedia($event, 'video', s)" class="text-[10px] w-[140px] file:mr-2 file:py-0.5 file:px-2 file:rounded-md file:border-0 file:text-[10px] file:font-semibold file:bg-[#FFE9F4] file:text-[#F80086] hover:file:bg-[#FFD4E9]" />
+                      <span *ngIf="s.videoUrl" class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded" title="{{s.videoUrl}}">Caricato</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <button (click)="deleteStep(f, s)" title="Elimina step" class="p-1.5 text-[#A9B4BF] hover:text-[#FF4757] transition-colors shrink-0 mt-1">
@@ -276,8 +282,8 @@
           <span class="text-[10px] font-bold uppercase tracking-wider text-[#A9B4BF] block mb-1">Destinazione</span>
           <select [(ngModel)]="pill.targetType" (ngModelChange)="onPillTargetTypeChange(pill)"
                   class="w-full px-3 py-2 bg-white border border-[#E2E8F0] rounded-lg text-xs font-medium text-[#1E2022] focus:outline-none focus:border-[#377DFF]">
-            <option value="category">📁 Categoria</option>
-            <option value="guide">📖 Guida Specifica</option>
+            <option value="category">Categoria</option>
+            <option value="guide">Guida Specifica</option>
           </select>
         </div>
 
@@ -361,34 +367,36 @@
 <!-- ===== TAB 3: SMARTFLOW ===== -->
 <div *ngIf="activeTab === 'smartflow'">
   
+  <header class="flex justify-between items-center mb-6 gap-4 flex-wrap">
+    <div>
+      <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">SmartFlow <span class="font-bold text-[#377DFF]">AI</span></h1>
+      <p class="text-[#77838F] mt-1 font-medium">Gestione guide guidate e intelligenza artificiale per l'assistenza.</p>
+    </div>
+  </header>
+
   <!-- SmartFlow Nav Tabs & Current Profile -->
   <div class="flex items-center justify-between gap-3 mb-6 flex-wrap">
     <div class="flex items-center gap-2 flex-wrap">
-      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+      <button (click)="sfView = 'wizard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'wizard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        ✍️ Crea Nuova Guida
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        Crea Nuova Guida
       </button>
       <button (click)="sfView = 'review'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'review' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        👁️ Bozze in Revisione
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        Bozze in Revisione
         <span class="px-2 py-0.5 rounded-full text-[10px]" [ngClass]="sfView === 'review' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700'">{{ smartflow.pendingDrafts.length }}</span>
       </button>
-      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
+      <button (click)="sfView = 'leaderboard'" class="px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               [ngClass]="sfView === 'leaderboard' ? 'bg-[#1E2022] text-white shadow-md' : 'bg-white/80 text-[#77838F] hover:text-[#1E2022] border border-[#E2E8F0]'">
-        🏆 Classifica
+        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+        Classifica
       </button>
     </div>
-
     <!-- Operator mini indicator -->
-    <div *ngIf="smartflow.currentOperator" class="flex items-center gap-2.5 bg-white/70 backdrop-blur-xl border border-white/80 px-3 py-1.5 rounded-xl shadow-sm">
-      <span class="text-base">{{ smartflow.currentOperator.emoji }}</span>
-      <div class="text-left">
-        <span class="text-xs font-bold text-[#1E2022] block leading-tight">{{ smartflow.currentOperator.name }}</span>
-        <span class="text-[10px] text-[#377DFF] font-semibold">Lvl {{ smartflow.currentOperator.level }} · {{ smartflow.currentOperator.score }} pt</span>
-      </div>
-      <button (click)="logoutOp()" title="Cambia operatore" class="ml-1 text-[#A9B4BF] hover:text-[#1E2022] text-[11px] font-bold px-2 py-0.5 hover:bg-[#F8FAFD] rounded-lg transition-colors cursor-pointer">
-        Esci
-      </button>
+    <div *ngIf="smartflow.currentOperator" class="hidden">
+      <!-- Operator info is now globally in the layout pill -->
     </div>
   </div>
 

@@ -55,7 +55,7 @@ public class UploadAsset : IHttpHandler {
                     return;
                 }
 
-                string folderPath = context.Server.MapPath($"~/Data/docs/{category}/{id}/images");
+                string folderPath = context.Server.MapPath(string.Format("~/Data/docs/{0}/{1}/images", category, id));
                 if (!Directory.Exists(folderPath)) {
                     Directory.CreateDirectory(folderPath);
                 }
@@ -66,13 +66,13 @@ public class UploadAsset : IHttpHandler {
                 if (File.Exists(filePath)) {
                     string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
                     string ext = Path.GetExtension(fileName);
-                    fileName = $"{fileNameWithoutExt}_{DateTime.Now.Ticks}{ext}";
+                    fileName = string.Format("{0}_{1}{2}", fileNameWithoutExt, DateTime.Now.Ticks, ext);
                     filePath = Path.Combine(folderPath, fileName);
                 }
 
                 file.SaveAs(filePath);
 
-                string fileUrl = $"/Data/docs/{category}/{id}/images/{fileName}";
+                string fileUrl = string.Format("/Data/docs/{0}/{1}/images/{2}", category, id, fileName);
 
                 var js = new JavaScriptSerializer();
                 context.Response.Write(js.Serialize(new {

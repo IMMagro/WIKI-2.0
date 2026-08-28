@@ -6,6 +6,37 @@
     <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#F80086]/10 rounded-full blur-[120px] mix-blend-multiply animate-pulse" style="animation-delay: 2s;"></div>
   </div>
 
+  <!-- Global Profile Pill -->
+  <div *ngIf="smartflow.currentOperator" 
+       class="absolute top-6 right-8 z-[100] flex items-center gap-2 bg-white/80 backdrop-blur-md border border-[#E2E8F0] shadow-sm px-3 py-1.5 rounded-2xl cursor-pointer hover:bg-white transition-all hover:shadow-md"
+       (click)="showProfileModal = true">
+    <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] flex items-center justify-center overflow-hidden border border-[#E2E8F0] shrink-0">
+      <img *ngIf="smartflow.currentOperator.avatar" [src]="smartflow.currentOperator.avatar" class="w-full h-full object-cover">
+      <span *ngIf="!smartflow.currentOperator.avatar" class="text-lg">{{ smartflow.currentOperator.emoji }}</span>
+    </div>
+    <div class="flex flex-col pr-2 border-r border-[#E2E8F0]">
+      <span class="text-xs font-bold text-[#1E2022] leading-tight">{{ smartflow.currentOperator.name }}</span>
+      <span class="text-[9px] font-bold uppercase tracking-wider" [style.color]="smartflow.getLevelForScore(smartflow.currentOperator.score).color">
+        Lvl {{ smartflow.currentOperator.level }} • {{ smartflow.currentOperator.score }} pt
+      </span>
+    </div>
+    <button (click)="onExitAdmin(); $event.stopPropagation()" class="pl-1 text-xs text-[#77838F] hover:text-[#FF4757] transition-colors" title="Esci">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+    </button>
+  </div>
+
+  <!-- Profile & Leaderboard Modal -->
+  <div *ngIf="showProfileModal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-[#0F172A]/40 backdrop-blur-sm transition-all" (click)="showProfileModal = false">
+    <div class="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative" (click)="$event.stopPropagation()">
+      <button (click)="showProfileModal = false" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F8FAFD] hover:bg-[#E2E8F0] text-[#77838F] hover:text-[#1E2022] flex items-center justify-center transition-colors z-10">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="flex-1 overflow-y-auto p-6 bg-[#F8FAFD]">
+        <app-smartflow-leaderboard></app-smartflow-leaderboard>
+      </div>
+    </div>
+  </div>
+
   <!-- SIDEBAR -->
   <aside class="relative z-10 w-[280px] h-full flex flex-col p-6 bg-white/60 backdrop-blur-3xl border-r border-white/80 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
     <!-- Header & Brand -->
@@ -43,6 +74,18 @@
          class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         Gestione Manuali
+      </a>
+      
+      <!-- SmartFlow Menu Item -->
+      <a href="javascript:void(0)" 
+         (click)="activeAdminTab = 'smartflow'"
+         [ngClass]="activeAdminTab === 'smartflow' ? 'bg-[#377DFF] text-white font-bold shadow-md shadow-[#377DFF]/20 scale-[1.02]' : 'text-[#377DFF] hover:bg-[#F0F5FF] font-semibold'"
+         class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all border border-[#377DFF]/20 mt-1 mb-2">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span class="flex-1">SmartFlow AI</span>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" [ngClass]="activeAdminTab === 'smartflow' ? 'bg-white/20 text-white' : 'bg-[#377DFF]/10 text-[#377DFF]'">
+          {{ smartflow.pendingDrafts.length }}
+        </span>
       </a>
       <a href="javascript:void(0)" 
          (click)="activeAdminTab = 'news'"
@@ -105,7 +148,12 @@
     
     <!-- GESTIONE MANUALI TAB -->
     <ng-container *ngIf="activeAdminTab === 'manuals'">
-      <app-guide-admin></app-guide-admin>
+      <app-guide-admin [activeTab]="'manuals'"></app-guide-admin>
+    </ng-container>
+
+    <!-- SMARTFLOW TAB -->
+    <ng-container *ngIf="activeAdminTab === 'smartflow'">
+      <app-guide-admin [activeTab]="'smartflow'"></app-guide-admin>
     </ng-container>
 
     <!-- GESTIONE TERMINI & PRIVACY TAB -->

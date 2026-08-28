@@ -45,6 +45,13 @@ public class NavigationSettingsHandler : IHttpHandler
             }
             else if (context.Request.HttpMethod == "POST")
             {
+                // Scrittura riservata all'area admin
+                if (!Auth.IsAuthorized(context))
+                {
+                    context.Response.StatusCode = 401;
+                    context.Response.Write("{\"error\": \"Non autorizzato: sessione mancante, non valida o scaduta\"}");
+                    return;
+                }
                 using (var reader = new StreamReader(context.Request.InputStream, Encoding.UTF8))
                 {
                     string newJson = reader.ReadToEnd();
