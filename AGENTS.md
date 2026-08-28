@@ -38,7 +38,12 @@
 - **Visual testing**: When asked to fix visual issues, use `.agents/skills/webapp-testing/SKILL_testing.md` to verify. Show test output as evidence before claiming work is complete — never say "tested" or "verified" without pasting terminal output.
 - **ui-ux-pro**: Whenever designing, building, reviewing, or fixing UI/UX interfaces, invoke the `ui-ux-pro` skill (`.agents/skills/ui-ux-pro/`) for UX guidelines, palettes, and design tokens.
 - **ui-tester**: Whenever you modify Angular templates or want to verify UI interactions (buttons, modals, links), use `.agents/skills/ui-tester/SKILL.md` to run visual and logical checks.
-- **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), use `.agents/skills/api-generator/SKILL.md` to follow standard C# JSON-handling patterns.
+- **api-generator**: Whenever you need to create a new backend endpoint for IIS (`.ashx`), use `.agents/skills/api-generator/SKILL.md` to follow standard C# JSON-handling patterns. Always enforce `Auth.IsAuthorized(context)` on mutating requests (POST/PUT/DELETE).
+- **Backend & IIS Security**:
+  - `Data/tokens.json` and `Data/users.json` MUST be blocked from static downloads via `web.config` request filtering. Sensitive server-only JSON files must NEVER be served to the public.
+  - All mutating endpoints (`save_smartflow.ashx`, `navigation_settings.ashx`, `upload_asset.ashx`, etc.) MUST strictly enforce `if (!Auth.IsAuthorized(context)) { context.Response.StatusCode = 401; ... return; }`.
+- **Frontend Auth Headers**: Whenever making `http.post` / mutating calls to protected `.ashx` endpoints from Angular (e.g. upload asset, save guides, save smartflow, save navigation), you MUST explicitly include `Authorization: Bearer <token>` (or `session_token`) in the request headers.
+- **C# Compatibility (IIS .NET 4.0)**: Never use C# 6.0+ syntax in `.ashx` files (NO string interpolation `$""`, NO null-propagation `?.`, NO expression bodies `=>`, NO `nameof()`). Always use `string.Format()` and standard C# 4.0 syntax.
 - **mock-data-cleaner**: Whenever you need to prepare the frontend for real HTTP integration, use `.agents/skills/mock-data-cleaner/SKILL.md` to strip out hardcoded mock data cleanly.
 - **manual-generator**: Whenever you need to create, format, or write a manual (wiki guide), use `.agents/skills/manual-generator/SKILL.md` to ensure the output respects the required MDX structure, HTML formatting, and UI tags.
 - **Console Check**: After any code modifications, check the terminal output (`ng serve` / `npm run build`) to ensure there are no errors (`TypeError`, `HttpErrorResponse`, etc.) before considering the task complete.
