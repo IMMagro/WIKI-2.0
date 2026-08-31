@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FaqReadingService } from '../../../services/faq-reading.service';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 
 /** Pannello di lettura di una FAQ (4 varianti di layout), aperto da Home o dalla pagina FAQ. */
 @Component({
   selector: 'app-faq-reading-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeHtmlPipe],
   templateUrl: './faq-reading-panel.component.html'
 })
 export class FaqReadingPanelComponent {
@@ -47,3 +48,4 @@ export class FaqReadingPanelComponent {
     }
   }
 }
+

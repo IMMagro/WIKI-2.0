@@ -134,7 +134,7 @@
               <h2 class="artTitle">{{ g.title }}</h2>
               
               <!-- Se c'è una panoramica MDX, mostrala -->
-              <div *ngIf="g.overview" class="prose" [innerHTML]="g.overview" (click)="handleInternalLink($event)"></div>
+              <div *ngIf="g.overview" class="prose" [innerHTML]="g.overview | safeHtml" (click)="handleInternalLink($event)"></div>
               
               <!-- Altrimenti mostra la descrizione breve -->
               <div *ngIf="!g.overview" class="prose"><p>{{ g.desc }}</p></div>
@@ -146,7 +146,7 @@
                   <div class="step" *ngFor="let s of mainProcedure.steps; let si = index; trackBy: trackByStep">
                     <div class="num">{{ si + 1 }}</div>
                     <div class="body">
-                      <p [innerHTML]="s.t" (click)="handleInternalLink($event)"></p>
+                      <p [innerHTML]="s.t | safeHtml" (click)="handleInternalLink($event)"></p>
                       <!-- Media Toggle Text -->
                       <div *ngIf="s.img || s.video" class="mt-2 text-sm">
                         <span *ngIf="!s['_expanded']" (click)="s['_expanded'] = true" class="text-blue-500 hover:text-blue-600 cursor-pointer font-medium flex items-center gap-1.5 w-fit transition-colors">
@@ -206,7 +206,7 @@
                       <div class="step" *ngFor="let s of f.steps; let si = index; trackBy: trackByStep">
                         <div class="num">{{ si + 1 }}</div>
                         <div class="body">
-                          <p [innerHTML]="s.t" (click)="handleInternalLink($event)"></p>
+                          <p [innerHTML]="s.t | safeHtml" (click)="handleInternalLink($event)"></p>
                           <!-- Media Toggle Text -->
                           <div *ngIf="s.img || s.video" class="mt-2 text-sm">
                             <span *ngIf="!s['_expanded']" (click)="s['_expanded'] = true" class="text-blue-500 hover:text-blue-600 cursor-pointer font-medium flex items-center gap-1.5 w-fit transition-colors">
@@ -327,4 +327,5 @@
   </div>
 
 </div>
+
 

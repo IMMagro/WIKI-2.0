@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { GuideService } from '../../services/guide.service';
 import { GuideTrackerService } from '../../services/guide-tracker.service';
 import { Category, Guide, Faq, Service, Ref, JourneyStep, Journey } from './guide.models';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 @Component({
   selector: 'app-guide',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeHtmlPipe],
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.css']
 })
