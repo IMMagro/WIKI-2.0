@@ -185,7 +185,7 @@ export class GuideService {
   private recomputeDerived(): void {
     this._publicCategories = (this._categories || [])
       .map(c => ({ ...c, manuals: (c.manuals || []).filter(m => m.status !== 'draft') }))
-      .filter(c => c.manuals.length > 0);
+      .filter(c => c.manuals.length > 0 || !!c.interactiveScreenId);
 
     const out: any[] = [];
     this._publicCategories.forEach((c: any, ci: number) => {

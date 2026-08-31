@@ -1,4 +1,4 @@
-﻿export interface ParsedAiStep {
+export interface ParsedAiStep {
   t: string;
   img?: boolean;
   imgUrl?: string;
@@ -8,11 +8,7 @@
 
 export interface ParsedAiFaq {
   q: string;
-  a: string;
-  img?: boolean;
-  imgUrl?: string;
-  video?: boolean;
-  videoUrl?: string;
+  steps: ParsedAiStep[];
 }
 
 export interface ParsedAiDoc {
@@ -29,6 +25,29 @@ export function parseAiDocument(rawText: string): ParsedAiDoc {
   }
 
   let text = rawText.trim();
+  
+  // 0. Prova a parsare come JSON (supporta JSON diretto o blocco Markdown ```json)
+  try {
+    let jsonStr = text;
+    if (jsonStr.startsWith('```json')) {
+      jsonStr = jsonStr.replace(/^```json/i, '').replace(/```$/i, '').trim();
+    } else if (jsonStr.startsWith('```')) {
+      jsonStr = jsonStr.replace(/^```/i, '').replace(/```$/i, '').trim();
+    }
+    const jsonObj = JSON.parse(jsonStr);
+    if (jsonObj && (jsonObj.title !== undefined || jsonObj.steps !== undefined || jsonObj.overview !== undefined)) {
+      return {
+        title: jsonObj.title || '',
+        description: jsonObj.description || '',
+        overview: jsonObj.overview || '',
+        steps: Array.isArray(jsonObj.steps) ? jsonObj.steps : [],
+        faqs: Array.isArray(jsonObj.faqs) ? jsonObj.faqs : []
+      };
+    }
+  } catch (e) {
+    // Non è JSON, procedi con il parsing MDX
+  }
+
   let title = '';
   let description = '';
 
@@ -218,18 +237,18 @@ function parseFaqsBlock(block: string): ParsedAiFaq[] {
       a = a.replace(/<\/?(p|h[1-6]|div)[^>]*>/gi, '').trim();
 
       if (q) {
-        const faqObj: ParsedAiFaq = { q, a };
+        const step: ParsedAiStep = { t: a };
         if (mediaUrl) {
           const isVid = isVideoUrl(mediaUrl);
           if (isVid) {
-            faqObj.video = true;
-            faqObj.videoUrl = mediaUrl;
+            step.video = true;
+            step.videoUrl = mediaUrl;
           } else {
-            faqObj.img = true;
-            faqObj.imgUrl = mediaUrl;
+            step.img = true;
+            step.imgUrl = mediaUrl;
           }
         }
-        faqs.push(faqObj);
+        faqs.push({ q, steps: [step] });
       }
     }
   }

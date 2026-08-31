@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { GuideService } from '../../services/guide.service';
 import { GuideTrackerService } from '../../services/guide-tracker.service';
 import { Category, Guide, Faq, Service, Ref, JourneyStep, Journey } from './guide.models';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { InteractiveScreenComponent } from './interactive-screen/interactive-screen.component';
 
 @Component({
   selector: 'app-guide',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeHtmlPipe, InteractiveScreenComponent],
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.css']
 })
@@ -25,6 +27,18 @@ export class GuideComponent implements OnDestroy {
   lightboxVideo: string | null = null;
   lightboxTitle: string = '';
   lightboxZoom: number = 1;
+
+  // Interfaccia Interattiva
+  activeInteractiveScreenId: string | null = null;
+  interactiveEditMode = false; // Il cliente NON può editare i pin
+
+  openInteractiveScreen(id: string) {
+    this.activeInteractiveScreenId = id;
+  }
+
+  closeInteractiveScreen() {
+    this.activeInteractiveScreenId = null;
+  }
 
   openLightbox(url: string, title: string, type: 'img' | 'video', ev?: Event) {
     if (ev) ev.stopPropagation();

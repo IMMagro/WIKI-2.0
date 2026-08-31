@@ -291,7 +291,7 @@
     </button>
   </nav>
 
-  <app-faq-reading-panel (categorySelected)="goToCategoryFromFaq($event)"></app-faq-reading-panel>
+  <app-faq-reading-panel (categorySelected)="goToCategoryFromFaq($event)" (internalLinkClick)="goToInternalLinkFromFaq($event)"></app-faq-reading-panel>
 
   <!-- Modale Caricamento Manuale -->
   <div *ngIf="isUploadModalOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -369,6 +369,7 @@
   <app-cookie-banner></app-cookie-banner>
 
 </div>
+
 
 
 

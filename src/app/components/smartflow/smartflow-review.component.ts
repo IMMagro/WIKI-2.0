@@ -83,13 +83,13 @@ export class SmartflowReviewComponent {
       q: f.q,
       tags: [],
       updated: new Date().toLocaleDateString('it-IT'),
-      steps: [{
-        t: f.a,
-        img: f.img,
-        imgUrl: f.imgUrl,
-        video: f.video,
-        videoUrl: f.videoUrl
-      }],
+      steps: f.steps ? f.steps.map(s => ({
+        t: s.t,
+        img: s.img,
+        imgUrl: s.imgUrl,
+        video: s.video,
+        videoUrl: s.videoUrl
+      })) : [],
       extra: true
     }));
 
@@ -166,18 +166,23 @@ export class SmartflowReviewComponent {
       });
     }
 
-    if (d.faqs && d.faqs.length > 0) {
-      txt += `\n## FAQ Collegate\n`;
-      d.faqs.forEach(f => {
-        txt += `**Q**: ${f.q}\n**A**: ${f.a}\n`;
-        if (f.img || f.video) {
-          txt += `   *(Media richiesti: ${f.img ? 'Screenshot ' : ''}${f.video ? 'Video ' : ''})*\n`;
-          if (f.imgUrl) txt += `   *(URL Immagine: ${f.imgUrl})*\n`;
-          if (f.videoUrl) txt += `   *(URL Video: ${f.videoUrl})*\n`;
-        }
-        txt += `\n`;
-      });
-    }
+      if (d.faqs && d.faqs.length > 0) {
+        txt += `\n## FAQ Collegate\n`;
+        d.faqs.forEach(f => {
+          txt += `**Q**: ${f.q}\n`;
+          if (f.steps && f.steps.length > 0) {
+            f.steps.forEach((s, i) => {
+              txt += `  ${i + 1}. ${s.t}\n`;
+              if (s.img || s.video) {
+                txt += `     *(Media richiesti: ${s.img ? 'Screenshot ' : ''}${s.video ? 'Video ' : ''})*\n`;
+                if (s.imgUrl) txt += `     *(URL Immagine: ${s.imgUrl})*\n`;
+                if (s.videoUrl) txt += `     *(URL Video: ${s.videoUrl})*\n`;
+              }
+            });
+          }
+          txt += `\n`;
+        });
+      }
     navigator.clipboard.writeText(txt).then(() => {
       alert('Bozza copiata negli appunti! Incollala in chat per revisione AI.');
     }).catch(err => {
@@ -220,11 +225,13 @@ export class SmartflowReviewComponent {
     if (parsed.faqs && parsed.faqs.length > 0) {
       this.selectedDraft.faqs = parsed.faqs.map(f => ({
         q: f.q,
-        a: f.a,
-        img: f.img,
-        imgUrl: f.imgUrl,
-        video: f.video,
-        videoUrl: f.videoUrl
+        steps: f.steps ? f.steps.map(s => ({
+          t: s.t,
+          img: s.img,
+          imgUrl: s.imgUrl,
+          video: s.video,
+          videoUrl: s.videoUrl
+        })) : []
       }));
     }
 

@@ -17,6 +17,48 @@ export class SmartflowWizardComponent {
   currentStep = 1;
   totalSteps = 5;
 
+  // Internal Link Modal
+  showLinkModal = false;
+  linkTargetTextarea: HTMLTextAreaElement | null = null;
+  linkTargetItem: any = null;
+  linkTargetProp: string = '';
+
+  openLinkModal(textarea: HTMLTextAreaElement, item: any, prop: string) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    if (start === end) {
+      alert('Seleziona prima una o più parole nel testo per creare un link (trascina il cursore per evidenziare il testo).');
+      return;
+    }
+    this.linkTargetTextarea = textarea;
+    this.linkTargetItem = item;
+    this.linkTargetProp = prop;
+    this.showLinkModal = true;
+  }
+
+  insertInternalLink(catId: string, guideId: string, faqIdx?: number) {
+    if (!this.linkTargetTextarea || !this.linkTargetItem) return;
+    const t = this.linkTargetTextarea;
+    const start = t.selectionStart;
+    const end = t.selectionEnd;
+    const fullText = this.linkTargetItem[this.linkTargetProp] || '';
+    
+    const selectedText = fullText.substring(start, end);
+    const faqAttr = faqIdx !== undefined ? ` data-faq-idx="${faqIdx}"` : '';
+    // Format the link HTML.
+    const linkHtml = `<a href="javascript:void(0)" data-cat-id="${catId}" data-guide-id="${guideId}"${faqAttr} class="internal-link font-semibold text-[#377DFF] hover:underline cursor-pointer transition-colors" title="Apri risorsa collegata">` + selectedText + `</a>`;
+    
+    const newText = fullText.substring(0, start) + linkHtml + fullText.substring(end);
+    this.linkTargetItem[this.linkTargetProp] = newText;
+    this.showLinkModal = false;
+  }
+
+  closeLinkModal() {
+    this.showLinkModal = false;
+    this.linkTargetTextarea = null;
+    this.linkTargetItem = null;
+  }
+
   // Step 1: Area funzionale
   selectedCategoryId = '';
   newCategoryName = '';
@@ -170,11 +212,30 @@ export class SmartflowWizardComponent {
 
   // ----- FAQ Management -----
   addFaq(): void {
-    this.faqs.push({ q: '', a: '' });
+    this.faqs.push({ q: '', steps: [{ t: '' }] });
   }
 
   removeFaq(index: number): void {
     this.faqs.splice(index, 1);
+  }
+
+  addFaqStep(faqIndex: number): void {
+    this.faqs[faqIndex].steps.push({ t: '' });
+  }
+
+  removeFaqStep(faqIndex: number, stepIndex: number): void {
+    if (this.faqs[faqIndex].steps.length > 1) {
+      this.faqs[faqIndex].steps.splice(stepIndex, 1);
+    }
+  }
+
+  moveFaqStep(faqIndex: number, stepIndex: number, dir: -1 | 1): void {
+    const steps = this.faqs[faqIndex].steps;
+    const newIdx = stepIndex + dir;
+    if (newIdx < 0 || newIdx >= steps.length) return;
+    const temp = steps[stepIndex];
+    steps[stepIndex] = steps[newIdx];
+    steps[newIdx] = temp;
   }
 
   // ----- Submit -----
@@ -204,7 +265,7 @@ export class SmartflowWizardComponent {
     this.wizardComplete = true;
   }
 
-  async uploadMedia(event: any, type: 'img' | 'video', item: SmartflowDraftStep | SmartflowDraftFaq) {
+  async uploadMedia(event: any, type: 'img' | 'video', item: any) {
     const file = event.target.files[0];
     if (!file) return;
 

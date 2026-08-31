@@ -85,7 +85,13 @@
           <span>{{ c.name }}</span>
         </span>
       </nav>
-      <p class="lede">{{ c.desc }}</p>
+      <p class="lede">
+        {{ c.desc }}
+        <button *ngIf="c.interactiveScreenId" (click)="openInteractiveScreen(c.interactiveScreenId)" class="inline-flex items-center gap-1.5 text-[#377DFF] hover:text-blue-700 font-medium transition-colors text-[15px] ml-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+          Esplora l'interfaccia live
+        </button>
+      </p>
       <div class="grid3">
         <button class="card" *ngFor="let m of c.manuals; let i = index; trackBy: trackByManual" [style.animationDelay]="(i * 45) + 'ms'" (click)="openGuide(m.id)">
           <div class="cardtop">
@@ -327,3 +333,11 @@
   </div>
 
 </div>
+
+<!-- ===== Interactive Screen ===== -->
+<app-interactive-screen 
+  *ngIf="activeInteractiveScreenId" 
+  [screenId]="activeInteractiveScreenId" 
+  [editMode]="interactiveEditMode" 
+  (chiudi)="closeInteractiveScreen()">
+</app-interactive-screen>
