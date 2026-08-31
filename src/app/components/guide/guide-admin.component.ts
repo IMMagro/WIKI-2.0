@@ -146,19 +146,19 @@ export class GuideAdminComponent {
     // Aggiungi le FAQ (extra: true)
     if (parsed.faqs && parsed.faqs.length > 0) {
       parsed.faqs.forEach(f => {
-        builtFaqs.push({
-          q: f.q,
-          tags: [],
-          updated: this.today(),
-          steps: [{
-            t: f.a,
-            img: f.img,
-            imgUrl: f.imgUrl,
-            video: f.video,
-            videoUrl: f.videoUrl
-          }],
-          extra: true
-        });
+          builtFaqs.push({
+            q: f.q,
+            tags: [],
+            updated: this.today(),
+            steps: f.steps ? f.steps.map(s => ({
+              t: s.t,
+              img: s.img,
+              imgUrl: s.imgUrl,
+              video: s.video,
+              videoUrl: s.videoUrl
+            })) : [],
+            extra: true
+          });
       });
     }
 

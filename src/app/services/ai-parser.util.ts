@@ -1,4 +1,4 @@
-﻿export interface ParsedAiStep {
+export interface ParsedAiStep {
   t: string;
   img?: boolean;
   imgUrl?: string;
@@ -8,11 +8,7 @@
 
 export interface ParsedAiFaq {
   q: string;
-  a: string;
-  img?: boolean;
-  imgUrl?: string;
-  video?: boolean;
-  videoUrl?: string;
+  steps: ParsedAiStep[];
 }
 
 export interface ParsedAiDoc {
@@ -218,18 +214,18 @@ function parseFaqsBlock(block: string): ParsedAiFaq[] {
       a = a.replace(/<\/?(p|h[1-6]|div)[^>]*>/gi, '').trim();
 
       if (q) {
-        const faqObj: ParsedAiFaq = { q, a };
+        const step: ParsedAiStep = { t: a };
         if (mediaUrl) {
           const isVid = isVideoUrl(mediaUrl);
           if (isVid) {
-            faqObj.video = true;
-            faqObj.videoUrl = mediaUrl;
+            step.video = true;
+            step.videoUrl = mediaUrl;
           } else {
-            faqObj.img = true;
-            faqObj.imgUrl = mediaUrl;
+            step.img = true;
+            step.imgUrl = mediaUrl;
           }
         }
-        faqs.push(faqObj);
+        faqs.push({ q, steps: [step] });
       }
     }
   }

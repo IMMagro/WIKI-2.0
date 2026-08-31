@@ -57,11 +57,7 @@ export interface SmartflowDraftStep {
 
 export interface SmartflowDraftFaq {
   q: string;
-  a: string;
-  img?: boolean;
-  imgUrl?: string;
-  video?: boolean;
-  videoUrl?: string;
+  steps: SmartflowDraftStep[];
 }
 
 export interface SmartflowDraft {

@@ -170,11 +170,30 @@ export class SmartflowWizardComponent {
 
   // ----- FAQ Management -----
   addFaq(): void {
-    this.faqs.push({ q: '', a: '' });
+    this.faqs.push({ q: '', steps: [{ t: '' }] });
   }
 
   removeFaq(index: number): void {
     this.faqs.splice(index, 1);
+  }
+
+  addFaqStep(faqIndex: number): void {
+    this.faqs[faqIndex].steps.push({ t: '' });
+  }
+
+  removeFaqStep(faqIndex: number, stepIndex: number): void {
+    if (this.faqs[faqIndex].steps.length > 1) {
+      this.faqs[faqIndex].steps.splice(stepIndex, 1);
+    }
+  }
+
+  moveFaqStep(faqIndex: number, stepIndex: number, dir: -1 | 1): void {
+    const steps = this.faqs[faqIndex].steps;
+    const newIdx = stepIndex + dir;
+    if (newIdx < 0 || newIdx >= steps.length) return;
+    const temp = steps[stepIndex];
+    steps[stepIndex] = steps[newIdx];
+    steps[newIdx] = temp;
   }
 
   // ----- Submit -----
@@ -204,7 +223,7 @@ export class SmartflowWizardComponent {
     this.wizardComplete = true;
   }
 
-  async uploadMedia(event: any, type: 'img' | 'video', item: SmartflowDraftStep | SmartflowDraftFaq) {
+  async uploadMedia(event: any, type: 'img' | 'video', item: any) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -218,7 +237,9 @@ export class SmartflowWizardComponent {
     formData.append('id', draftId);
 
     try {
-      const res = await this.http.post<{success: boolean, url: string}>('api/upload_asset.ashx', formData).toPromise();
+      const token = sessionStorage.getItem('adminToken');
+      const headers: any = token ? { Authorization: 'Bearer ' + token } : {};
+      const res = await this.http.post<{success: boolean, url: string}>('/api/upload_asset.ashx', formData, { headers }).toPromise();
       if (res && res.success) {
          if (type === 'img') {
            item.img = true;
