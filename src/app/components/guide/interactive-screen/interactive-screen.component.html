@@ -39,12 +39,12 @@
     </div>
   </div>
 
-  <!-- Main Content Area -->
-  <div *ngIf="!loading && screen" class="flex-1 relative overflow-auto p-4 sm:p-8 flex items-start justify-center">
+  <!-- Main Content Area (Maximized Full-Screen View) -->
+  <div *ngIf="!loading && screen" class="flex-1 relative overflow-auto p-3 sm:p-6 flex items-center justify-center">
     
     <!-- Image Container with soft shadow and white border -->
-    <div class="relative bg-white p-2.5 sm:p-3 rounded-2xl shadow-[0_20px_50px_rgba(30,32,34,0.09)] border border-[#E2E8F0] max-w-full" (click)="onImageClick($event); $event.stopPropagation()">
-      <img [src]="screen.imageUrl" alt="Screenshot Interfaccia" class="block max-w-full h-auto rounded-xl select-none" style="max-height: 78vh;" />
+    <div class="relative bg-white p-2 sm:p-2.5 rounded-2xl shadow-[0_20px_50px_rgba(30,32,34,0.09)] border border-[#E2E8F0] max-w-full" (click)="onImageClick($event); $event.stopPropagation()">
+      <img [src]="screen.imageUrl" alt="Screenshot Interfaccia" class="block max-w-full h-auto rounded-xl select-none" style="max-height: 85vh;" />
       
       <!-- Pins -->
       <button *ngFor="let pin of screen.pins"

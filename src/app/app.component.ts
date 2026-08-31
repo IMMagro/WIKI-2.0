@@ -22,6 +22,8 @@ import { LegalService } from './services/legal.service';
 import { LegalModalComponent } from './components/shared/legal-modal/legal-modal.component';
 import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-banner.component';
 import { NavigationSettingsService } from './services/navigation-settings.service';
+import { InteractiveScreenComponent } from './components/guide/interactive-screen/interactive-screen.component';
+import { InteractiveScreensService } from './services/interactive-screens.service';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +43,8 @@ import { NavigationSettingsService } from './services/navigation-settings.servic
     FaqReadingPanelComponent,
     NewsCarouselComponent,
     LegalModalComponent,
-    CookieBannerComponent
+    CookieBannerComponent,
+    InteractiveScreenComponent
   ],
   templateUrl: './app.component.html'
 })
@@ -76,7 +79,8 @@ export class AppComponent implements OnInit {
     public faqReadingService: FaqReadingService,
     public guideTracker: GuideTrackerService,
     public legalService: LegalService,
-    public navSettingsService: NavigationSettingsService
+    public navSettingsService: NavigationSettingsService,
+    public interactiveScreensService: InteractiveScreensService
   ) {}
 
   // Uscita dalla modalità admin

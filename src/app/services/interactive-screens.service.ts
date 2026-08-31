@@ -1,12 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { InteractiveScreen } from '../components/guide/guide.models';
-import { Observable, of, tap, catchError } from 'rxjs';
+import { Observable, of, tap, catchError, BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class InteractiveScreensService {
   private screensCache: { [id: string]: InteractiveScreen } | null = null;
+
+  private _activeScreenId = new BehaviorSubject<string | null>(null);
+  public activeScreenId$ = this._activeScreenId.asObservable();
+
+  private _activeEditMode = new BehaviorSubject<boolean>(false);
+  public activeEditMode$ = this._activeEditMode.asObservable();
+
+  open(screenId: string, editMode = false) {
+    this._activeEditMode.next(editMode);
+    this._activeScreenId.next(screenId);
+  }
+
+  close() {
+    this._activeScreenId.next(null);
+    this._activeEditMode.next(false);
+  }
 
   constructor(private http: HttpClient) {}
 

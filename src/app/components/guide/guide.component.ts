@@ -4,12 +4,12 @@ import { GuideService } from '../../services/guide.service';
 import { GuideTrackerService } from '../../services/guide-tracker.service';
 import { Category, Guide, Faq, Service, Ref, JourneyStep, Journey } from './guide.models';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
-import { InteractiveScreenComponent } from './interactive-screen/interactive-screen.component';
+import { InteractiveScreensService } from '../../services/interactive-screens.service';
 
 @Component({
   selector: 'app-guide',
   standalone: true,
-  imports: [CommonModule, SafeHtmlPipe, InteractiveScreenComponent],
+  imports: [CommonModule, SafeHtmlPipe],
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.css']
 })
@@ -29,15 +29,8 @@ export class GuideComponent implements OnDestroy {
   lightboxZoom: number = 1;
 
   // Interfaccia Interattiva
-  activeInteractiveScreenId: string | null = null;
-  interactiveEditMode = false; // Il cliente NON può editare i pin
-
   openInteractiveScreen(id: string) {
-    this.activeInteractiveScreenId = id;
-  }
-
-  closeInteractiveScreen() {
-    this.activeInteractiveScreenId = null;
+    this.interactiveScreensService.open(id, false);
   }
 
   openLightbox(url: string, title: string, type: 'img' | 'video', ev?: Event) {
@@ -257,7 +250,11 @@ export class GuideComponent implements OnDestroy {
   }
   hideSvc() { clearTimeout(this.svcTimer); this.svcVisible = false; }
 
-  constructor(private guides: GuideService, private guideTracker: GuideTrackerService) {}
+  constructor(
+    private guides: GuideService,
+    private guideTracker: GuideTrackerService,
+    private interactiveScreensService: InteractiveScreensService
+  ) {}
 
   ngOnDestroy(): void {
     this.guideTracker.trackGuideLeave();

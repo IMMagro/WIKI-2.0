@@ -335,11 +335,3 @@
   </div>
 
 </div>
-
-<!-- ===== Interactive Screen ===== -->
-<app-interactive-screen 
-  *ngIf="activeInteractiveScreenId" 
-  [screenId]="activeInteractiveScreenId" 
-  [editMode]="interactiveEditMode" 
-  (chiudi)="closeInteractiveScreen()">
-</app-interactive-screen>

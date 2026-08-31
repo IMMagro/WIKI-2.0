@@ -368,6 +368,14 @@
   <!-- Banner Consenso Cookie Prima Visita -->
   <app-cookie-banner></app-cookie-banner>
 
+  <!-- Modale Schermata Interattiva a Schermo Intero (True Full-Screen - Copre Header, Sidebar e Contatti) -->
+  <app-interactive-screen
+    *ngIf="interactiveScreensService.activeScreenId$ | async as screenId"
+    [screenId]="screenId"
+    [editMode]="(interactiveScreensService.activeEditMode$ | async) ?? false"
+    (chiudi)="interactiveScreensService.close()">
+  </app-interactive-screen>
+
 </div>
 
 

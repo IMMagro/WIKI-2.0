@@ -9,7 +9,7 @@ import { parseAiDocument } from '../../services/ai-parser.util';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
 import { SmartflowReviewComponent } from '../smartflow/smartflow-review.component';
 import { SmartflowLeaderboardComponent } from '../smartflow/smartflow-leaderboard.component';
-import { InteractiveScreenComponent } from './interactive-screen/interactive-screen.component';
+import { InteractiveScreensService } from '../../services/interactive-screens.service';
 
 @Component({
   selector: 'app-guide-admin',
@@ -19,8 +19,7 @@ import { InteractiveScreenComponent } from './interactive-screen/interactive-scr
     FormsModule,
     SmartflowWizardComponent,
     SmartflowReviewComponent,
-    SmartflowLeaderboardComponent,
-    InteractiveScreenComponent
+    SmartflowLeaderboardComponent
   ],
   templateUrl: './guide-admin.component.html'
 })
@@ -53,14 +52,8 @@ export class GuideAdminComponent {
   linkTargetProp: string = '';
 
   // Interactive Screen Admin
-  activeInteractiveScreenId: string | null = null;
-
   openInteractiveScreen(id: string) {
-    this.activeInteractiveScreenId = id;
-  }
-
-  closeInteractiveScreen() {
-    this.activeInteractiveScreenId = null;
+    this.interactiveScreensService.open(id, true);
   }
 
   openLinkModal(textarea: HTMLTextAreaElement, item: any, prop: string) {
@@ -100,7 +93,12 @@ export class GuideAdminComponent {
 
   iconPath(name: string): string { return this.iconPaths[name] || this.iconPaths['book']; }
 
-  constructor(public guides: GuideService, public smartflow: SmartflowService, private http: HttpClient) {}
+  constructor(
+    public guides: GuideService,
+    public smartflow: SmartflowService,
+    private http: HttpClient,
+    private interactiveScreensService: InteractiveScreensService
+  ) {}
 
 
   get categories(): Category[] { return this.guides.categories; }
