@@ -274,4 +274,24 @@ export class GuideComponent implements OnDestroy {
       this.openGuide(pill.targetId);
     }
   }
+
+  /** Intercetta click su link interni generati dall'editor Smartflow/Admin */
+  handleInternalLink(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const link = target.closest('.internal-link') as HTMLElement;
+    if (link) {
+      event.preventDefault();
+      const catId = link.getAttribute('data-cat-id');
+      const guideId = link.getAttribute('data-guide-id');
+      const faqIdxStr = link.getAttribute('data-faq-idx');
+
+      if (catId && guideId) {
+        this.selCat = catId;
+        this.openGuide(guideId);
+        if (faqIdxStr) {
+          this.openFaq(parseInt(faqIdxStr, 10));
+        }
+      }
+    }
+  }
 }

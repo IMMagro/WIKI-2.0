@@ -527,4 +527,19 @@ export class AppComponent implements OnInit {
       setTimeout(() => this.guideRef?.openCat(catId), 0);
     }
   }
+
+  goToInternalLinkFromFaq(linkInfo: {catId: string, guideId: string, faqIdx?: number}) {
+    // Navigate to the correct tab and open the guide
+    this.menuItems.forEach((m, idx) => m.active = (idx === 1));
+    this.activeIndex = 1;
+    setTimeout(() => {
+      if (this.guideRef) {
+        this.guideRef.selCat = linkInfo.catId;
+        this.guideRef.openGuide(linkInfo.guideId);
+        if (linkInfo.faqIdx !== undefined) {
+          this.guideRef.openFaq(linkInfo.faqIdx);
+        }
+      }
+    }, 0);
+  }
 }
