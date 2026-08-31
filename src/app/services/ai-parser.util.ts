@@ -25,6 +25,29 @@ export function parseAiDocument(rawText: string): ParsedAiDoc {
   }
 
   let text = rawText.trim();
+  
+  // 0. Prova a parsare come JSON (supporta JSON diretto o blocco Markdown ```json)
+  try {
+    let jsonStr = text;
+    if (jsonStr.startsWith('```json')) {
+      jsonStr = jsonStr.replace(/^```json/i, '').replace(/```$/i, '').trim();
+    } else if (jsonStr.startsWith('```')) {
+      jsonStr = jsonStr.replace(/^```/i, '').replace(/```$/i, '').trim();
+    }
+    const jsonObj = JSON.parse(jsonStr);
+    if (jsonObj && (jsonObj.title !== undefined || jsonObj.steps !== undefined || jsonObj.overview !== undefined)) {
+      return {
+        title: jsonObj.title || '',
+        description: jsonObj.description || '',
+        overview: jsonObj.overview || '',
+        steps: Array.isArray(jsonObj.steps) ? jsonObj.steps : [],
+        faqs: Array.isArray(jsonObj.faqs) ? jsonObj.faqs : []
+      };
+    }
+  } catch (e) {
+    // Non è JSON, procedi con il parsing MDX
+  }
+
   let title = '';
   let description = '';
 
