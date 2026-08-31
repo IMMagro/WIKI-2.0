@@ -43,6 +43,48 @@ export class GuideAdminComponent {
     quote: 'M4 5h13v11H9l-4 3V5zM8 9h6M8 12h4',
     book: 'M5 5a2 2 0 012-2h11v16H7a2 2 0 00-2 2V5z'
   };
+
+  // Internal Link Modal
+  showLinkModal = false;
+  linkTargetTextarea: HTMLTextAreaElement | null = null;
+  linkTargetItem: any = null;
+  linkTargetProp: string = '';
+
+  openLinkModal(textarea: HTMLTextAreaElement, item: any, prop: string) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    if (start === end) {
+      alert('Seleziona prima una o più parole nel testo per creare un link (trascina il cursore per evidenziare il testo).');
+      return;
+    }
+    this.linkTargetTextarea = textarea;
+    this.linkTargetItem = item;
+    this.linkTargetProp = prop;
+    this.showLinkModal = true;
+  }
+
+  insertInternalLink(catId: string, guideId: string, faqIdx?: number) {
+    if (!this.linkTargetTextarea || !this.linkTargetItem) return;
+    const t = this.linkTargetTextarea;
+    const start = t.selectionStart;
+    const end = t.selectionEnd;
+    const fullText = this.linkTargetItem[this.linkTargetProp] || '';
+    
+    const selectedText = fullText.substring(start, end);
+    const faqAttr = faqIdx !== undefined ? ` data-faq-idx="${faqIdx}"` : '';
+    const linkHtml = `<a href="javascript:void(0)" data-cat-id="${catId}" data-guide-id="${guideId}"${faqAttr} class="internal-link font-semibold text-[#377DFF] hover:underline cursor-pointer transition-colors" title="Apri risorsa collegata">` + selectedText + `</a>`;
+    
+    const newText = fullText.substring(0, start) + linkHtml + fullText.substring(end);
+    this.linkTargetItem[this.linkTargetProp] = newText;
+    this.showLinkModal = false;
+  }
+
+  closeLinkModal() {
+    this.showLinkModal = false;
+    this.linkTargetTextarea = null;
+    this.linkTargetItem = null;
+  }
+
   iconPath(name: string): string { return this.iconPaths[name] || this.iconPaths['book']; }
 
   constructor(public guides: GuideService, public smartflow: SmartflowService, private http: HttpClient) {}
