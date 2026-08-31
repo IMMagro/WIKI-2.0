@@ -4,7 +4,16 @@ export interface Service { name: string; desc: string; }
 export interface Faq { q: string; tags: string[]; read?: boolean; expanded?: boolean; updated: string; steps: Step[]; service?: Service; extra?: boolean; }
 export interface Guide { id: string; title: string; status: 'pub' | 'draft'; updated: string; desc: string; overview?: string; service?: Service; faqs: Faq[]; }
 export interface Category { id: string; name: string; icon: string; emoji?: string; accent: 'blue' | 'magenta'; desc: string; manuals: Guide[]; interactiveScreenId?: string; }
-export interface InteractivePin { id: string; x: number; y: number; title: string; content: string; }
+export interface InteractivePin {
+  id: string;
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+  type?: 'pin' | 'box';
+  title: string;
+  content: string;
+}
 export interface InteractiveScreen { id: string; imageUrl: string; pins: InteractivePin[]; }
 export interface Ref { type: 'category' | 'guide' | 'faq' | 'home'; cat?: string; man?: string; faq?: number; }
 export interface JourneyStep { title: string; text: string; ref: Ref; }

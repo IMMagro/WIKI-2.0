@@ -1,5 +1,17 @@
-/* Gli stili base (Tailwind) e le animazioni (animate-fade-in, animate-ping) sono gestite globalmente nel progetto. */
+/* Stili base per Pin, Rettangoli e Maniglie di Ridimensionamento */
 .interactive-pin {
-  /* Assicurati che l'outline non sia mostrato al click per mantenere uno stile pulito */
   outline: none;
 }
+
+.interactive-box {
+  user-select: none;
+}
+
+.interactive-box:hover {
+  backdrop-filter: blur(1px);
+}
+
+.handle {
+  touch-action: none;
+}
+
