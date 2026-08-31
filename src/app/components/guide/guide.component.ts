@@ -143,7 +143,10 @@ export class GuideComponent implements OnDestroy {
     el.classList.add(dir);
   }
 
+  navHistory: {catId: string; guideId: string; faqIdx: number; title: string}[] = [];
+
   goHome() {
+    this.navHistory = [];
     this.guideTracker.trackGuideLeave();
     this.view = 'cats';
     this.selCat = null;
@@ -161,6 +164,7 @@ export class GuideComponent implements OnDestroy {
   }
 
   openCat(id: string, dir: 'fwd' | 'back' = 'fwd') {
+    this.navHistory = [];
     this.guideTracker.trackGuideLeave();
     this.view = 'guides';
     this.selCat = id;
@@ -171,7 +175,8 @@ export class GuideComponent implements OnDestroy {
   isTocOpen = false;
   toggleToc() { this.isTocOpen = !this.isTocOpen; }
 
-  openGuide(id: string) {
+  openGuide(id: string, clearHistory: boolean = true) {
+    if (clearHistory) { this.navHistory = []; }
     this.view = 'read';
     this.selGuide = id;
     this.selFaq = -1;
@@ -287,12 +292,23 @@ export class GuideComponent implements OnDestroy {
       const faqIdxStr = link.getAttribute('data-faq-idx');
 
       if (catId && guideId) {
+        if (this.view === 'read' && this.selCat && this.selGuide) { this.navHistory.push({ catId: this.selCat, guideId: this.selGuide, faqIdx: this.selFaq, title: this.curGuide?.title || 'Guida precedente' }); }
         this.selCat = catId;
-        this.openGuide(guideId);
+        this.openGuide(guideId, false);
         if (faqIdxStr) {
           this.openFaq(parseInt(faqIdxStr, 10));
         }
       }
     }
   }
+
+  goBackInHistory(): void {
+    const prev = this.navHistory.pop();
+    if (prev) {
+      this.selCat = prev.catId;
+      this.openGuide(prev.guideId, false);
+      if (prev.faqIdx !== -1) this.openFaq(prev.faqIdx);
+    }
+  }
 }
+

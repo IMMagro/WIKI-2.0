@@ -114,6 +114,13 @@
           </button>
           <span class="bc-sep">/</span>
           <span class="bc-current">{{ g.title }}</span>
+          <ng-container *ngIf="navHistory.length > 0">
+            <span class="bc-sep ml-3">|</span>
+            <button class="bc-link text-blue-600 dark:text-blue-400 hover:text-blue-700 font-semibold flex items-center gap-1" (click)="goBackInHistory()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+              Torna a: {{ navHistory[navHistory.length - 1].title }}
+            </button>
+          </ng-container>
         </nav>
 
         <div class="reader" [class.toc-open]="isTocOpen">
@@ -327,5 +334,6 @@
   </div>
 
 </div>
+
 
 
