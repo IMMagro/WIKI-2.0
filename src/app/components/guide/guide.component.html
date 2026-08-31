@@ -283,27 +283,27 @@
   <a class="cta">Scopri il servizio &rarr;</a>
 </div>
 
-<!-- ===== Notion-Style Lightbox Modal ===== -->
-<div *ngIf="lightboxImg || lightboxVideo" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-slate-950/80 backdrop-blur-md animate-fade-in" (click)="closeLightbox()">
+<!-- ===== Notion-Style Lightbox Modal (Clean Light Mode) ===== -->
+<div *ngIf="lightboxImg || lightboxVideo" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-8 bg-[#F8FAFD]/92 backdrop-blur-2xl animate-fade-in" (click)="closeLightbox()">
   
-  <!-- Floating Top Controls Bar (Only show zoom for images) -->
+  <!-- Floating Top Controls Bar (Clean Light Glassmorphism) -->
   <div class="absolute top-5 right-5 flex items-center gap-2 z-10" (click)="$event.stopPropagation()">
     <ng-container *ngIf="lightboxImg">
       <!-- Zoom Out -->
-      <button (click)="zoomOut($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Riduci (-)">
+      <button (click)="zoomOut($event)" class="p-2.5 rounded-xl bg-white/80 hover:bg-white text-[#1E2022] hover:text-[#377DFF] backdrop-blur-xl border border-[#E2E8F0] transition-all cursor-pointer shadow-md" title="Riduci (-)">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
       </button>
       <!-- Zoom Indicator & Reset -->
-      <button (click)="resetZoom($event)" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 text-xs font-bold transition-all cursor-pointer shadow-lg" title="Reimposta zoom (100%)">
+      <button (click)="resetZoom($event)" class="px-3.5 py-2 rounded-xl bg-white/80 hover:bg-white text-[#1E2022] backdrop-blur-xl border border-[#E2E8F0] text-xs font-bold transition-all cursor-pointer shadow-md" title="Reimposta zoom (100%)">
         {{ (lightboxZoom * 100).toFixed(0) }}%
       </button>
       <!-- Zoom In -->
-      <button (click)="zoomIn($event)" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white backdrop-blur-lg border border-white/15 transition-all cursor-pointer shadow-lg" title="Ingrandisci (+)">
+      <button (click)="zoomIn($event)" class="p-2.5 rounded-xl bg-white/80 hover:bg-white text-[#1E2022] hover:text-[#377DFF] backdrop-blur-xl border border-[#E2E8F0] transition-all cursor-pointer shadow-md" title="Ingrandisci (+)">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
       </button>
     </ng-container>
     <!-- Close Button -->
-    <button (click)="closeLightbox()" class="p-2.5 rounded-xl bg-white/20 hover:bg-rose-600 text-white backdrop-blur-lg border border-white/20 transition-all cursor-pointer shadow-lg ml-2" title="Chiudi (Esc)">
+    <button (click)="closeLightbox()" class="p-2.5 rounded-xl bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 backdrop-blur-xl border border-[#E2E8F0] transition-all cursor-pointer shadow-md ml-2" title="Chiudi (Esc)">
       <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
@@ -311,24 +311,26 @@
   <!-- Media Display Box -->
   <div class="relative w-full h-full flex items-center justify-center p-4 sm:p-12 select-none" (click)="$event.stopPropagation()">
     
-    <div *ngIf="lightboxImg" class="relative transition-transform duration-200 ease-out flex items-center justify-center" 
+    <div *ngIf="lightboxImg" class="relative transition-transform duration-200 ease-out flex items-center justify-center bg-white p-2.5 sm:p-3 rounded-2xl shadow-[0_20px_50px_rgba(30,32,34,0.10)] border border-[#E2E8F0]" 
          [style.transform]="'scale(' + lightboxZoom + ')'">
       <img [src]="lightboxImg" [alt]="lightboxTitle" 
-           class="rounded-md shadow-2xl max-w-full max-h-[85vh] object-contain" 
+           class="rounded-xl max-w-full max-h-[78vh] object-contain select-none" 
            [style.cursor]="lightboxZoom === 1 ? 'zoom-in' : 'zoom-out'"
            (click)="toggleZoom($event)" />
     </div>
 
-    <video *ngIf="lightboxVideo" [src]="lightboxVideo" controls autoplay 
-           class="rounded-md shadow-2xl max-w-full max-h-[85vh] object-contain">
-    </video>
+    <div *ngIf="lightboxVideo" class="bg-white p-2.5 sm:p-3 rounded-2xl shadow-[0_20px_50px_rgba(30,32,34,0.10)] border border-[#E2E8F0]">
+      <video [src]="lightboxVideo" controls autoplay 
+             class="rounded-xl max-w-full max-h-[78vh] object-contain">
+      </video>
+    </div>
 
   </div>
 
   <!-- Bottom Floating Info Bar -->
-  <div class="absolute bottom-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl bg-slate-900/70 backdrop-blur-md border border-white/15 text-xs text-white/90 font-medium pointer-events-none shadow-xl flex items-center gap-2">
-    <svg *ngIf="lightboxImg" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    <svg *ngIf="lightboxVideo" class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+  <div class="absolute bottom-5 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full bg-white/90 backdrop-blur-xl border border-[#E2E8F0] text-xs text-[#1E2022] font-semibold pointer-events-none shadow-lg flex items-center gap-2">
+    <svg *ngIf="lightboxImg" class="w-4 h-4 text-[#377DFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <svg *ngIf="lightboxVideo" class="w-4 h-4 text-[#F80086]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
     <span>{{ lightboxTitle }} &bull; {{ lightboxImg ? "Clicca sull'immagine per zoomare, o premi ESC per uscire" : "Premi ESC per chiudere il video" }}</span>
   </div>
 
