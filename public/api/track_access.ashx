@@ -258,17 +258,15 @@ public class TrackAccess : IHttpHandler {
                         eventsList = new List<object>();
                     }
 
-                    string sw = GetRegionSoftware(matchedRegion);
                     var ev = new Dictionary<string, object>();
                     ev["id"] = "ev_" + DateTime.UtcNow.Ticks;
                     ev["region"] = matchedRegion;
                     ev["guideTitle"] = guideTitle;
                     ev["category"] = category;
                     ev["time"] = nowLocal.ToString("HH:mm");
-                    ev["software"] = sw;
                     ev["clientName"] = "Utente " + matchedRegion;
                     ev["action"] = "Apertura guida: " + guideTitle;
-                    ev["color"] = GetSoftwareColor(sw);
+                    ev["color"] = "#377DFF";
 
                     eventsList.Insert(0, ev);
                     if (eventsList.Count > 15) {
@@ -288,27 +286,6 @@ public class TrackAccess : IHttpHandler {
             context.Response.StatusCode = 500;
             context.Response.Write("{\"error\": \"" + ex.Message.Replace("\"", "\\\"") + "\"}");
         }
-    }
-
-    // ---- Helper Software & Colori per Regione ----
-    private string GetRegionSoftware(string region) {
-        if (string.IsNullOrEmpty(region)) return "Windent";
-        string r = region.ToLowerInvariant();
-        if (r.Contains("lazio") || r.Contains("campania") || r.Contains("puglia") || 
-            r.Contains("sicilia") || r.Contains("calabria") || r.Contains("basilicata") || 
-            r.Contains("abruzzo") || r.Contains("molise")) {
-            return "Poliwin";
-        }
-        if (r.Contains("emilia") || r.Contains("veneto") || r.Contains("trentino")) {
-            return "Winodlab";
-        }
-        return "Windent";
-    }
-
-    private string GetSoftwareColor(string software) {
-        if (software == "Poliwin") return "#F80086";
-        if (software == "Winodlab") return "#F97316";
-        return "#377DFF";
     }
 
     // ---- Geo-IP ----
@@ -382,31 +359,31 @@ public class TrackAccess : IHttpHandler {
 
     private object[] GetDefaultMapNodes() {
         var nodes = new List<Dictionary<string, object>> {
-            CreateNode("lom", "Lombardia", "LOM", "nord", 138.0, 92.0, 45.46, 9.19, 0, 0, "Windent"),
-            CreateNode("laz", "Lazio", "LAZ", "centro", 245.0, 260.0, 41.90, 12.50, 0, 0, "Poliwin"),
-            CreateNode("cam", "Campania", "CAM", "sud", 312.0, 312.0, 40.85, 14.27, 0, 0, "Poliwin"),
-            CreateNode("ven", "Veneto", "VEN", "nord", 215.0, 92.0, 45.44, 12.32, 0, 0, "Winodlab"),
-            CreateNode("emr", "Emilia-Romagna", "EMR", "nord", 188.0, 142.0, 44.49, 11.34, 0, 0, "Winodlab"),
-            CreateNode("pug", "Puglia", "PUG", "sud", 382.0, 305.0, 41.12, 16.87, 0, 0, "Poliwin"),
-            CreateNode("sic", "Sicilia", "SIC", "sud", 285.0, 460.0, 37.50, 14.20, 0, 0, "Poliwin"),
-            CreateNode("tos", "Toscana", "TOS", "centro", 188.0, 188.0, 43.77, 11.25, 0, 0, "Windent"),
-            CreateNode("pie", "Piemonte", "PIE", "nord", 72.3, 112.2, 45.07, 7.68, 0, 0, "Windent"),
-            CreateNode("sar", "Sardegna", "SAR", "sud", 115.0, 345.0, 40.12, 9.01, 0, 0, "Windent"),
-            CreateNode("lig", "Liguria", "LIG", "nord", 105.0, 152.0, 44.41, 8.93, 0, 0, "Windent"),
-            CreateNode("mar", "Marche", "MAR", "centro", 260.0, 190.0, 43.61, 13.51, 0, 0, "Windent"),
-            CreateNode("cal", "Calabria", "CAL", "sud", 370.0, 395.0, 38.91, 16.59, 0, 0, "Poliwin"),
-            CreateNode("taa", "Trentino-Alto Adige", "TAA", "nord", 202.0, 54.0, 46.06, 11.12, 0, 0, "Winodlab"),
-            CreateNode("fvg", "Friuli-Venezia Giulia", "FVG", "nord", 262.0, 68.0, 45.65, 13.77, 0, 0, "Windent"),
-            CreateNode("abr", "Abruzzo", "ABR", "sud", 288.0, 242.0, 42.35, 13.40, 0, 0, "Poliwin"),
-            CreateNode("umb", "Umbria", "UMB", "centro", 238.0, 208.0, 43.11, 12.39, 0, 0, "Windent"),
-            CreateNode("bas", "Basilicata", "BAS", "sud", 360.0, 330.0, 40.64, 15.80, 0, 0, "Poliwin"),
-            CreateNode("mol", "Molise", "MOL", "sud", 310.0, 268.0, 41.56, 14.66, 0, 0, "Poliwin"),
-            CreateNode("vda", "Valle d'Aosta", "VDA", "nord", 60.0, 82.0, 45.73, 7.32, 0, 0, "Windent")
+            CreateNode("lom", "Lombardia", "LOM", "nord", 138.0, 92.0, 45.46, 9.19, 0, 0),
+            CreateNode("laz", "Lazio", "LAZ", "centro", 245.0, 260.0, 41.90, 12.50, 0, 0),
+            CreateNode("cam", "Campania", "CAM", "sud", 312.0, 312.0, 40.85, 14.27, 0, 0),
+            CreateNode("ven", "Veneto", "VEN", "nord", 215.0, 92.0, 45.44, 12.32, 0, 0),
+            CreateNode("emr", "Emilia-Romagna", "EMR", "nord", 188.0, 142.0, 44.49, 11.34, 0, 0),
+            CreateNode("pug", "Puglia", "PUG", "sud", 382.0, 305.0, 41.12, 16.87, 0, 0),
+            CreateNode("sic", "Sicilia", "SIC", "sud", 285.0, 460.0, 37.50, 14.20, 0, 0),
+            CreateNode("tos", "Toscana", "TOS", "centro", 188.0, 188.0, 43.77, 11.25, 0, 0),
+            CreateNode("pie", "Piemonte", "PIE", "nord", 72.3, 112.2, 45.07, 7.68, 0, 0),
+            CreateNode("sar", "Sardegna", "SAR", "sud", 115.0, 345.0, 40.12, 9.01, 0, 0),
+            CreateNode("lig", "Liguria", "LIG", "nord", 105.0, 152.0, 44.41, 8.93, 0, 0),
+            CreateNode("mar", "Marche", "MAR", "centro", 260.0, 190.0, 43.61, 13.51, 0, 0),
+            CreateNode("cal", "Calabria", "CAL", "sud", 370.0, 395.0, 38.91, 16.59, 0, 0),
+            CreateNode("taa", "Trentino-Alto Adige", "TAA", "nord", 202.0, 54.0, 46.06, 11.12, 0, 0),
+            CreateNode("fvg", "Friuli-Venezia Giulia", "FVG", "nord", 262.0, 68.0, 45.65, 13.77, 0, 0),
+            CreateNode("abr", "Abruzzo", "ABR", "sud", 288.0, 242.0, 42.35, 13.40, 0, 0),
+            CreateNode("umb", "Umbria", "UMB", "centro", 238.0, 208.0, 43.11, 12.39, 0, 0),
+            CreateNode("bas", "Basilicata", "BAS", "sud", 360.0, 330.0, 40.64, 15.80, 0, 0),
+            CreateNode("mol", "Molise", "MOL", "sud", 310.0, 268.0, 41.56, 14.66, 0, 0),
+            CreateNode("vda", "Valle d'Aosta", "VDA", "nord", 60.0, 82.0, 45.73, 7.32, 0, 0)
         };
         return nodes.ToArray();
     }
 
-    private Dictionary<string, object> CreateNode(string id, string name, string code, string macroArea, double x, double y, double lat, double lng, int v, int active, string software) {
+    private Dictionary<string, object> CreateNode(string id, string name, string code, string macroArea, double x, double y, double lat, double lng, int v, int active) {
         var n = new Dictionary<string, object>();
         n["id"] = id;
         n["name"] = name;
@@ -418,7 +395,6 @@ public class TrackAccess : IHttpHandler {
         n["lng"] = lng;
         n["v"] = v;
         n["active"] = active;
-        n["software"] = software;
         return n;
     }
 
