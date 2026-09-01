@@ -1,0 +1,152 @@
+<div class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#F8FAFD] dark:bg-[#0F172A] text-[#1E2022] dark:text-[#F8FAFD] overflow-hidden select-none px-4 onboarding-container"
+     [class.onboarding-fade-out]="fadingOut">
+
+  <!-- =========================================================================
+       Background Decorators (Aurora Glow, Radiant Rings, Floating Particles)
+       ========================================================================= -->
+  <!-- Radiant Concentric Rings -->
+  <div class="concentric-ring ring-1"></div>
+  <div class="concentric-ring ring-2"></div>
+  <div class="concentric-ring ring-3"></div>
+  <div class="concentric-ring ring-4"></div>
+
+  <!-- Soft Central Aurora Glow -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[540px] h-[540px] sm:w-[680px] sm:h-[680px] bg-gradient-to-tr from-[#377DFF]/15 via-[#5B97FF]/10 to-[#F80086]/10 rounded-full blur-[100px] sm:blur-[130px] pointer-events-none"></div>
+
+  <!-- Floating Particles -->
+  <div class="floating-particle particle-1"></div>
+  <div class="floating-particle particle-2"></div>
+  <div class="floating-particle particle-3"></div>
+  <div class="floating-particle particle-4"></div>
+
+  <!-- =========================================================================
+       Main Centered Content
+       ========================================================================= -->
+  <div class="relative z-10 flex flex-col items-center max-w-lg w-full">
+
+    <!-- Subtitle Badge: Quaderno Elettronico • Knowledge Workspace -->
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 border border-[#377DFF]/25 shadow-sm mb-5 backdrop-blur-md transition-all duration-300">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#377DFF] opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#377DFF]"></span>
+      </span>
+      <span class="text-xs sm:text-sm font-semibold tracking-wide text-[#377DFF] dark:text-[#5B97FF]">
+        Quaderno Elettronico • Knowledge Workspace
+      </span>
+    </div>
+
+    <!-- Centered Brand Title: WIKI with progressive color lighting & shimmer -->
+    <div class="relative mb-6 text-center select-none">
+      <div class="text-6xl sm:text-7xl font-black tracking-tight font-sans leading-none relative">
+        <!-- Base graphite layer (visible at start) -->
+        <span class="text-[#1E2022] dark:text-[#CBD5E1] transition-colors duration-300">
+          WIKI
+        </span>
+
+        <!-- Vivid QE blue / celestial overlay (illuminates proportionally with progress) -->
+        <span class="absolute inset-0 bg-gradient-to-r from-[#377DFF] via-[#5B97FF] to-[#38BDF8] bg-clip-text text-transparent transition-opacity duration-100 ease-out"
+              [style.opacity]="progress / 100">
+          WIKI
+        </span>
+
+        <!-- Light shimmer wave across title -->
+        <span class="shimmer-overlay">WIKI</span>
+      </div>
+    </div>
+
+    <!-- Dynamic Progress Bar Section -->
+    <div class="w-full max-w-md">
+      <!-- Status text & Percentage -->
+      <div class="flex items-center justify-between text-xs sm:text-sm mb-2 font-medium px-1">
+        <div class="flex items-center gap-2 text-[#77838F] dark:text-[#94A3B8]">
+          <span *ngIf="!isCompleted" class="inline-block w-3.5 h-3.5 border-2 border-[#377DFF] border-t-transparent rounded-full animate-spin"></span>
+          <svg *ngIf="isCompleted" class="w-4 h-4 text-[#10B981] success-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class="transition-all duration-300 font-semibold text-[#1E2022] dark:text-[#F8FAFD]">
+            {{ currentStatusText }}
+          </span>
+        </div>
+
+        <span class="font-mono font-bold text-[#377DFF] dark:text-[#5B97FF] text-sm tabular-nums">
+          {{ progress }}%
+        </span>
+      </div>
+
+      <!-- Rounded Progress Track -->
+      <div class="w-full h-3 sm:h-3.5 bg-slate-200/80 dark:bg-slate-800 rounded-full p-0.5 relative overflow-hidden border border-slate-300/40 dark:border-slate-700/50 shadow-inner backdrop-blur-sm">
+        <!-- Fill Gradient -->
+        <div class="h-full rounded-full bg-gradient-to-r from-[#377DFF] via-[#5B97FF] to-[#38BDF8] relative transition-all duration-100 ease-out"
+             [style.width.%]="progress">
+          <!-- Light spark at head of the bar -->
+          <div *ngIf="progress > 2 && progress < 100" 
+               class="absolute right-0 top-0 bottom-0 w-3.5 bg-white rounded-full blur-[1px] progress-spark">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Tips Box (Glassmorphism card) -->
+    <div class="w-full max-w-md bg-white/85 dark:bg-slate-800/85 backdrop-blur-xl border border-[#E2E8F0] dark:border-slate-700/60 shadow-[0_10px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)] rounded-2xl p-4 sm:p-5 relative overflow-hidden mt-6">
+      
+      <!-- Top Tip Category & Icon Header -->
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700/50">
+        <div class="flex items-center gap-2.5">
+          <span class="text-xl shrink-0 select-none">{{ currentTip.icon }}</span>
+          <span class="font-bold text-sm text-[#1E2022] dark:text-white">
+            {{ currentTip.title }}
+          </span>
+        </div>
+        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#377DFF]/10 text-[#377DFF] dark:bg-[#377DFF]/20 dark:text-[#5B97FF]">
+          {{ currentTip.tag }}
+        </span>
+      </div>
+
+      <!-- Tip Body Description -->
+      <div class="min-h-[48px] flex items-center mt-2.5">
+        <p class="text-xs sm:text-sm text-[#77838F] dark:text-[#94A3B8] leading-relaxed tip-item-enter"
+           [attr.data-tip-id]="currentTipIndex">
+          {{ currentTip.desc }}
+        </p>
+      </div>
+
+      <!-- Step Indicator Dots -->
+      <div class="flex items-center justify-between pt-3 mt-1 border-t border-slate-100 dark:border-slate-700/40">
+        <div class="flex items-center gap-1.5">
+          <div *ngFor="let tip of tips; let i = index" 
+               class="h-1.5 rounded-full transition-all duration-300"
+               [ngClass]="i === currentTipIndex ? 'w-5 bg-[#377DFF]' : 'w-1.5 bg-slate-300 dark:bg-slate-600'">
+          </div>
+        </div>
+
+        <span class="text-[11px] text-[#77838F] dark:text-[#94A3B8] font-mono">
+          Tip {{ currentTipIndex + 1 }} di {{ tips.length }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Success Feedback Overlay / Pill when 100% -->
+    <div *ngIf="isCompleted" class="mt-4 success-bounce">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/50 text-emerald-700 dark:text-emerald-300 text-xs sm:text-sm font-semibold shadow-sm">
+        <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Accesso consentito</span>
+      </div>
+    </div>
+
+    <!-- Skip / Enter Directly Button -->
+    <div class="mt-5">
+      <button type="button"
+              (click)="skip()"
+              class="text-xs font-medium text-[#77838F] hover:text-[#377DFF] dark:text-[#94A3B8] dark:hover:text-[#5B97FF] transition-colors py-1.5 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1.5">
+        <span>Accedi subito</span>
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+</div>

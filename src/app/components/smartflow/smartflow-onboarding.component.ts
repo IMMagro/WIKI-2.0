@@ -1,51 +1,167 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+export interface OnboardingTip {
+  icon: string;
+  title: string;
+  tag: string;
+  desc: string;
+}
 
 @Component({
   selector: 'app-smartflow-onboarding',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="fixed inset-0 bg-[#0F172A] z-[9999] flex flex-col items-center justify-center text-white overflow-hidden" [class.fade-out]="fadingOut">
-      <!-- Cool hacker/setup animation -->
-      <div class="mb-8 w-24 h-24 rounded-full border-4 border-[#377DFF] border-t-transparent animate-spin"></div>
-      
-      <div class="text-3xl font-bold mb-4 tracking-wider animate-pulse text-[#F8FAFD]">WIKI 2.0 INIT</div>
-      
-      <div class="h-6 overflow-hidden w-64 text-center text-[#94A3B8] font-mono text-sm">
-        <div class="transition-transform duration-500" [style.transform]="'translateY(' + (-stepIndex * 24) + 'px)'">
-          <div class="h-6">Autenticazione operatore...</div>
-          <div class="h-6">Inizializzazione servizi...</div>
-          <div class="h-6">Caricamento database...</div>
-          <div class="h-6">Area Riservata pronta.</div>
-        </div>
-      </div>
-      
-      <div class="w-64 h-2 bg-slate-800 rounded-full mt-6 overflow-hidden">
-        <div class="h-full bg-[#F80086] transition-all duration-300 ease-out" [style.width.%]="progress"></div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .fade-out { opacity: 0; pointer-events: none; transition: opacity 0.8s ease-out; }
-  `]
+  templateUrl: './smartflow-onboarding.component.html',
+  styleUrls: ['./smartflow-onboarding.component.css']
 })
-export class SmartflowOnboardingComponent implements OnInit {
+export class SmartflowOnboardingComponent implements OnInit, OnDestroy {
   @Output() complete = new EventEmitter<void>();
-  
-  stepIndex = 0;
-  progress = 0;
-  fadingOut = false;
 
-  ngOnInit() {
-    // Sequence
-    setTimeout(() => { this.stepIndex = 1; this.progress = 30; }, 800);
-    setTimeout(() => { this.stepIndex = 2; this.progress = 65; }, 1800);
-    setTimeout(() => { this.stepIndex = 3; this.progress = 100; }, 2800);
-    
-    setTimeout(() => {
+  progress: number = 0;
+  currentTipIndex: number = 0;
+  currentStatusText: string = 'Inizializzazione ambiente...';
+  isCompleted: boolean = false;
+  fadingOut: boolean = false;
+
+  readonly tips: OnboardingTip[] = [
+    {
+      icon: '💡',
+      title: 'Ricerca Rapida',
+      tag: 'Produttività',
+      desc: 'Usa la barra di ricerca globale per trovare risposte e FAQ in pochi millisecondi.'
+    },
+    {
+      icon: '🎯',
+      title: 'Interfaccia Live',
+      tag: 'Interattività',
+      desc: 'Esplora le schermate interattive per scoprire tutte le funzioni a colpo d\'occhio.'
+    },
+    {
+      icon: '🚀',
+      title: 'SmartFlow Guide',
+      tag: 'Documentazione',
+      desc: 'Crea nuove guide operative con passaggi dettagliati e screenshot annotati.'
+    },
+    {
+      icon: '⚡',
+      title: 'FAQ & Risoluzioni',
+      tag: 'Supporto',
+      desc: 'Consulta le procedure con immagini ingrandibili per un supporto immediato.'
+    },
+    {
+      icon: '🌟',
+      title: 'Community & Livelli',
+      tag: 'Gamification',
+      desc: 'Contribuisci alla documentazione per guadagnare punti e salire di livello!'
+    }
+  ];
+
+  private timerRef: any = null;
+  private timeoutRefs: any[] = [];
+
+  get currentTip(): OnboardingTip {
+    return this.tips[this.currentTipIndex] || this.tips[0];
+  }
+
+  ngOnInit(): void {
+    this.startProgressAnimation();
+  }
+
+  ngOnDestroy(): void {
+    this.cleanupTimers();
+  }
+
+  /**
+   * Fluid 0 to 100% progress animation with status updates and tips cycling
+   */
+  private startProgressAnimation(): void {
+    const totalDurationMs = 3800; // ~3.8s total
+    const intervalMs = 35;
+    const totalSteps = totalDurationMs / intervalMs;
+    let stepCount = 0;
+
+    this.timerRef = setInterval(() => {
+      stepCount++;
+      // Smooth progression curve
+      const ratio = stepCount / totalSteps;
+      const rawProgress = Math.round(ratio * 100);
+      this.progress = Math.min(100, Math.max(0, rawProgress));
+
+      this.updateStateForProgress(this.progress);
+
+      if (this.progress >= 100) {
+        clearInterval(this.timerRef);
+        this.timerRef = null;
+        this.finishSequence();
+      }
+    }, intervalMs);
+  }
+
+  private updateStateForProgress(p: number): void {
+    if (p < 22) {
+      this.currentTipIndex = 0;
+      this.currentStatusText = 'Inizializzazione ambiente...';
+    } else if (p < 44) {
+      this.currentTipIndex = 1;
+      this.currentStatusText = 'Caricamento manuali e guide...';
+    } else if (p < 66) {
+      this.currentTipIndex = 2;
+      this.currentStatusText = 'Sincronizzazione FAQ e risorse...';
+    } else if (p < 88) {
+      this.currentTipIndex = 3;
+      this.currentStatusText = 'Configurazione interfaccia live...';
+    } else if (p < 100) {
+      this.currentTipIndex = 4;
+      this.currentStatusText = 'Finalizzazione workspace...';
+    } else {
+      this.currentTipIndex = 4;
+      this.currentStatusText = 'Workspace pronto!';
+    }
+  }
+
+  /**
+   * Final transition sequence with success badge and smooth fade out
+   */
+  private finishSequence(): void {
+    this.isCompleted = true;
+    this.currentStatusText = 'Workspace pronto!';
+
+    const fadeTimeout = setTimeout(() => {
       this.fadingOut = true;
-      setTimeout(() => this.complete.emit(), 800);
-    }, 3500);
+
+      const completeTimeout = setTimeout(() => {
+        this.complete.emit();
+      }, 600); // Wait for CSS opacity/transform fade-out transition
+
+      this.timeoutRefs.push(completeTimeout);
+    }, 700); // Brief pause to see 100% and success mark
+
+    this.timeoutRefs.push(fadeTimeout);
+  }
+
+  /**
+   * Skip directly to app
+   */
+  skip(): void {
+    this.cleanupTimers();
+    this.progress = 100;
+    this.isCompleted = true;
+    this.fadingOut = true;
+
+    const skipTimeout = setTimeout(() => {
+      this.complete.emit();
+    }, 250);
+
+    this.timeoutRefs.push(skipTimeout);
+  }
+
+  private cleanupTimers(): void {
+    if (this.timerRef) {
+      clearInterval(this.timerRef);
+      this.timerRef = null;
+    }
+    this.timeoutRefs.forEach(t => clearTimeout(t));
+    this.timeoutRefs = [];
   }
 }

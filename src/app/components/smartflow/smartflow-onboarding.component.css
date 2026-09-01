@@ -1,0 +1,223 @@
+/* ==========================================================================
+   Smartflow Onboarding Component Styles - QE Theme
+   Colors: #F8FAFD (bg), #377DFF (primary blue), #F80086 (magenta), #1E2022 (text)
+   Optimized for 60fps hardware-accelerated rendering
+   ========================================================================== */
+
+:host {
+  display: block;
+}
+
+/* Fullscreen Overlay & Exit Transition */
+.onboarding-container {
+  will-change: opacity, transform;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.onboarding-fade-out {
+  opacity: 0 !important;
+  transform: scale(0.98) !important;
+  pointer-events: none !important;
+}
+
+/* Radiant Concentric Rings */
+.concentric-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.ring-1 {
+  width: 320px;
+  height: 320px;
+  border: 1px solid rgba(55, 125, 255, 0.18);
+  animation: ringPulse 6s ease-in-out infinite;
+}
+
+.ring-2 {
+  width: 520px;
+  height: 520px;
+  border: 1px solid rgba(55, 125, 255, 0.12);
+  animation: ringPulse 8s ease-in-out infinite 1s;
+}
+
+.ring-3 {
+  width: 760px;
+  height: 760px;
+  border: 1px dashed rgba(55, 125, 255, 0.08);
+  animation: ringRotate 30s linear infinite;
+}
+
+.ring-4 {
+  width: 1040px;
+  height: 1040px;
+  border: 1px solid rgba(248, 0, 134, 0.06);
+  animation: ringPulse 10s ease-in-out infinite 2s;
+}
+
+@keyframes ringPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes ringRotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Floating Ambient Particles */
+.floating-particle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.particle-1 {
+  top: 15%;
+  left: 18%;
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle, rgba(55, 125, 255, 0.35) 0%, rgba(55, 125, 255, 0) 70%);
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+.particle-2 {
+  top: 25%;
+  right: 20%;
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, rgba(248, 0, 134, 0.25) 0%, rgba(248, 0, 134, 0) 70%);
+  animation: floatSlow 9s ease-in-out infinite 1.5s;
+}
+
+.particle-3 {
+  bottom: 22%;
+  left: 22%;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(55, 125, 255, 0.3) 0%, rgba(55, 125, 255, 0) 70%);
+  animation: floatSlow 8s ease-in-out infinite 2s;
+}
+
+.particle-4 {
+  bottom: 28%;
+  right: 16%;
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(56, 189, 248, 0) 70%);
+  animation: floatSlow 10s ease-in-out infinite 0.8s;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translateY(-16px) translateX(10px) scale(1.1);
+    opacity: 0.9;
+  }
+  66% {
+    transform: translateY(12px) translateX(-8px) scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+/* WIKI Shimmer and Color Wave */
+.shimmer-text-effect {
+  position: relative;
+  display: inline-block;
+}
+
+.shimmer-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shimmerWave 2.8s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shimmerWave {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Progress bar light spark */
+.progress-spark {
+  animation: sparkPulse 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes sparkPulse {
+  0% {
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px #377DFF);
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px #5B97FF) drop-shadow(0 0 16px rgba(55, 125, 255, 0.8));
+  }
+}
+
+/* Tip Transition */
+.tip-item-enter {
+  animation: tipEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tipEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Success Badge Pop */
+.success-bounce {
+  animation: popSuccess 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popSuccess {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
