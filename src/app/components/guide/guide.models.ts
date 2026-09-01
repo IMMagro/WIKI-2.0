@@ -13,6 +13,8 @@ export interface InteractivePin {
   type?: 'pin' | 'box';
   title: string;
   content: string;
+  popupX?: number;
+  popupY?: number;
 }
 export interface InteractiveScreen { id: string; imageUrl: string; pins: InteractivePin[]; }
 export interface Ref { type: 'category' | 'guide' | 'faq' | 'home'; cat?: string; man?: string; faq?: number; }

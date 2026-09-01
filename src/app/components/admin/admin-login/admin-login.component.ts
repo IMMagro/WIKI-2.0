@@ -127,6 +127,8 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
     }
   }
 
+  signUpLoading = false;
+
   signUp() {
     this.regError = '';
     this.regSuccess = '';
@@ -145,16 +147,25 @@ export class AdminLoginComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword, this.regAvatar || undefined);
-    this.regSuccess = 'Registrazione completata! In attesa di approvazione.';
-    setTimeout(() => {
-      this.isSignUpMode = false;
-      this.regSuccess = '';
-      this.regName = '';
-      this.regPassword = '';
-      this.regConfirm = '';
-      this.regAvatar = null;
-    }, 2500);
+    this.signUpLoading = true;
+    this.smartflow.registerOperator(name, this.regEmoji, this.regPassword, this.regAvatar || undefined).subscribe({
+      next: (res) => {
+        this.signUpLoading = false;
+        this.regSuccess = (res && res.message) ? res.message : 'Registrazione completata! In attesa di approvazione admin.';
+        setTimeout(() => {
+          this.isSignUpMode = false;
+          this.regSuccess = '';
+          this.regName = '';
+          this.regPassword = '';
+          this.regConfirm = '';
+          this.regAvatar = null;
+        }, 2500);
+      },
+      error: (err) => {
+        this.signUpLoading = false;
+        this.regError = err?.error?.error || err?.message || 'Errore durante la registrazione. Riprova più tardi.';
+      }
+    });
   }
 
   onFileSelected(event: any) {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideService } from '../../../services/guide.service';
 import { AdminService } from '../../../services/admin.service';
+import { SmartflowService } from '../../../services/smartflow.service';
 import { HttpClient } from '@angular/common/http';
 
 export interface MapRegionNode {
@@ -16,7 +17,6 @@ export interface MapRegionNode {
   lng: number;
   v: number; // total access hits
   active?: number; // current live concurrent sessions
-  software?: string; // e.g. Windent, Poliwin, Winodlab
   macroArea?: 'nord' | 'centro' | 'sud';
   labelDx?: number;
   labelDy?: number;
@@ -40,12 +40,11 @@ export interface LiveAccessEvent {
   id: string;
   region: string;
   clientName: string;
-  software: string;
   action: string;
   guideTitle?: string;
   category?: string;
   time: string;
-  color: string;
+  color?: string;
 }
 
 @Component({
@@ -69,7 +68,14 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   get unreadNotificationsCount(): number {
-    return this.adminNotifications.filter(n => n.unread).length;
+    return this.adminNotifications.filter(n => n.unread === true || n.read === false).length;
+  }
+
+  get totalPendingNotifications(): number {
+    const unread = this.unreadNotificationsCount;
+    const opNotifs = this.adminNotifications.filter(n => n.type === 'user_pending' && (n.unread === true || n.read === false)).length;
+    const extraPendingOps = Math.max(0, (this.smartflow?.pendingOperatorsCount || 0) - opNotifs);
+    return unread + extraPendingOps;
   }
 
   // Accurate SVG Paths for all 20 Italian Regions (High precision, normalized 480x580)
@@ -212,6 +218,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   constructor(
     private guideService: GuideService,
     private adminService: AdminService,
+    public smartflow: SmartflowService,
     private http: HttpClient
   ) {}
 
@@ -240,7 +247,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   markAllNotificationsAsRead() {
-    this.adminNotifications = this.adminNotifications.map(n => ({ ...n, unread: false }));
+    this.adminNotifications = this.adminNotifications.map(n => ({ ...n, unread: false, read: true }));
     this.adminService.markNotificationsAsRead(this.adminNotifications).subscribe({
       next: () => {},
       error: (err) => console.error('Errore salvataggio notifiche:', err)
@@ -295,17 +302,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         // 2. Aggiorna flusso accessi ed eventi live reali dal backend
         if (d && Array.isArray(d.recentEvents)) {
           this.liveFeed = d.recentEvents.map((ev: any) => {
-            const sw = ev.software || this.getSoftwareByRegion(ev.region);
             return {
               id: ev.id || ('ev_' + (ev.time || Date.now())),
               region: ev.region || 'Italia',
               clientName: ev.clientName || ('Utente ' + (ev.region || 'Online')),
-              software: sw,
               action: ev.action || (ev.guideTitle ? ('Apertura guida: ' + ev.guideTitle) : 'Consultazione'),
               guideTitle: ev.guideTitle || '',
               category: ev.category || '',
               time: ev.time || 'Pochi secondi fa',
-              color: ev.color || this.getColorBySoftware(sw)
+              color: ev.color || '#377DFF'
             };
           });
         } else {
@@ -337,7 +342,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       const def = this.regionDefaultPositions[reg.name] || { x: 200, y: 200, labelDx: 8, labelDy: 3, textAnchor: 'start' };
       const v = n.v !== undefined ? Number(n.v) : 0;
       const active = n.active !== undefined ? Number(n.active) : 0;
-      const software = n.software || (['Lazio', 'Campania', 'Puglia', 'Sicilia', 'Calabria', 'Basilicata', 'Abruzzo', 'Molise'].includes(reg.name) ? 'Poliwin' : ['Emilia-Romagna', 'Veneto', 'Trentino-Alto Adige'].includes(reg.name) ? 'Winodlab' : 'Windent');
 
       return {
         id: n.id || reg.name.toLowerCase().substring(0, 3),
@@ -350,7 +354,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         lng: n.lng || 0,
         v: v,
         active: active,
-        software: software,
         macroArea: reg.macro,
         labelDx: def.labelDx,
         labelDy: def.labelDy,
@@ -411,8 +414,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
     // Hover su regione o nodo
     if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
-      if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.42)';
-      if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.42)';
       return 'rgba(55, 125, 255, 0.42)';
     }
 
@@ -421,19 +422,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       return '#F8FAFD';
     }
 
-    // Calcolo sfumatura coropletica in base a v / accessMapMax
+    // Calcolo sfumatura coropletica in base a v / accessMapMax (blu brand #377DFF)
     const ratio = Math.max(0.08, Math.min(1, (node.v || 0) / this.accessMapMax));
-
-    if (node.software === 'Poliwin') {
-      const alpha = 0.08 + 0.32 * ratio;
-      return `rgba(248, 0, 134, ${alpha.toFixed(2)})`;
-    } else if (node.software === 'Winodlab') {
-      const alpha = 0.08 + 0.32 * ratio;
-      return `rgba(249, 115, 22, ${alpha.toFixed(2)})`;
-    } else {
-      const alpha = 0.08 + 0.34 * ratio;
-      return `rgba(55, 125, 255, ${alpha.toFixed(2)})`;
-    }
+    const alpha = 0.08 + 0.34 * ratio;
+    return `rgba(55, 125, 255, ${alpha.toFixed(2)})`;
   }
 
   getRegionStroke(name: string): string {
@@ -445,15 +437,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
 
     if (this.hoveredRegion === name || this.hoveredNode?.name === name) {
-      return node.software === 'Poliwin' ? '#F80086' : node.software === 'Winodlab' ? '#F97316' : '#377DFF';
+      return '#377DFF';
     }
 
     if (!node.v || node.v === 0) {
       return '#E2E8F0';
     }
 
-    if (node.software === 'Poliwin') return 'rgba(248, 0, 134, 0.35)';
-    if (node.software === 'Winodlab') return 'rgba(249, 115, 22, 0.35)';
     return 'rgba(55, 125, 255, 0.35)';
   }
 
@@ -475,25 +465,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   onRegionLeave() {
     this.hoveredRegion = null;
     this.hoveredNode = null;
-  }
-
-  // ---- Helper Software & Colori per Regione ----
-  getSoftwareByRegion(region: string): string {
-    if (!region) return 'Windent';
-    const r = region.toLowerCase();
-    if (['lazio', 'campania', 'puglia', 'sicilia', 'calabria', 'basilicata', 'abruzzo', 'molise'].some(x => r.includes(x))) {
-      return 'Poliwin';
-    }
-    if (['emilia-romagna', 'veneto', 'trentino-alto adige'].some(x => r.includes(x))) {
-      return 'Winodlab';
-    }
-    return 'Windent';
-  }
-
-  getColorBySoftware(software: string): string {
-    if (software === 'Poliwin') return '#F80086';
-    if (software === 'Winodlab') return '#F97316';
-    return '#377DFF';
   }
 
   // ---- Heatmap Oraria ----

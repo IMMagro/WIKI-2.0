@@ -43,6 +43,10 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
   // Selected Pin / Box in Edit Mode
   selectedPin: InteractivePin | null = null;
 
+  // Popup Dragging State (Admin Mode)
+  isDraggingPopup = false;
+  popupDragPin: InteractivePin | null = null;
+
   // For Edit Mode Form Popup
   showForm = false;
   isEditingExisting = false;
@@ -54,6 +58,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
   newPinType: 'box' | 'pin' = 'box';
   newPinTitle = '';
   newPinContent = '';
+  newPinPopupX: number | undefined = undefined;
+  newPinPopupY: number | undefined = undefined;
 
   // For View Mode Popup
   activePin: InteractivePin | null = null;
@@ -92,6 +98,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
       this.showForm = false;
       this.activePin = null;
       this.selectedPin = null;
+      this.isDraggingPopup = false;
+      this.popupDragPin = null;
     }
   }
 
@@ -104,14 +112,58 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
     });
   }
 
+  // ===== Helper Methods for Popup Coordinates & Connection Lines =====
+
+  getPinCenterX(pin: InteractivePin): number {
+    return pin.x + (pin.width ? pin.width / 2 : 0);
+  }
+
+  getPinCenterY(pin: InteractivePin): number {
+    return pin.y + (pin.height ? pin.height / 2 : 0);
+  }
+
+  getPinPopupX(pin: InteractivePin): number {
+    return pin.popupX !== undefined ? pin.popupX : (pin.x + (pin.width ? pin.width / 2 : 0));
+  }
+
+  getPinPopupY(pin: InteractivePin): number {
+    return pin.popupY !== undefined ? pin.popupY : (pin.y + (pin.height || 0) + 4);
+  }
+
+  resetPopupPosition(pin: InteractivePin, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    delete pin.popupX;
+    delete pin.popupY;
+    this.newPinPopupX = undefined;
+    this.newPinPopupY = undefined;
+    this.saveCurrentScreen();
+  }
+
+  startDragPopup(pin: InteractivePin, event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (!this.editMode) return;
+
+    this.isDraggingPopup = true;
+    this.popupDragPin = pin;
+  }
+
   // ===== Mouse Event Handlers on Image Container =====
 
   onCanvasMouseDown(event: MouseEvent) {
     if (!this.editMode || !this.screen) return;
     
-    // Ignore if clicking on an interactive element or handle or form
+    // Ignore if clicking on an interactive element or handle or form or popup preview
     const target = event.target as HTMLElement;
-    if (target.closest('.interactive-pin') || target.closest('.interactive-box') || target.closest('.form-popover') || target.closest('.handle')) {
+    if (target.closest('.interactive-pin') || 
+        target.closest('.interactive-box') || 
+        target.closest('.form-popover') || 
+        target.closest('.draggable-popup-preview') || 
+        target.closest('.handle') || 
+        target.closest('.popup-drag-handle')) {
       return;
     }
 
@@ -139,7 +191,19 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
     if (!imgEl) return;
     const rect = imgEl.getBoundingClientRect();
 
-    // 1. Drawing a new box
+    // 1. Dragging popup box position in edit mode
+    if (this.isDraggingPopup && this.popupDragPin) {
+      const currentX = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+      const currentY = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+
+      this.popupDragPin.popupX = Math.round(currentX * 10) / 10;
+      this.popupDragPin.popupY = Math.round(currentY * 10) / 10;
+      this.newPinPopupX = this.popupDragPin.popupX;
+      this.newPinPopupY = this.popupDragPin.popupY;
+      return;
+    }
+
+    // 2. Drawing a new box
     if (this.isDrawing && this.currentDrawingBox) {
       const currentX = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
       const currentY = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
@@ -153,7 +217,7 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
       return;
     }
 
-    // 2. Resizing an existing box
+    // 3. Resizing an existing box
     if (this.isResizing && this.activeInteractionPin && this.pinInitialState) {
       const currentX = ((event.clientX - rect.left) / rect.width) * 100;
       const currentY = ((event.clientY - rect.top) / rect.height) * 100;
@@ -169,7 +233,7 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
       return;
     }
 
-    // 3. Dragging/moving an existing item
+    // 4. Dragging/moving an existing item
     if (this.isDragging && this.activeInteractionPin && this.pinInitialState) {
       const currentX = ((event.clientX - rect.left) / rect.width) * 100;
       const currentY = ((event.clientY - rect.top) / rect.height) * 100;
@@ -188,6 +252,12 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
 
   @HostListener('window:mouseup', ['$event'])
   onWindowMouseUp(event: MouseEvent) {
+    if (this.isDraggingPopup) {
+      this.isDraggingPopup = false;
+      this.popupDragPin = null;
+      this.saveCurrentScreen();
+    }
+
     if (this.isDrawing) {
       if (this.currentDrawingBox) {
         const isBox = this.creationTool === 'box' && (this.currentDrawingBox.width > 2 || this.currentDrawingBox.height > 2);
@@ -196,6 +266,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
         this.newPinId = 'pin_' + Date.now().toString();
         this.newPinTitle = '';
         this.newPinContent = '';
+        this.newPinPopupX = undefined;
+        this.newPinPopupY = undefined;
 
         if (isBox) {
           this.newPinX = Math.round(this.currentDrawingBox.x * 10) / 10;
@@ -285,6 +357,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
       this.newPinType = (pin.width && pin.height) ? 'box' : 'pin';
       this.newPinTitle = pin.title;
       this.newPinContent = pin.content;
+      this.newPinPopupX = pin.popupX;
+      this.newPinPopupY = pin.popupY;
       this.showForm = true;
       this.activePin = null;
     } else {
@@ -330,6 +404,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
         existing.width = this.newPinWidth;
         existing.height = this.newPinHeight;
         existing.type = this.newPinType;
+        existing.popupX = this.newPinPopupX;
+        existing.popupY = this.newPinPopupY;
       }
     } else {
       // Add new
@@ -341,7 +417,9 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
         height: this.newPinHeight,
         type: this.newPinType,
         title: this.newPinTitle,
-        content: this.newPinContent
+        content: this.newPinContent,
+        popupX: this.newPinPopupX,
+        popupY: this.newPinPopupY
       };
       this.screen.pins.push(newPin);
     }

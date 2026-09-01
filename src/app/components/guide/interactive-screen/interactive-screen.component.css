@@ -15,3 +15,30 @@
   touch-action: none;
 }
 
+/* Maniglia e Anteprima Drag Popup */
+.popup-drag-handle {
+  cursor: move;
+  user-select: none;
+  touch-action: none;
+}
+
+.draggable-popup-preview {
+  touch-action: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.draggable-popup-preview:hover {
+  box-shadow: 0 25px 50px -12px rgba(55, 125, 255, 0.35);
+}
+
+/* Linee di connessione SVG */
+.connector-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+
+.connector-line-glow {
+  filter: blur(2px);
+}
+

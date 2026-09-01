@@ -47,14 +47,12 @@ export class SmartflowUsersComponent {
   }
 
   approve(op: SmartflowOperator): void {
-    op.status = 'approved';
-    this.smartflow.saveOperator(op);
+    this.smartflow.approveOperator(op.id);
     this.showToast(`Operatore ${op.name} approvato con successo!`, 'success');
   }
 
   reject(op: SmartflowOperator): void {
-    op.status = 'rejected';
-    this.smartflow.saveOperator(op);
+    this.smartflow.rejectOperator(op.id);
     this.showToast(`Operatore ${op.name} respinto.`, 'danger');
   }
 

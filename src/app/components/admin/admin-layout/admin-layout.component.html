@@ -108,7 +108,10 @@
          [ngClass]="activeAdminTab === 'users' ? 'bg-[#F0F5FF] text-[#377DFF] font-semibold' : 'text-[#77838F] hover:bg-[#F8FAFD] hover:text-[#1E2022] font-medium'"
          class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        Utenti
+        <span class="flex-1">Operatori & Utenti</span>
+        <span *ngIf="smartflow.pendingOperatorsCount > 0" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white animate-pulse shadow-sm shadow-amber-500/30">
+          {{ smartflow.pendingOperatorsCount }}
+        </span>
       </a>
       <a href="javascript:void(0)" 
          (click)="activeAdminTab = 'legal'"

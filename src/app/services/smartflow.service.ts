@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { SmartflowData, SmartflowOperator, SmartflowDraft, SmartflowLevel, KnowledgeEntry, Category } from '../components/guide/guide.models';
 import { GuideService } from './guide.service';
 
@@ -124,18 +126,72 @@ export class SmartflowService {
     this.saveToBackend();
   }
 
-  registerOperator(name: string, emoji: string, password?: string, avatar?: string): SmartflowOperator {
-    const id = 'op-' + Date.now();
-    const now = this.today();
-    const op: SmartflowOperator = {
-      id, name, emoji, avatar, password, score: 0, level: 1, levelName: 'Barba',
-      guidesCreated: 0, guidesApproved: 0, lastActivity: now, registeredAt: now,
-      status: 'pending',
-      hasOnboarded: false
+  approveOperator(operatorId: string): void {
+    const op = this.getOperator(operatorId);
+    if (op) {
+      op.status = 'approved';
+      this.saveToBackend();
+    }
+  }
+
+  rejectOperator(operatorId: string): void {
+    const op = this.getOperator(operatorId);
+    if (op) {
+      op.status = 'rejected';
+      this.saveToBackend();
+    }
+  }
+
+  registerOperator(name: string, emoji: string, password?: string, avatar?: string): Observable<any> {
+    const payload = {
+      name,
+      emoji: emoji || '🧑‍💻',
+      password: password || '',
+      avatar: avatar || ''
     };
-    this.operators.push(op);
-    this.saveToBackend();
-    return op;
+
+    return this.http.post<any>('/api/register_operator.ashx', payload).pipe(
+      tap((res) => {
+        if (res && res.operator) {
+          const existingIndex = this.operators.findIndex(o => o.id === res.operator.id || o.name.toLowerCase() === res.operator.name.toLowerCase());
+          if (existingIndex >= 0) {
+            this.operators[existingIndex] = res.operator;
+          } else {
+            this.operators.push(res.operator);
+          }
+          console.log('Operatore registrato con successo:', res.operator.name);
+        }
+      }),
+      catchError((err) => {
+        console.warn('Backend API /api/register_operator.ashx non disponibile, fallback locale:', err);
+        const id = 'op-' + Date.now();
+        const now = this.today();
+        const op: SmartflowOperator = {
+          id,
+          name,
+          emoji: emoji || '🧑‍💻',
+          avatar,
+          password,
+          score: 0,
+          level: 1,
+          levelName: 'Barba',
+          guidesCreated: 0,
+          guidesApproved: 0,
+          lastActivity: now,
+          registeredAt: now,
+          status: 'pending',
+          hasOnboarded: false
+        };
+        const existing = this.operators.findIndex(o => o.name.toLowerCase() === name.toLowerCase());
+        if (existing >= 0) {
+          this.operators[existing] = op;
+        } else {
+          this.operators.push(op);
+        }
+        console.log('Operatore registrato in fallback locale:', op.name);
+        return of({ success: true, message: 'Registrazione completata!', operator: op });
+      })
+    );
   }
 
   addScore(operatorId: string, points: number): void {

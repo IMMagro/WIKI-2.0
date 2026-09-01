@@ -161,23 +161,157 @@
         <span class="relative inline-flex rounded-full h-4 w-4 bg-[#377DFF] border-2 border-white shadow-md"></span>
       </div>
 
+      <!-- SVG Connector Lines Overlay (for Custom or Dragged Popup Positions) -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none z-20 overflow-visible" 
+           viewBox="0 0 100 100" 
+           preserveAspectRatio="none">
+        
+        <!-- View Mode: Connection Line between Pin/Box and Custom Popup Position -->
+        <ng-container *ngIf="!editMode && activePin && activePin.popupX !== undefined">
+          <line [attr.x1]="getPinCenterX(activePin)" 
+                [attr.y1]="getPinCenterY(activePin)" 
+                [attr.x2]="getPinPopupX(activePin)" 
+                [attr.y2]="getPinPopupY(activePin)" 
+                class="connector-line-glow"
+                stroke="rgba(55, 125, 255, 0.35)" 
+                stroke-width="5" 
+                vector-effect="non-scaling-stroke" />
+          <line [attr.x1]="getPinCenterX(activePin)" 
+                [attr.y1]="getPinCenterY(activePin)" 
+                [attr.x2]="getPinPopupX(activePin)" 
+                [attr.y2]="getPinPopupY(activePin)" 
+                class="connector-line"
+                stroke="#377DFF" 
+                stroke-width="2" 
+                stroke-dasharray="5 3" 
+                vector-effect="non-scaling-stroke" />
+          <circle [attr.cx]="getPinCenterX(activePin)" 
+                  [attr.cy]="getPinCenterY(activePin)" 
+                  r="4" 
+                  fill="#377DFF" 
+                  stroke="#ffffff" 
+                  stroke-width="2" 
+                  vector-effect="non-scaling-stroke" />
+          <circle [attr.cx]="getPinPopupX(activePin)" 
+                  [attr.cy]="getPinPopupY(activePin)" 
+                  r="4" 
+                  fill="#377DFF" 
+                  stroke="#ffffff" 
+                  stroke-width="2" 
+                  vector-effect="non-scaling-stroke" />
+        </ng-container>
+
+        <!-- Edit Mode: Connection Line between Selected Pin/Box and Draggable Popup Preview -->
+        <ng-container *ngIf="editMode && selectedPin">
+          <line [attr.x1]="getPinCenterX(selectedPin)" 
+                [attr.y1]="getPinCenterY(selectedPin)" 
+                [attr.x2]="getPinPopupX(selectedPin)" 
+                [attr.y2]="getPinPopupY(selectedPin)" 
+                class="connector-line-glow"
+                stroke="rgba(248, 0, 134, 0.35)" 
+                stroke-width="5" 
+                vector-effect="non-scaling-stroke" />
+          <line [attr.x1]="getPinCenterX(selectedPin)" 
+                [attr.y1]="getPinCenterY(selectedPin)" 
+                [attr.x2]="getPinPopupX(selectedPin)" 
+                [attr.y2]="getPinPopupY(selectedPin)" 
+                class="connector-line"
+                stroke="#F80086" 
+                stroke-width="2" 
+                stroke-dasharray="5 3" 
+                vector-effect="non-scaling-stroke" />
+          <circle [attr.cx]="getPinCenterX(selectedPin)" 
+                  [attr.cy]="getPinCenterY(selectedPin)" 
+                  r="4" 
+                  fill="#F80086" 
+                  stroke="#ffffff" 
+                  stroke-width="2" 
+                  vector-effect="non-scaling-stroke" />
+          <circle [attr.cx]="getPinPopupX(selectedPin)" 
+                  [attr.cy]="getPinPopupY(selectedPin)" 
+                  r="4" 
+                  fill="#377DFF" 
+                  stroke="#ffffff" 
+                  stroke-width="2" 
+                  vector-effect="non-scaling-stroke" />
+        </ng-container>
+
+      </svg>
+
       <!-- View Mode Popover (Client Click) -->
       <div *ngIf="activePin" 
            class="absolute z-30 w-72 bg-white/95 backdrop-blur-xl border border-[#E2E8F0] shadow-2xl rounded-2xl p-4 animate-fade-in text-[#1E2022]"
-           [style.left.%]="activePin.x"
-           [style.top.%]="activePin.y"
-           style="transform: translate(-50%, 18px);"
+           [style.left.%]="getPinPopupX(activePin)"
+           [style.top.%]="getPinPopupY(activePin)"
+           style="transform: translate(-50%, 0);"
            (click)="$event.stopPropagation()">
-        <!-- Triangle pointer -->
-        <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-[#E2E8F0] transform rotate-45"></div>
+        <!-- Triangle pointer (shown when using default position) -->
+        <div *ngIf="activePin.popupX === undefined" class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-t border-l border-[#E2E8F0] transform rotate-45"></div>
         <div class="relative z-10">
           <div class="flex items-start justify-between mb-2">
             <h4 class="font-bold text-[15px] m-0 text-[#377DFF] leading-tight">{{ activePin.title }}</h4>
-            <button (click)="closePopup($event)" class="text-slate-400 hover:text-rose-500 transition-colors -mr-2 -mt-2 p-1">
+            <button (click)="closePopup($event)" class="text-slate-400 hover:text-rose-500 transition-colors -mr-2 -mt-2 p-1 cursor-pointer">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
           <p class="text-sm text-slate-600 m-0 leading-relaxed whitespace-pre-line">{{ activePin.content }}</p>
+        </div>
+      </div>
+
+      <!-- Edit Mode: Draggable Live Popup Preview -->
+      <div *ngIf="editMode && selectedPin"
+           class="draggable-popup-preview absolute z-35 w-72 shadow-2xl rounded-2xl animate-fade-in text-[#1E2022]"
+           [style.left.%]="getPinPopupX(selectedPin)"
+           [style.top.%]="getPinPopupY(selectedPin)"
+           style="transform: translate(-50%, 0);"
+           (mousedown)="$event.stopPropagation()"
+           (click)="$event.stopPropagation()">
+        
+        <!-- Drag Handle Bar -->
+        <div class="popup-drag-handle flex items-center justify-between gap-2 px-3 py-2 bg-gradient-to-r from-[#377DFF] to-[#2B63D9] text-white rounded-t-2xl cursor-move select-none shadow-sm hover:brightness-105 active:brightness-95 transition-all"
+             (mousedown)="startDragPopup(selectedPin, $event)"
+             title="Trascina per posizionare il popup">
+          <div class="flex items-center gap-1.5 min-w-0">
+            <svg class="w-3.5 h-3.5 flex-shrink-0 text-white/90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16M10 4l-2 4 2 4M14 12l2 4-2 4"/>
+            </svg>
+            <span class="text-[11px] font-bold tracking-wide truncate">📍 Trascina per posizionare</span>
+          </div>
+          
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <button *ngIf="selectedPin.popupX !== undefined" 
+                    type="button" 
+                    (click)="resetPopupPosition(selectedPin, $event)"
+                    class="text-[10px] bg-white/20 hover:bg-white/30 text-white font-semibold px-2 py-0.5 rounded-md transition-colors flex items-center gap-1 cursor-pointer"
+                    title="Ripristina posizione automatica">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Reset</span>
+            </button>
+            <span *ngIf="selectedPin.popupX === undefined" class="text-[9px] text-white/80 bg-white/15 px-1.5 py-0.5 rounded font-medium">
+              Auto
+            </span>
+          </div>
+        </div>
+
+        <!-- Popup Preview Card Body -->
+        <div class="p-4 bg-white/95 backdrop-blur-xl border-x border-b border-[#377DFF]/30 rounded-b-2xl">
+          <div class="flex items-start justify-between mb-1.5">
+            <h4 class="font-bold text-[14px] m-0 text-[#377DFF] leading-tight">
+              {{ newPinTitle || selectedPin.title || '(Senza titolo)' }}
+            </h4>
+            <span class="text-[10px] font-semibold text-[#77838F] uppercase tracking-wider bg-slate-100 px-1.5 py-0.5 rounded">Anteprima</span>
+          </div>
+          <p class="text-xs text-slate-600 m-0 leading-relaxed whitespace-pre-line max-h-32 overflow-y-auto">
+            {{ newPinContent || selectedPin.content || '(Nessuna descrizione inserita)' }}
+          </p>
+
+          <!-- Position indicator info -->
+          <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+            <span>Posizione popup:</span>
+            <span class="font-mono font-medium text-slate-600">
+              {{ selectedPin.popupX !== undefined ? (selectedPin.popupX + '%, ' + selectedPin.popupY + '%') : 'Automatica' }}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -205,9 +339,21 @@
             <input type="text" name="title" [(ngModel)]="newPinTitle" placeholder="es. Barra Strumenti Odontogramma" class="w-full px-3.5 py-2.5 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl text-sm text-[#1E2022] outline-none focus:bg-white focus:border-[#377DFF] focus:ring-2 focus:ring-[#377DFF]/20" required autofocus />
           </div>
 
-          <div class="mb-4">
+          <div class="mb-3">
             <label class="block text-xs font-bold text-[#77838F] uppercase tracking-wide mb-1.5">Spiegazione</label>
             <textarea name="content" [(ngModel)]="newPinContent" rows="3" placeholder="Descrivi cosa fa questo elemento dell'interfaccia..." class="w-full px-3.5 py-2.5 bg-[#F8FAFD] border border-[#E2E8F0] rounded-xl text-sm text-[#1E2022] outline-none focus:bg-white focus:border-[#377DFF] focus:ring-2 focus:ring-[#377DFF]/20 resize-none" required></textarea>
+          </div>
+
+          <!-- Position Info / Drag Notice -->
+          <div *ngIf="selectedPin" class="mb-4 p-2.5 bg-[#F8FAFD] rounded-xl border border-[#E2E8F0] flex items-center justify-between text-xs">
+            <div class="flex items-center gap-1.5 text-slate-600">
+              <svg class="w-3.5 h-3.5 text-[#377DFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span class="font-medium">Posizione Box:</span>
+              <span class="font-bold text-[#377DFF]">{{ selectedPin.popupX !== undefined ? 'Personalizzata' : 'Automatica' }}</span>
+            </div>
+            <button *ngIf="selectedPin.popupX !== undefined" type="button" (click)="resetPopupPosition(selectedPin, $event)" class="text-[11px] text-rose-500 hover:text-rose-700 font-semibold cursor-pointer underline">
+              Ripristina Auto
+            </button>
           </div>
 
           <div class="flex items-center justify-between gap-2">

@@ -128,9 +128,11 @@
                 <p class="text-[9px] text-[#94A3B8] leading-tight max-w-[150px]">Registrati come operatore SmartFlow. Richiede approvazione admin.</p>
                 <span class="text-[10px] font-bold text-[#F8FAFD] mt-1">Request access!</span>
               </div>
-              <button (click)="signUp()" class="px-5 py-3 bg-[#377DFF] hover:bg-[#2563EB] text-white text-xs font-bold rounded-full flex items-center gap-2 shadow-[0_10px_20px_rgba(55,125,255,0.3)] hover:scale-105 active:scale-95 transition-all flex-shrink-0 cursor-pointer">
-                <span>Registrati</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <button (click)="signUp()" [disabled]="signUpLoading" class="px-5 py-3 bg-[#377DFF] hover:bg-[#2563EB] text-white text-xs font-bold rounded-full flex items-center gap-2 shadow-[0_10px_20px_rgba(55,125,255,0.3)] hover:scale-105 active:scale-95 transition-all flex-shrink-0 cursor-pointer disabled:opacity-50">
+                <span *ngIf="!signUpLoading">Registrati</span>
+                <span *ngIf="signUpLoading">Registrazione in corso...</span>
+                <svg *ngIf="!signUpLoading" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <svg *ngIf="signUpLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
               </button>
             </div>
           </ng-container>
