@@ -378,6 +378,9 @@
     (chiudi)="interactiveScreensService.close()">
   </app-interactive-screen>
 
+  <!-- Pagina 404 Not Found (Full Screen Overlay) -->
+  <app-not-found *ngIf="is404Active" class="fixed inset-0 z-[120]" (backHome)="hide404()"></app-not-found>
+
 </div>
 
 

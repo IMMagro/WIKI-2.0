@@ -23,6 +23,7 @@ import { CookieBannerComponent } from './components/shared/cookie-banner/cookie-
 import { NavigationSettingsService } from './services/navigation-settings.service';
 import { InteractiveScreenComponent } from './components/guide/interactive-screen/interactive-screen.component';
 import { InteractiveScreensService } from './services/interactive-screens.service';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +43,8 @@ import { InteractiveScreensService } from './services/interactive-screens.servic
     NewsCarouselComponent,
     LegalModalComponent,
     CookieBannerComponent,
-    InteractiveScreenComponent
+    InteractiveScreenComponent,
+    NotFoundComponent
   ],
   templateUrl: './app.component.html'
 })
@@ -55,8 +57,20 @@ export class AppComponent implements OnInit {
   titleVisible = false;
   isAdminRoute = false;
   isAdminAuthenticated = false;
+  is404Active = false;
   isUploadModalOpen = false;
   isSidebarExpanded = false;
+
+  show404() {
+    this.is404Active = true;
+  }
+
+  hide404() {
+    this.is404Active = false;
+    if (this.menuItems && this.menuItems.length > 0) {
+      this.selectMenuItem(this.menuItems[0]);
+    }
+  }
 
   openUploadModal() {
     this.isUploadModalOpen = true;
@@ -530,6 +544,8 @@ export class AppComponent implements OnInit {
       if (sessionStorage.getItem('adminToken')) {
         this.isAdminAuthenticated = true;
       }
+    } else if (path === '/404' || hash.includes('/404')) {
+      this.is404Active = true;
     }
 
     this.triggerPageAnimation('QeHome');
