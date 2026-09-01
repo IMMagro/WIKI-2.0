@@ -190,6 +190,18 @@
           </label>
         </div>
 
+        <div class="flex items-center justify-between p-6 bg-[#F8FAFD] rounded-2xl border border-[#E2E8F0] hover:border-[#377DFF]/30 transition-colors mt-4">
+          <div class="pr-8">
+            <h3 class="font-bold text-[#1E2022] text-lg">Modalità leggera (prestazioni)</h3>
+            <p class="text-sm text-[#77838F] mt-2 leading-relaxed">Disattiva gli effetti "vetro" sfocati (backdrop-blur) e l'aurora animata, molto pesanti sulle schede grafiche deboli. Migliora la fluidità su PC lenti. Si attiva già in automatico se il dispositivo sembra poco potente.</p>
+          </div>
+
+          <label class="relative inline-flex items-center cursor-pointer shrink-0">
+            <input type="checkbox" [checked]="themeService.liteMode" (change)="themeService.liteMode = !themeService.liteMode" class="sr-only peer">
+            <div class="w-14 h-7 bg-[#E2E8F0] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#377DFF] shadow-inner"></div>
+          </label>
+        </div>
+
         <h2 class="text-xl font-bold text-[#1E2022] mt-8 mb-6">Documenti Legali & GDPR</h2>
         
         <div class="flex items-center justify-between p-6 bg-[#F8FAFD] rounded-2xl border border-[#E2E8F0] hover:border-[#377DFF]/30 transition-colors">

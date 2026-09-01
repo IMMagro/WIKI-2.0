@@ -305,3 +305,41 @@ body {
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.6); }
+
+/* ===================================================================
+   MODALITÀ LEGGERA (classe .lite su <html>)
+   Disattiva gli effetti GPU-costosi che causano scatti su hardware debole:
+   il backdrop-filter (glassmorphism) è la proprietà più pesante in assoluto.
+   =================================================================== */
+
+/* 1) Elimina la sfocatura dietro i pannelli "vetro" (il vero collo di bottiglia) */
+:root.lite [class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 2) Ripristina leggibilità: i pannelli vetro chiari, senza sfocatura,
+   diventano quasi opachi (i valori alti come /80-/95 restano già leggibili) */
+:root.lite [class*="backdrop-blur"][class*="bg-white/40"],
+:root.lite [class*="backdrop-blur"][class*="bg-white/50"],
+:root.lite [class*="backdrop-blur"][class*="bg-white/60"],
+:root.lite [class*="backdrop-blur"][class*="bg-white/70"] {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+:root.lite.dark [class*="backdrop-blur"][class*="dark:bg-slate-800"],
+:root.lite.dark [class*="backdrop-blur"][class*="dark:bg-slate-900"] {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* 3) Aurora / blob decorativi enormi (blur-[100px]/[120px]): azzera il costo.
+   Il selettore "blur-[" prende solo le sfocature arbitrarie, non i backdrop-blur. */
+:root.lite [class*="blur-["] {
+  filter: none !important;
+  opacity: 0.06 !important;
+  animation: none !important;
+}
+
+/* 4) Alleggerisce le ombre più pesanti (secondario) */
+:root.lite [class*="shadow-2xl"] {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+}

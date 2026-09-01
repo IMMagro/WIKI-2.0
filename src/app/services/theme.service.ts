@@ -16,6 +16,29 @@ export class ThemeService {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    // Applica la modalità leggera (auto se il PC è lento o l'utente non ha scelto)
+    this.applyLite(this.liteMode);
+  }
+
+  /**
+   * Modalità leggera: disattiva gli effetti GPU-costosi (backdrop-blur, aurora).
+   * Se l'utente non ha mai scelto, si attiva in automatico su hardware lento o
+   * con prefers-reduced-motion.
+   */
+  get liteMode(): boolean {
+    const v = localStorage.getItem('liteMode');
+    if (v !== null) return JSON.parse(v);
+    const lowCores = (navigator.hardwareConcurrency || 8) <= 4;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return lowCores || reducedMotion;
+  }
+  set liteMode(value: boolean) {
+    localStorage.setItem('liteMode', JSON.stringify(value));
+    this.applyLite(value);
+  }
+
+  private applyLite(on: boolean): void {
+    document.documentElement.classList.toggle('lite', on);
   }
 
   get globalAnimationsEnabled(): boolean {
