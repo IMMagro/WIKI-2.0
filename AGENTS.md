@@ -28,6 +28,7 @@
 
 ## Custom Agent Rules (Concrete Actions)
 
+- **Subagent-Driven & Parallel Orchestration**: Whenever executing tasks, refactoring, feature implementation, research, or audits, YOU MUST structure the workflow by delegating tasks to specialized subagents (e.g., `wiki-coder`, `wiki-reviewer`, `research`, `ui-tester-agent`). Whenever subtasks are independent (e.g., backend handler + frontend UI, research + template refactoring, or multi-file audits), invoke subagents **in parallel** concurrently with a single `invoke_subagent` batch call. The lead agent acts as orchestrator: defines clear prompts, synchronizes results, validates builds with `npm run build`, and presents consolidated findings to the user.
 - **Proactive Orchestration**: Before executing a request, evaluate the full scope. If working on UI, proactively READ design systems and animation guidelines before writing code. If working on backend, proactively check architecture and security patterns.
 - **Auto-Commit**: Whenever you complete a significant chunk of work or hit a milestone, you MUST execute `git add` and `git commit` using conventional commit format. Reference `.agents/skills/auto-git-commit/SKILL_git.md` for message format.
 - **Theme Factory (CSS/UI)**: Whenever you edit CSS, stylesheets, or UI components, you MUST READ the file `.agents/skills/theme-factory/themes/12-qe-theme.md` and strictly apply its rules. Palette: qe-blue `#377DFF`, magenta `#F80086`, bg `#F8FAFD`, testo `#1E2022`, font Poppins.
@@ -51,6 +52,7 @@
 ## Boundaries
 
 ### Always Do
+- Decompose operations into subagent tasks and run independent tasks in parallel whenever applicable.
 - Run `npm run build` before committing (pre-commit check).
 - Use conventional commit format: `type(scope): subject`.
 - Use **atomic commits** (one logical change per commit).
