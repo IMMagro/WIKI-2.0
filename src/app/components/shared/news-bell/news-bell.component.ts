@@ -39,4 +39,8 @@ export class NewsBellComponent {
     this.isOpen = false;
     document.body.style.overflow = 'hidden';
   }
+
+  trackByNews(_i: number, n: any): any {
+    return (n && (n.id ?? n.title)) ?? _i;
+  }
 }

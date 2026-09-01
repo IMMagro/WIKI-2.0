@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideComponent } from './components/guide/guide.component';
 import { GuideService } from './services/guide.service';
-import { GuideAdminComponent } from './components/guide/guide-admin.component';
 import { AdminLoginComponent } from './components/admin/admin-login/admin-login.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 import { NewsBellComponent } from './components/shared/news-bell/news-bell.component';
@@ -32,7 +31,6 @@ import { InteractiveScreensService } from './services/interactive-screens.servic
     CommonModule,
     FormsModule,
     GuideComponent,
-    GuideAdminComponent,
     AdminLoginComponent,
     AdminLayoutComponent,
     NewsBellComponent,

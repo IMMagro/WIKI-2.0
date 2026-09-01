@@ -6,11 +6,17 @@
          [style.background]="auroraGradientStyle"></div>
   </div>
 
-  <!-- ADMIN LOGIN OVERLAY -->
-  <app-admin-login *ngIf="isAdminRoute && !isAdminAuthenticated" (loginSuccess)="onLoginSuccess()"></app-admin-login>
-
-  <!-- ADMIN DASHBOARD -->
-  <app-admin-layout *ngIf="isAdminRoute && isAdminAuthenticated" (exitAdmin)="exitAdmin()"></app-admin-layout>
+  <!-- AREA ADMIN — caricata in lazy solo quando si entra nell'admin (chunk separato) -->
+  @defer (when isAdminRoute) {
+    <!-- ADMIN LOGIN OVERLAY -->
+    <app-admin-login *ngIf="isAdminRoute && !isAdminAuthenticated" (loginSuccess)="onLoginSuccess()"></app-admin-login>
+    <!-- ADMIN DASHBOARD -->
+    <app-admin-layout *ngIf="isAdminRoute && isAdminAuthenticated" (exitAdmin)="exitAdmin()"></app-admin-layout>
+  } @loading (minimum 200ms) {
+    <div *ngIf="isAdminRoute" class="fixed inset-0 z-[80] flex items-center justify-center bg-white dark:bg-slate-900">
+      <div class="w-10 h-10 rounded-full border-4 border-[#377DFF]/20 border-t-[#377DFF] animate-spin"></div>
+    </div>
+  }
 
   <app-news-popup *ngIf="!isAdminRoute"></app-news-popup>
 
