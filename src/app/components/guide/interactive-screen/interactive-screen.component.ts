@@ -58,6 +58,23 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
   // For View Mode Popup
   activePin: InteractivePin | null = null;
 
+  // Flag to prevent immediate click closing after mouseup
+  isJustDrawn = false;
+
+  // Smart Popover Positioning
+  get formLeft(): number {
+    const center = this.newPinX + (this.newPinWidth ? this.newPinWidth / 2 : 0);
+    return Math.max(18, Math.min(82, center));
+  }
+
+  get formTop(): number {
+    return this.newPinY > 50 ? this.newPinY : (this.newPinY + (this.newPinHeight || 0));
+  }
+
+  get formTransform(): string {
+    return this.newPinY > 50 ? 'translate(-50%, -105%)' : 'translate(-50%, 15px)';
+  }
+
   constructor(
     private interactiveScreensService: InteractiveScreensService,
     private http: HttpClient
@@ -97,6 +114,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
     if (target.closest('.interactive-pin') || target.closest('.interactive-box') || target.closest('.form-popover') || target.closest('.handle')) {
       return;
     }
+
+    event.preventDefault(); // Prevent default browser image drag
 
     const imgEl = this.imageContainerRef?.nativeElement;
     if (!imgEl) return;
@@ -193,6 +212,8 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
         }
 
         this.showForm = true;
+        this.isJustDrawn = true;
+        setTimeout(() => { this.isJustDrawn = false; }, 350);
       }
       this.isDrawing = false;
       this.currentDrawingBox = null;
@@ -284,6 +305,7 @@ export class InteractiveScreenComponent implements OnInit, OnChanges {
   }
 
   closePopup(event?: Event) {
+    if (this.isJustDrawn) return;
     if (event) event.stopPropagation();
     this.activePin = null;
     this.showForm = false;
