@@ -1,11 +1,11 @@
 <!-- Topbar -->
 <header class="flex justify-between items-center mb-10">
   <div>
-    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Bentornato, <span class="font-bold text-[#377DFF]">Admin</span></h1>
+    <h1 class="text-3xl font-light text-[#1E2022] tracking-wide">Bentornato, <span class="font-bold text-[#377DFF]">{{ smartflow.currentOperator ? smartflow.currentOperator.name : 'Admin' }}</span></h1>
     <p class="text-[#77838F] mt-1 font-medium">Panoramica e monitoraggio in tempo reale del sistema Quaderno Elettronico.</p>
   </div>
   
-  <div class="flex items-center gap-6">
+  <div class="flex items-center gap-4">
     <div class="relative" #notificationDropdown>
       <button (click)="isNotificationOpen = !isNotificationOpen" aria-label="Notifiche" [ngClass]="isNotificationOpen ? 'text-[#377DFF] bg-[#F0F5FF]' : 'text-[#77838F] hover:text-[#377DFF]'" class="relative p-2 flex items-center justify-center min-w-[44px] min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#377DFF] rounded-full transition-colors">
         <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
@@ -47,9 +47,26 @@
       </div>
     </div>
     
-    <div class="flex items-center gap-3 bg-[#FFFFFF] border border-[#E2E8F0] shadow-sm rounded-full pl-2 pr-4 py-1">
-      <img [src]="'https://ui-avatars.com/api/?name=' + (currentAdminEmail || 'Admin') + '&background=377DFF&color=fff'" class="w-8 h-8 rounded-full" alt="User">
-      <span class="text-sm font-semibold text-[#1E2022]">{{ currentAdminEmail }}</span>
+    <!-- Profile Badge (Operator / Admin) -->
+    <div (click)="onProfileClick()" 
+         class="flex items-center gap-3 bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#377DFF]/30 rounded-2xl pl-2 pr-4 py-1.5 transition-all cursor-pointer group"
+         [title]="smartflow.currentOperator ? 'Visualizza profilo e classifica operatore' : 'Profilo amministratore'">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-[#E2E8F0] flex items-center justify-center overflow-hidden shrink-0">
+        <img *ngIf="smartflow.currentOperator?.avatar" [src]="smartflow.currentOperator.avatar" class="w-full h-full object-cover" alt="Avatar">
+        <span *ngIf="!smartflow.currentOperator?.avatar && smartflow.currentOperator?.emoji" class="text-xl">{{ smartflow.currentOperator.emoji }}</span>
+        <img *ngIf="!smartflow.currentOperator" [src]="'https://ui-avatars.com/api/?name=' + (currentAdminEmail || 'Admin') + '&background=377DFF&color=fff'" class="w-full h-full object-cover" alt="User">
+      </div>
+      <div class="flex flex-col text-left">
+        <span class="text-xs font-bold text-[#1E2022] leading-tight group-hover:text-[#377DFF] transition-colors truncate max-w-[150px]">
+          {{ smartflow.currentOperator ? smartflow.currentOperator.name : currentAdminEmail }}
+        </span>
+        <span *ngIf="smartflow.currentOperator" class="text-[10px] font-bold" [style.color]="smartflow.getLevelForScore(smartflow.currentOperator.score).color">
+          Lvl {{ smartflow.currentOperator.level }} • {{ smartflow.currentOperator.score }} pt
+        </span>
+        <span *ngIf="!smartflow.currentOperator" class="text-[10px] font-semibold text-[#77838F]">
+          Amministratore
+        </span>
+      </div>
     </div>
   </div>
 </header>

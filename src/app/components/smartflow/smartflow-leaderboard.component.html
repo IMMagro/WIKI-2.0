@@ -8,8 +8,9 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
       <!-- User info & Avatar -->
       <div class="flex items-center gap-4">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-white shadow-sm flex items-center justify-center text-4xl shrink-0">
-          {{ currentOperator.emoji }}
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-white shadow-sm flex items-center justify-center text-4xl shrink-0 overflow-hidden">
+          <img *ngIf="currentOperator.avatar" [src]="currentOperator.avatar" class="w-full h-full object-cover rounded-2xl">
+          <span *ngIf="!currentOperator.avatar">{{ currentOperator.emoji }}</span>
         </div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
@@ -112,8 +113,9 @@
         </div>
 
         <!-- Avatar -->
-        <div class="w-10 h-10 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] flex items-center justify-center text-2xl shrink-0">
-          {{ op.emoji }}
+        <div class="w-10 h-10 rounded-xl bg-[#F8FAFD] border border-[#E2E8F0] flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+          <img *ngIf="op.avatar" [src]="op.avatar" class="w-full h-full object-cover rounded-xl">
+          <span *ngIf="!op.avatar">{{ op.emoji }}</span>
         </div>
 
         <!-- Name & Details -->

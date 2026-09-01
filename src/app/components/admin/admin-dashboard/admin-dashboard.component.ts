@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GuideService } from '../../../services/guide.service';
@@ -54,10 +54,15 @@ export interface LiveAccessEvent {
   templateUrl: './admin-dashboard.component.html'
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
+  @Output() openProfile = new EventEmitter<void>();
   isNotificationOpen = false;
   adminNotifications: any[] = [];
   accessStats: any = null;
   liveGuides: LiveGuideItem[] = [];
+
+  onProfileClick(): void {
+    this.openProfile.emit();
+  }
 
   get currentAdminEmail(): string {
     return sessionStorage.getItem('adminEmail') || 'amministratore@qe.com';
