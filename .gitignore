@@ -44,3 +44,7 @@ Thumbs.db
 # Manuali: asset video pesanti serviti da IIS, non dal repo (superano i limiti di GitHub)
 public/Data/docs/**/*.mp4
 *.mp4
+
+# File di stato runtime (rigenerati dal backend, non versionare)
+/public/Data/tokens.json
+/public/Data/access_stats.json
