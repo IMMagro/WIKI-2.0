@@ -1,13 +1,9 @@
 <div class="h-screen w-full bg-qe-bg dark:bg-slate-900 relative overflow-hidden font-poppins transition-colors duration-500">
 
-  <!-- Sfondo Aurora -->
-  <div class="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30" style="z-index: 0" [style.transition]="'opacity 2s ease'" [style.opacity]="stage === 1 ? (themeService.isDarkMode ? 0.4 : 0.6) : 0.2">
-    <div class="absolute w-[600px] h-[600px] rounded-full blur-[100px] top-[-100px] left-[-100px] transition-colors duration-[1500ms] ease-in-out"
-         style="animation: pulse 10s infinite alternate;"
-         [style.background-color]="getGlowColor(1)"></div>
-    <div class="absolute w-[500px] h-[500px] rounded-full blur-[100px] bottom-[-100px] right-[-100px] transition-colors duration-[1500ms] ease-in-out" 
-         style="animation: pulse 8s infinite alternate;"
-         [style.background-color]="getGlowColor(2)"></div>
+  <!-- Sfondo Aurora Ottimizzato (Hardware Accelerated con Radial Gradients) -->
+  <div class="absolute inset-0 pointer-events-none opacity-100 transition-opacity duration-700 will-change-[opacity]" style="z-index: 0">
+    <div class="absolute inset-0 transition-all duration-700"
+         [style.background]="auroraGradientStyle"></div>
   </div>
 
   <!-- ADMIN LOGIN OVERLAY -->
@@ -51,7 +47,7 @@
           
           <!-- Popover Card (Glassmorphism & Responsive Mobile Width) -->
           <div [ngClass]="isContactOpen ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'"
-               class="absolute right-0 top-full mt-2 sm:mt-4 w-[calc(100vw-2rem)] sm:w-[340px] max-w-[340px] z-[100] bg-white/85 dark:bg-slate-800/85 backdrop-blur-2xl border border-white/60 dark:border-slate-700/50 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-qe-blue/5 dark:shadow-black/20 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+               class="absolute right-0 top-full mt-2 sm:mt-4 w-[calc(100vw-2rem)] sm:w-[340px] max-w-[340px] z-[100] bg-white/95 dark:bg-slate-800/95 border border-[#E2E8F0] dark:border-slate-700/60 rounded-2xl sm:rounded-[2rem] shadow-2xl shadow-qe-blue/10 dark:shadow-black/30 overflow-hidden origin-top-right transform transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
             
             <!-- Intestazione -->
             <div class="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-gray-100/80 dark:border-slate-700/60 relative">
@@ -103,50 +99,50 @@
         </div>
       </div>
 
-      <!-- Dynamic Content Area -->
-      <div class="relative flex-1 overflow-hidden">
+      <!-- Dynamic Content Area (Hardware Accelerated 60 FPS) -->
+      <div class="relative flex-1 overflow-hidden transform-gpu">
         
         <!-- View 0: QeHome (Assistenza Clienti) -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center pb-20 px-4 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col items-center justify-center pb-20 px-4 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[transform,opacity]"
              [style.opacity]="activeIndex === 0 ? 1 : 0"
              [style.pointer-events]="activeIndex === 0 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 0 ? 'translateY(0)' : (0 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
+             [style.transform]="activeIndex === 0 ? 'translate3d(0, 0, 0)' : (0 > activeIndex ? 'translate3d(0, 60px, 0)' : 'translate3d(0, -60px, 0)')">
           <app-home class="w-full max-w-4xl flex flex-col items-center justify-center"
                     [isActive]="activeIndex === 0" [titleVisible]="titleVisible" [homeStage]="homeStage" [tags]="tags"
                     (pillSelected)="onHomePillSelected($event)"></app-home>
         </div>
         <!-- View 1: Guide (Knowledge Base) -->
-        <div class="absolute inset-0 flex flex-col transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[transform,opacity]"
              [style.opacity]="activeIndex === 1 ? 1 : 0"
              [style.pointer-events]="activeIndex === 1 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 1 ? 'translateY(0)' : (1 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
+             [style.transform]="activeIndex === 1 ? 'translate3d(0, 0, 0)' : (1 > activeIndex ? 'translate3d(0, 60px, 0)' : 'translate3d(0, -60px, 0)')">
           <app-guide></app-guide>
         </div>
 
         <!-- View 2: FAQ -->
-        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[transform,opacity]"
              [ngClass]="faqReadingService.selectedFaq ? 'overflow-hidden' : 'overflow-y-auto scrollbar-hide'"
              [style.opacity]="activeIndex === 2 ? 1 : 0"
              [style.pointer-events]="activeIndex === 2 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 2 ? 'translateY(0)' : (2 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
+             [style.transform]="activeIndex === 2 ? 'translate3d(0, 0, 0)' : (2 > activeIndex ? 'translate3d(0, 60px, 0)' : 'translate3d(0, -60px, 0)')">
           <app-faq-page [isActive]="activeIndex === 2" [stage]="manualiStage" [animVariant]="faqAnimVariant"></app-faq-page>
         </div>
 
         <!-- View 3: Servizi -->
-        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col py-4 md:py-8 px-4 md:px-8 pb-20 md:pb-8 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[transform,opacity]"
              [style.opacity]="activeIndex === 3 ? 1 : 0"
              [style.pointer-events]="activeIndex === 3 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 3 ? 'translateY(0)' : (3 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
+             [style.transform]="activeIndex === 3 ? 'translate3d(0, 0, 0)' : (3 > activeIndex ? 'translate3d(0, 60px, 0)' : 'translate3d(0, -60px, 0)')">
           <app-servizi [isActive]="activeIndex === 3" [stage]="serviziStage" [services]="services"
                        [currentServicePage]="currentServicePage" [isChangingPage]="isChangingPage" [animatingDirection]="animatingDirection"
-                       (wheelScroll)="onWheel($event)" (nextPage)="nextServicePage()"></app-servizi>
+                       (nextPage)="nextServicePage()"></app-servizi>
         </div>
 
         <!-- View 4: News / Aggiornamenti -->
-        <div class="absolute inset-0 flex flex-col items-center pt-4 md:pt-8 pb-20 md:pb-4 px-4 md:px-8 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        <div class="absolute inset-0 flex flex-col items-center pt-4 md:pt-8 pb-20 md:pb-4 px-4 md:px-8 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[transform,opacity]"
              [style.opacity]="activeIndex === 4 ? 1 : 0"
-               [style.pointer-events]="activeIndex === 4 ? 'auto' : 'none'"
-             [style.transform]="activeIndex === 4 ? 'translateY(0)' : (4 > activeIndex ? 'translateY(100px)' : 'translateY(-100px)')">
+             [style.pointer-events]="activeIndex === 4 ? 'auto' : 'none'"
+             [style.transform]="activeIndex === 4 ? 'translate3d(0, 0, 0)' : (4 > activeIndex ? 'translate3d(0, 60px, 0)' : 'translate3d(0, -60px, 0)')">
 
           <app-news-carousel class="w-full h-full block relative"
                [stage]="newsStage" [programs]="programs" [activeProgramIndex]="activeProgramIndex"

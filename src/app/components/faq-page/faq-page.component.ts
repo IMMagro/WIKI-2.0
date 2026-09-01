@@ -27,18 +27,24 @@ export class FaqPageComponent {
     public themeService: ThemeService
   ) {}
 
+  private _cachedQuery = '';
+  private _cachedResult: any[] = [];
+
   get filteredFAQ() {
     const all = this.guideService.allFaqItems;
-    if (!this.faqSearchQuery || this.faqSearchQuery.trim() === '') {
-      return all;
+    const q = (this.faqSearchQuery || '').trim().toLowerCase();
+    if (!q) return all;
+    if (q === this._cachedQuery) {
+      return this._cachedResult;
     }
-    const q = this.faqSearchQuery.toLowerCase();
-    return all.filter(doc =>
+    this._cachedQuery = q;
+    this._cachedResult = all.filter(doc =>
       (doc.title && doc.title.toLowerCase().includes(q)) ||
       (doc.desc && doc.desc.toLowerCase().includes(q)) ||
       (doc.category && doc.category.toLowerCase().includes(q)) ||
       (doc.tags && doc.tags.join(' ').toLowerCase().includes(q))
     );
+    return this._cachedResult;
   }
 
   getReadCount(): number {

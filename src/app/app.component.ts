@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, ChangeDetectorRef, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -51,13 +51,14 @@ import { InteractiveScreensService } from './services/interactive-screens.servic
 export class AppComponent implements OnInit {
   @ViewChild('contactDropdown') contactDropdown!: ElementRef;
   @ViewChild(ServiziComponent) serviziRef?: ServiziComponent;
+
+  isContactOpen = false;
   stage = 0;
   titleVisible = false;
-  isSidebarExpanded = false;
-  isContactOpen = false;
   isAdminRoute = false;
   isAdminAuthenticated = false;
   isUploadModalOpen = false;
+  isSidebarExpanded = false;
 
   openUploadModal() {
     this.isUploadModalOpen = true;
@@ -72,6 +73,7 @@ export class AppComponent implements OnInit {
   constructor(
     private eRef: ElementRef,
     private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
     private http: HttpClient,
     public guideService: GuideService,
     public themeService: ThemeService,
@@ -82,6 +84,18 @@ export class AppComponent implements OnInit {
     public navSettingsService: NavigationSettingsService,
     public interactiveScreensService: InteractiveScreensService
   ) {}
+
+  // Sfondo Aurora Ultra-Performante (Hardware-Accelerated via CSS Radial Gradients, 0% CPU/GPU overhead)
+  get auroraGradientStyle(): string {
+    const isDark = this.themeService.isDarkMode;
+    const c1 = this.activeIndex === 4 && this.programs[this.activeProgramIndex]
+      ? this.programs[this.activeProgramIndex].hexColor
+      : '#377DFF';
+    const c2 = '#F80086';
+    const a1 = isDark ? 0.12 : 0.07;
+    const a2 = isDark ? 0.08 : 0.04;
+    return `radial-gradient(circle at 10% 15%, ${this.hexToRgba(c1, a1)} 0%, transparent 60%), radial-gradient(circle at 90% 85%, ${this.hexToRgba(c2, a2)} 0%, transparent 60%)`;
+  }
 
   // Uscita dalla modalità admin
   exitAdmin() {
@@ -458,32 +472,42 @@ export class AppComponent implements OnInit {
 
   lastWheelTime = 0;
 
-  @HostListener('window:wheel', ['$event'])
-  onWheel(event: WheelEvent) {
-    if (!(this.activeIndex === 3 && this.serviziStage === 'cards') && !(this.activeIndex === 4 && this.newsStage === 'detail')) return;
-    
-    event.preventDefault();
-    const now = Date.now();
-    const isContinuousScroll = (now - this.lastWheelTime) < 150;
-    this.lastWheelTime = now;
-
-    if (this.activeIndex === 3) {
-      if (this.scrollLock || isContinuousScroll) return;
-      if (event.deltaY > 0) this.nextServicePage();
-      else if (event.deltaY < 0) this.prevServicePage();
-    } else if (this.activeIndex === 4) {
-      if (this.isNewsAnimating || isContinuousScroll) return;
-      if (Math.abs(event.deltaY) > 20) {
-        if (event.deltaY > 0 && this.activeNewsItemIndex < this.newsItems.length - 1) {
-           this.changeNewsItem(this.activeNewsItemIndex + 1);
-        } else if (event.deltaY < 0 && this.activeNewsItemIndex > 0) {
-           this.changeNewsItem(this.activeNewsItemIndex - 1);
+  private setupWheelListener() {
+    this.ngZone.runOutsideAngular(() => {
+      window.addEventListener('wheel', (event: WheelEvent) => {
+        if (!(this.activeIndex === 3 && this.serviziStage === 'cards') && !(this.activeIndex === 4 && this.newsStage === 'detail')) {
+          return;
         }
-      }
-    }
+        
+        event.preventDefault();
+        const now = Date.now();
+        const isContinuousScroll = (now - this.lastWheelTime) < 150;
+        this.lastWheelTime = now;
+
+        if (this.activeIndex === 3) {
+          if (this.scrollLock || isContinuousScroll) return;
+          this.ngZone.run(() => {
+            if (event.deltaY > 0) this.nextServicePage();
+            else if (event.deltaY < 0) this.prevServicePage();
+          });
+        } else if (this.activeIndex === 4) {
+          if (this.isNewsAnimating || isContinuousScroll) return;
+          if (Math.abs(event.deltaY) > 20) {
+            this.ngZone.run(() => {
+              if (event.deltaY > 0 && this.activeNewsItemIndex < this.newsItems.length - 1) {
+                 this.changeNewsItem(this.activeNewsItemIndex + 1);
+              } else if (event.deltaY < 0 && this.activeNewsItemIndex > 0) {
+                 this.changeNewsItem(this.activeNewsItemIndex - 1);
+              }
+            });
+          }
+        }
+      }, { passive: false });
+    });
   }
 
   ngOnInit() {
+    this.setupWheelListener();
     this.guideTracker.trackPageView();
     this.loadNews();
     this.loadServices();

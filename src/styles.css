@@ -11,6 +11,11 @@
   transform-style: preserve-3d;
 }
 
+.transform-gpu {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
 * {
   box-sizing: border-box;
 }

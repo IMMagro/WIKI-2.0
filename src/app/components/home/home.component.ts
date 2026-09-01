@@ -44,20 +44,7 @@ export class HomeComponent {
     }
   }
 
-  get homeSearchResults() {
-    if (!this.homeSearchQuery || this.homeSearchQuery.trim() === '') {
-      return [];
-    }
-    const q = this.homeSearchQuery.toLowerCase();
-    // Cerca sulle singole FAQ reali (domanda + guida + categoria + tag + testo step). Max 5.
-    return this.guideService.allFaqItems.filter(doc =>
-      (doc.title && doc.title.toLowerCase().includes(q)) ||
-      (doc.desc && doc.desc.toLowerCase().includes(q)) ||
-      (doc.category && doc.category.toLowerCase().includes(q)) ||
-      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q)) ||
-      (doc.steps && doc.steps.map((s: any) => s.t).join(' ').toLowerCase().includes(q))
-    ).slice(0, 5);
-  }
+  homeSearchResults: any[] = [];
 
   onHomeSearchFocus() {
     if (this.homeSearchQuery.trim() !== '') {
@@ -66,7 +53,21 @@ export class HomeComponent {
   }
 
   onHomeSearchInput() {
-    this.isHomeSearchOpen = this.homeSearchQuery.trim() !== '';
+    const q = (this.homeSearchQuery || '').trim().toLowerCase();
+    if (!q) {
+      this.homeSearchResults = [];
+      this.isHomeSearchOpen = false;
+      return;
+    }
+    // Cerca sulle singole FAQ reali (domanda + guida + categoria + tag + testo step). Max 5.
+    this.homeSearchResults = this.guideService.allFaqItems.filter(doc =>
+      (doc.title && doc.title.toLowerCase().includes(q)) ||
+      (doc.desc && doc.desc.toLowerCase().includes(q)) ||
+      (doc.category && doc.category.toLowerCase().includes(q)) ||
+      (doc.tags && doc.tags.join(' ').toLowerCase().includes(q)) ||
+      (doc.steps && doc.steps.map((s: any) => s.t).join(' ').toLowerCase().includes(q))
+    ).slice(0, 5);
+    this.isHomeSearchOpen = true;
   }
 
   openFaqFromHome(faq: any) {
