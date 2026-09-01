@@ -65,6 +65,9 @@
           <span class="w-1.5 h-1.5 rounded-full shrink-0" [ngClass]="g.status === 'pub' ? 'bg-emerald-500' : 'bg-amber-500'"></span>
           <span class="flex-1 text-[13px] font-medium truncate">{{ g.title }}</span>
           <span class="text-[10px] text-[#A9B4BF]">{{ g.faqs.length }} FAQ</span>
+          <button (click)="exportGuideToHtml(cat, g, $event)" title="Esporta in HTML" class="p-0.5 rounded text-[#A9B4BF] hover:text-[#377DFF] opacity-0 group-hover/g:opacity-100 transition-opacity">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </button>
           <button (click)="deleteGuide(cat, g, $event)" title="Elimina guida" class="p-0.5 rounded text-[#A9B4BF] hover:text-[#FF4757] opacity-0 group-hover/g:opacity-100 transition-opacity">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
@@ -154,6 +157,10 @@
         <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
           <h3 class="text-sm font-bold text-[#1E2022] uppercase tracking-wider">Guida <span class="text-[#A9B4BF] font-medium normal-case">· {{ selCat?.name }}</span></h3>
           <div class="flex items-center gap-3">
+            <button (click)="exportGuideToHtml(selCat, selGuide)" [disabled]="isExportingHtml" class="flex items-center gap-1.5 px-3 py-1.5 bg-[#EAF1FF] hover:bg-[#D6E4FF] text-[#377DFF] border border-[#377DFF]/30 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer" title="Esporta questa guida in un file HTML autonomo da inviare via email">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              {{ isExportingHtml ? 'Esportazione…' : 'Esporta HTML' }}
+            </button>
             <button (click)="openAiImport()" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 rounded-xl text-xs font-bold transition-all cursor-pointer">
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               Importa da AI

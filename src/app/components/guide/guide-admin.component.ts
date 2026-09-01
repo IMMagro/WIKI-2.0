@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { GuideService } from '../../services/guide.service';
 import { SmartflowService } from '../../services/smartflow.service';
+import { GuideExporterService } from '../../services/guide-exporter.service';
 import { Category, Guide, Faq, Step, HomePill } from './guide.models';
 import { parseAiDocument } from '../../services/ai-parser.util';
 import { SmartflowWizardComponent } from '../smartflow/smartflow-wizard.component';
@@ -33,6 +34,7 @@ export class GuideAdminComponent {
   saving = false;
   saveMsg = '';
   saveOk = false;
+  isExportingHtml = false;
 
   iconOptions = ['receipt', 'users', 'truck', 'box', 'tooth', 'quote', 'book'];
   private iconPaths: Record<string, string> = {
@@ -97,8 +99,23 @@ export class GuideAdminComponent {
     public guides: GuideService,
     public smartflow: SmartflowService,
     private http: HttpClient,
-    private interactiveScreensService: InteractiveScreensService
+    private interactiveScreensService: InteractiveScreensService,
+    private guideExporter: GuideExporterService
   ) {}
+
+  async exportGuideToHtml(cat: Category | null, guide: Guide | null, ev?: Event) {
+    if (ev) ev.stopPropagation();
+    if (!guide) return;
+    this.isExportingHtml = true;
+    try {
+      await this.guideExporter.exportToHtml(cat ? cat.name : '', guide);
+    } catch (err) {
+      console.error('Errore durante esportazione HTML:', err);
+      alert('Si è verificato un errore durante l\'esportazione della guida.');
+    } finally {
+      this.isExportingHtml = false;
+    }
+  }
 
 
   get categories(): Category[] { return this.guides.categories; }

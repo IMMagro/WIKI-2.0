@@ -51,22 +51,33 @@
     <div (click)="onProfileClick()" 
          class="flex items-center gap-3 bg-white border border-[#E2E8F0] shadow-sm hover:shadow-md hover:border-[#377DFF]/30 rounded-2xl pl-2 pr-4 py-1.5 transition-all cursor-pointer group"
          [title]="smartflow.currentOperator ? 'Visualizza profilo e classifica operatore' : 'Profilo amministratore'">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-[#E2E8F0] flex items-center justify-center overflow-hidden shrink-0">
-        <img *ngIf="smartflow.currentOperator?.avatar" [src]="smartflow.currentOperator.avatar" class="w-full h-full object-cover" alt="Avatar">
-        <span *ngIf="!smartflow.currentOperator?.avatar && smartflow.currentOperator?.emoji" class="text-xl">{{ smartflow.currentOperator.emoji }}</span>
-        <img *ngIf="!smartflow.currentOperator" [src]="'https://ui-avatars.com/api/?name=' + (currentAdminEmail || 'Admin') + '&background=377DFF&color=fff'" class="w-full h-full object-cover" alt="User">
-      </div>
-      <div class="flex flex-col text-left">
-        <span class="text-xs font-bold text-[#1E2022] leading-tight group-hover:text-[#377DFF] transition-colors truncate max-w-[150px]">
-          {{ smartflow.currentOperator ? smartflow.currentOperator.name : currentAdminEmail }}
-        </span>
-        <span *ngIf="smartflow.currentOperator" class="text-[10px] font-bold" [style.color]="smartflow.getLevelForScore(smartflow.currentOperator.score).color">
-          Lvl {{ smartflow.currentOperator.level }} • {{ smartflow.currentOperator.score }} pt
-        </span>
-        <span *ngIf="!smartflow.currentOperator" class="text-[10px] font-semibold text-[#77838F]">
-          Amministratore
-        </span>
-      </div>
+      <ng-container *ngIf="smartflow.currentOperator as op; else adminBadge">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-[#E2E8F0] flex items-center justify-center overflow-hidden shrink-0">
+          <img *ngIf="op.avatar" [src]="op.avatar" class="w-full h-full object-cover" alt="Avatar">
+          <span *ngIf="!op.avatar" class="text-xl">{{ op.emoji }}</span>
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-xs font-bold text-[#1E2022] leading-tight group-hover:text-[#377DFF] transition-colors truncate max-w-[150px]">
+            {{ op.name }}
+          </span>
+          <span class="text-[10px] font-bold" [style.color]="smartflow.getLevelForScore(op.score).color">
+            Lvl {{ op.level }} • {{ op.score }} pt
+          </span>
+        </div>
+      </ng-container>
+      <ng-template #adminBadge>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#EAF1FF] to-[#FFE9F4] border border-[#E2E8F0] flex items-center justify-center overflow-hidden shrink-0">
+          <img [src]="'https://ui-avatars.com/api/?name=' + (currentAdminEmail || 'Admin') + '&background=377DFF&color=fff'" class="w-full h-full object-cover" alt="User">
+        </div>
+        <div class="flex flex-col text-left">
+          <span class="text-xs font-bold text-[#1E2022] leading-tight group-hover:text-[#377DFF] transition-colors truncate max-w-[150px]">
+            {{ currentAdminEmail }}
+          </span>
+          <span class="text-[10px] font-semibold text-[#77838F]">
+            Amministratore
+          </span>
+        </div>
+      </ng-template>
     </div>
   </div>
 </header>
