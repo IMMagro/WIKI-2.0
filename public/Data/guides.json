@@ -3225,6 +3225,534 @@
           "updated": "28/09/2026"
         }
       ]
+    },
+    {
+      "id": "servizi",
+      "name": "Servizi & Moduli Add-On",
+      "icon": "receipt",
+      "accent": "blue",
+      "desc": "Panoramica di tutti i moduli aggiuntivi integrabili: Firma Wi-Fi, WhatsApp, Mia Assistente, OpenCeph, QE Pocket.",
+      "manuals": [
+        {
+          "id": "servizi-guida-paziente-vedere-i-filmati-di-guida-paziente",
+          "title": "Guida Paziente - Vedere i filmati di Guida Paziente",
+          "overview": "Per vedere i filmati di Guida Paziente è sufficiente accedere ad un Odontogramma paziente e premere il relativo pulsante in alto a destra.\n\nÈ inoltre possibile vedere i filmati legati ai singoli interventi facendo doppio click sugli interventi interessati.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-manuale-aggiungere-un-nuovo-medico-alla-sincronizzazione",
+          "title": "Sincronizzatore Google Calendar (manuale) - Aggiungere un nuovo medico alla sincronizzazione",
+          "overview": "Nota: prima di procedere è necessario che i medici siano già presenti nell'agenda di Quaderno.\nQualora non lo fossero, seguire [[[[[[[[[[[[[[[[[[questa]]]]]]]]]]]]]]]]]]] guida per aggiungerli.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Accedere all'agenda di Quaderno.\n2. Premere il pulsante 'Esporta Agenda' in alto a destra.\nApparirà il sincronizzatore appuntamenti.\n3. Premere il pulsante 'Configura' in alto.\n4. Premere il pulsante con i 3 omini in basso ed eventualmente inserire l'e-mail di Google Calendar per autenticarsi.\n5. Scegliere i medici da sincronizzare e confermare.\n6. Attendere che i medici vengano aggiunti e confermare.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-manuale-togliere-un-medico-dalla-sincronizzazione",
+          "title": "Sincronizzatore Google Calendar (manuale) - Togliere un medico dalla sincronizzazione",
+          "overview": "1. Accedere all'agenda di Quaderno.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Esporta Agenda' in alto a destra.\nApparirà il sincronizzatore appuntamenti.\n3. Premere il pulsante 'Configura' in alto.\n4. Selezionare la riga del medico che si intende rimuovere dalla sincronizzazione.\n5. Togliere la spunta alla relativa casellina di sincronizzazione.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-manuale-condividere-un-calendario-su-google-calendar",
+          "title": "Sincronizzatore Google Calendar (manuale) - Condividere un calendario su Google Calendar",
+          "overview": "1. Accedere al proprio account di Google Calendar da browser.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Posizionarsi sopra al nome del calendario che si intende condividere, in basso a sinistra.\n3. Premere i 3 puntini.\n4. Cliccare 'Impostazioni e condivisione'.\n5. Scorrere fino alla sezione 'Condivisione con'.\n6. Premere il pulsante '+ Aggiungi persone e gruppi'.\n7. Inserire l'e-mail con la quale condividere il calendario e l'autorizzazione che potrà avere.\n8. Confermare.\nL'e-mail scelta riceverà un messaggio posta elettronica e ritroverà il calendario condiviso sul proprio account Google Calendar.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-manuale-esportare-i-telefoni-pazienti-negli-appuntamenti-sincronizzati-con-google-calendar",
+          "title": "Sincronizzatore Google Calendar (manuale) - Esportare i telefoni pazienti negli appuntamenti sincronizzati con Google Calendar",
+          "overview": "SIAMO SICURI CHE L'OPZIONE DESCRITTA SIA QUELLA DEI TELEFONI?",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Accedere all'agenda di Quaderno.\n2. Premere il pulsante 'Esporta Agenda' in alto a destra.\nApparirà il sincronizzatore appuntamenti.\n3. Premere il pulsante 'Configura' in alto.\n4. Premere la linguetta 'Preferenze 2' in basso a sinistra.\n5. Abilitare la spunta 'esporta note appuntamenti' in basso a sinistra e confermare.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-manuale-sincronizzare-i-contatti-con-google-calendar-export-csv",
+          "title": "Sincronizzatore Google Calendar (manuale) - Sincronizzare i contatti con Google Calendar (+ Export CSV)",
+          "overview": "Configurazione profilo per sincronizzazione contatti",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Accedere all'agenda di Quaderno.\n2. Premere il pulsante 'Esporta Agenda' in alto a destra.\nApparirà il sincronizzatore appuntamenti.\n3. Premere il pulsante 'Configura' in alto.\n4. Cliccare su 'Contatti' in alto a destra.\nQui saranno presenti le controparti dei medici del programma che sincronizzano calendari.\n5. Selezionare la 1° riga vuota (normalmente la 1°) e premere il pulsante Modifica in alto.\nVedremo le impostazioni di appuntamenti (parte sopra) e contatti (parte sotto).\n6. Spuntare la casellina 'Abilita' sulla destra all'altezza di Contatti e poi premere sul '+'.\nVerrà richiesto un nome per il gruppo di contatti che andremo a sincronizzare.\nUna volta scelto confermare per entrambe le finestre.\n\nI contatti verranno esportati sull'account Google e li ritroveremo su https://contacts.google.com/.\n\n\nSincronizzazione contatti vera e propria\n1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nella barra delle icone di Windows, vicino all'ora del computer.\n2. Premere il pulsante 'Contatti' in alto e attendere la fine dell'operazione.\nIn base a quanti contatti intendiamo sincronizzare, il sincronizzatore potrebbe metterci molto tempo.\nSi consiglia dunque di lasciare in background.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-automatico-aggiungere-un-nuovo-medico-alla-sincronizzazione",
+          "title": "Sincronizzatore Google Calendar (automatico) - Aggiungere un nuovo medico alla sincronizzazione",
+          "overview": "Nota: prima di procedere è necessario che i medici siano già presenti nell'agenda di Quaderno.\nQualora non lo fossero, seguire [[[[[[[[[[[[[[[[[[questa]]]]]]]]]]]]]]]]]]] guida per aggiungerli.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nel computer principale, nella barra delle icone di Windows, vicino all'ora del computer.\nFare doppio click sull'apposita icona a forma di calendario.\n2. Premere il pulsante 'Configura' in alto.\n3. Premere il pulsante con i 3 omini in basso ed eventualmente inserire l'e-mail di Google Calendar per autenticarsi.\n4. Scegliere i medici da sincronizzare e confermare.\n5. Attendere che i medici vengano aggiunti e confermare.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-automatico-togliere-un-medico-dalla-sincronizzazione",
+          "title": "Sincronizzatore Google Calendar (automatico) - Togliere un medico dalla sincronizzazione",
+          "overview": "1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nel computer principale, nella barra delle icone di Windows, vicino all'ora del computer.\nFare doppio click sull'apposita icona a forma di calendario.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Configura' in alto.\n3. Selezionare la riga del medico che si intende rimuovere dalla sincronizzazione.\n4. Togliere la spunta alla relativa casellina di sincronizzazione. Confermare.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-automatico-condividere-un-calendario-su-google-calendar",
+          "title": "Sincronizzatore Google Calendar (automatico) - Condividere un calendario su Google Calendar",
+          "overview": "1. Accedere al proprio account di Google Calendar da browser.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Posizionarsi sopra al nome del calendario che si intende condividere, in basso a sinistra.\n3. Premere i 3 puntini.\n4. Cliccare 'Impostazioni e condivisione'.\n5. Scorrere fino alla sezione 'Condivisione con'.\n6. Premere il pulsante '+ Aggiungi persone e gruppi'.\n7. Inserire l'e-mail con la quale condividere il calendario e l'autorizzazione che potrà avere.\n8. Confermare.\nL'e-mail scelta riceverà un messaggio posta elettronica e ritroverà il calendario condiviso sul proprio account Google Calendar.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-automatico-esportare-i-telefoni-pazienti-negli-appuntamenti-sincronizzati-con-google-calendar",
+          "title": "Sincronizzatore Google Calendar (automatico) - Esportare i telefoni pazienti negli appuntamenti sincronizzati con Google Calendar",
+          "overview": "SIAMO SICURI CHE L'OPZIONE DESCRITTA SIA QUELLA DEI TELEFONI?",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nel computer principale, nella barra delle icone di Windows, vicino all'ora del computer.\nFare doppio click sull'apposita icona a forma di calendario.\n2. Premere il pulsante 'Configura' in alto.\n3. Premere la linguetta 'Preferenze 2' in basso a sinistra.\n4. Abilitare la spunta 'esporta note appuntamenti' in basso a sinistra e confermare.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sincronizzatore-google-calendar-automatico-sincronizzare-i-contatti-con-google-calendar-export-csv",
+          "title": "Sincronizzatore Google Calendar (automatico) - Sincronizzare i contatti con Google Calendar (+ Export CSV)",
+          "overview": "Configurazione profilo per sincronizzazione contatti",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nel computer principale, nella barra delle icone di Windows, vicino all'ora del computer.\nFare doppio click sull'apposita icona a forma di calendario.\n2. Premere il pulsante 'Configura' in alto.\n3. Cliccare su 'Contatti' in alto a destra.\nQui saranno presenti le controparti dei medici del programma che sincronizzano calendari.\n4. Selezionare la 1° riga vuota (normalmente la 1°) e premere il pulsante Modifica in alto.\nVedremo le impostazioni di appuntamenti (parte sopra) e contatti (parte sotto).\n5. Spuntare la casellina 'Abilita' sulla destra all'altezza di Contatti e poi premere sul '+'.\nVerrà richiesto un nome per il gruppo di contatti che andremo a sincronizzare.\nUna volta scelto confermare per entrambe le finestre.\n\nI contatti verranno esportati sull'account Google e li ritroveremo su https://contacts.google.com/.\n\n\nSincronizzazione contatti vera e propria\n1. Aprire il sincronizzatore di Google Calendar.\nSolitamente, il sincronizzatore si trova nel computer principale, nella barra delle icone di Windows, vicino all'ora del computer.\n2. Premere il pulsante 'Contatti' in alto e attendere la fine dell'operazione.\nIn base a quanti contatti intendiamo sincronizzare, il sincronizzatore potrebbe metterci molto tempo.\nSi consiglia dunque di lasciare in background.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-anamnesi-su-tablet-configurare-per-la-prima-volta-anamnesi-su-tablet",
+          "title": "Anamnesi su Tablet - Configurare per la prima volta Anamnesi su Tablet",
+          "overview": "1. Aprire l'anagrafica di un paziente qualsiasi.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante Anamensi su Tablet a destra (medici e pianta).\n3. Premere 'Ulteriori configurazioni' in basso a sinistra.\nApparirà una finestra di opzioni.\n4. Stabilire le opzioni desiderate e poi premere il pulsante 'Ok - Memorizza Impostazioni'.\n\nI passaggi che seguono sono quelli per la compilazione dell'anamnesi su tablet.\n5. Premere il pulsante 'INIZIALIZZA' in alto a sinistra.\nVerrà richiesto di registrarsi con e-mail la 1° volta che si fa questo passaggio.\n6. Registrarsi e confermare.\nVerrà creato un pin di accesso al servizio.\n7. Scansionare il codice QR Code con la fotocamera del tablet.\n8. Compilare l'anamnesi da tablet.\nUna volta concluso tutto, premere il pulsante 'Fine'.\n9. Da Quaderno, premere il pulsante 'IMPORTA' sulla destra e verificare tutte le stampe e dettagli ulteriori.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-anamnesi-su-tablet-far-compilare-l-anamnesi-paziente-su-tablet",
+          "title": "Anamnesi su Tablet - Far compilare l'anamnesi paziente su tablet",
+          "overview": "1. Aprire l'anagrafica del paziente al quale si intende far compilare l'anamnesi.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante Anamensi su Tablet a destra (medici e pianta).\n3. Premere il pulsante 'INIZIALIZZA' in alto a sinistra.\nVerrà creato un pin di accesso al servizio.\n4. Scansionare il codice QR Code con la fotocamera del tablet.\n5. Compilare l'anamnesi da tablet.\nUna volta concluso tutto, premere il pulsante 'Fine'.\n6. Da Quaderno, premere il pulsante 'IMPORTA' sulla destra e verificare tutte le stampe e dettagli ulteriori.\n\nNota: durante la compilazione, è possibile cambiare ambiente in Quaderno e vedere ad esempio agenda, Odontogramma ed emettere fattura.\nPoi, una volta terminata la compilazione, sarà sufficiente accedere all'anagrafica del paziente, premere il pulsante Anamnesi su Tablet a destra ed il pulsante 'IMPORTA' a destra.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-anamnesi-su-tablet-far-compilare-l-anamnesi-paziente-a-casa",
+          "title": "Anamnesi su Tablet - Far compilare l'anamnesi paziente a casa",
+          "overview": "1. Aprire l'anagrafica di un paziente qualsiasi.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante Anamensi su Tablet a destra (medici e pianta).\n3. Premere il pulsante 'INIZIALIZZA' in alto a sinistra.\nVerrà creato un pin di accesso al servizio.\n4. Premere il pulsante 'SMS', 'E-Mail' o 'WhatsApp' nella parte centrale, per inviare il link di compilazione anamnesi al paziente.\nIl paziente compilerà quindi la sua anamnesi a casa e successivamente tornerà in studio.\nQuando sarà in studio, dovrete:\n5. Aprire l'anagrafica del paziente con l'anamnesi da importare.\n6. Premere il pulsante Anamnesi su Tablet a destra (medici e pianta).\n7. Premere il pulsante 'IMPORTA' sulla destra e verificare tutte le stampe e dettagli ulteriori.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-export-paziente-esportare-i-dati-paziente-tramite-il-servizio-export-paziente",
+          "title": "Export paziente - Esportare i dati paziente tramite il servizio ''Export paziente''",
+          "overview": "1. Aprire l'anagrafica di un paziente qualsiasi.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Pz. su CD/SmartCard' a destra.\nApparirà una finestra di esportazione.\n3. Selezionare cosa si desidera esportare sulla sinistra.\n4. Selezionare dove si desidera esportare i dati, sulla destra, e poi premere il pulsante 'Esporta'.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-dashboard-informazioni-da-conoscere-pre-dashboard",
+          "title": "Dashboard - Informazioni da conoscere pre-Dashboard",
+          "overview": "La prima volta che viene eseguito Dashboard è importante inquadrare quali parti di Quaderno sarà necessario seguire per un uso soddisfacente del servizio in questione:",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "- Creare interventi di listino per singole visite e modelli per gruppi di interventi.\nAnziché creare voci di onorario complesse, come 'Ciclo di cure di Ortodonzia', consigliamo di creare interventi per le singole sedute.\nGli interventi di gruppo vanno creati come 'Modelli', dall'apposita linguetta in basso.\n\n- Specificare le durate degli interventi.\nDa Onorario, facendo doppio click sulle voci presenti, è possibile specificare la durate dell'intervento, sulla sinistra.\nInoltre, è possibile personalizzare la durata anche da Odontogramma, facendo doppio click sugli interventi inseriti.\n\n- Utilizzare gli stati appuntamento (arrivato, uscito, ecc...) all’interno dell’appuntamento.\nDa agenda, facendo click sugli appuntamenti e guardando nel menu laterale di destra, è possibile stabilire quando il paziente si è presentato alla visita, si è seduto in poltrano o è uscito.\n\n- Collegare gli appuntamenti agli interventi tramite apposito pulsante all’interno dell’appuntamento.\nDa agenda, facendo click sugli appuntamenti, è possibile collegare gli interventi che il paziente eseguirà durante la visita con l'appuntamento stesso.\nPer farlo, premere il pulsante 'Agenda la tua produzione', al centro, sulla destra.\n\n- Utilizzare il planning.\nUtilizzare il planning significa pianificare attentamente tutti i passaggi per eseguire gli interventi, tra Odontogramma e agenda.\nPer utilizzarlo, accedere all'Odontogramma paziente e premere il pulsante con spuntina in alto, sulla destra.\n\n- Gestire i compensi dei collaboratori.\nGestendo i compensi è possibile vedere quando occorre pagare i propri collaboratori.\nVedere questa pagina per approfondire l'argomento:\n[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ inserire link ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]\n\n- Gestire i p.d.t. e preventivi accettati e rifiutati.\nDa Odontogramma è possibile stabilire, per ciascun P.d.T. o preventivo paziente, lo stato del piano.\nPer farlo, cliccare sul pulsante 'P.d.T. o Preventivo' in alto a sinistra.\nQui, le opzioni dello stato sono quelle in alto a destra, scritte in rosso bordeaux.\nPer vedere le statistiche in merito, invece, accedere alla lista pazienti, premere il pulsante delle statistiche a destra e poi 'Statistiche per P.d.T. o Prev. Accettati/Rifiutati'.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-chi-cosa-fare-se-il-chi-non-funzionasse",
+          "title": "Chi è - Cosa fare se il ''Chi è'' non funzionasse",
+          "overview": "1. Controllare la configurazione: normalmente, il computer dove è installato il 'Chi è' dovrebbe trovarsi vicino al centralino.\nCollegare centralino → modem tramite cavetto e modem → computer designato tramite USB.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Accertarsi che il modem USB non sia collegato al computer tramite un moltiplicatore di porte USB.\nIl collegamento deve essere diretto.\n\n3. Controllare la presenza di aggiornamenti Windows.\nPer vedere, cliccare sul menu Start e accedere alle Impostazioni (ingranaggio).\nQui, vedere sezione 'Windows Update' e cercare aggiornamenti.\nRiprovare il funzionamento del 'Chi è' dopo aver fatto gli aggiornamenti ed aver riavviato il computer.\n\n4. Controllare e togliere eventuali risparmi di energia per i modem.\nDa Gestione dispositivi, controllare e rimuovere questi risparmi.\n\n5. Effettuare gli aggiornamenti dei driver del modem.\nDa Gestione dispositivi, aggiornare i suddetti driver all'ultima versione.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-foto-manager-acquisire-foto-da-smartphone",
+          "title": "Foto Manager - Acquisire foto da smartphone",
+          "overview": "1. Aprire il visualizzatore foto del paziente interessato.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Acquisisci da Smartphone / Wireless' in alto a sinistra.\nApparirà una schermata con QR Code a destra.\n3. Inquadrare il QR Code di destra con lo smartphone che si intende utilizzare per acquisire le foto.\nNello smartphone apparirà un sito internet apposito.\n4. Da smartphone, premere i pulsanti in basso per acquisire o importare foto.\n5. Al termine di tutte le operazioni, salvare con l'apposito pulsante.\nLe immagini verranno così acquisite in Quaderno.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-lettore-ts-cie-acquisire-dati-paziente-tramite-tessera-sanitaria-copia",
+          "title": "Lettore TS + CIE - Acquisire dati paziente tramite tessera sanitaria - Copia",
+          "overview": "1. Creare un nuovo paziente (o aprire l'anagrafica di uno esistente).",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere, al centro in basso, il pulsante blu 'Tessera Sanitaria'.\nApparirà una finestra con tessera sanitaria.\n3. Inserire la tessera sanitaria nel lettore, dal lato del chip.\nI dati verranno acquisiti e importati in anagrafica.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-lettore-ts-cie-acquisire-dati-paziente-tramite-carta-di-identit-elettronica",
+          "title": "Lettore TS + CIE - Acquisire dati paziente tramite carta di identità elettronica",
+          "overview": "1. Creare un nuovo paziente (o aprire l'anagrafica di uno esistente).",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere, al centro in basso, il pulsante 'Carta d'Identità'.\nApparirà una finestra con una carta di identità elettronica.\n3. Scrivere le 6 cifre di destra della carta direttamente su Quaderno, nell'apposito spazio.\n4. Appoggiare e tenere appoggiata la carta di identità elettronica al lettore.\n5. Premere il pulsante 'Leggi' accanto allo spazio dove si sono inserite le 6 cifre.\nI dati verranno acquisiti e importati in anagrafica.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-backup-immagini-e-documenti-consultare-le-impostazioni-di-backup-in-cloud",
+          "title": "Backup immagini e documenti - Consultare le impostazioni di Backup in Cloud",
+          "overview": "Per vedere le configurazioni è sufficiente accedere al menu 'Servizi e Novità → Configura Servizio... → BackUp serale ed in Cloud → Configura e vedi backup in CLoud'.\nQui, sarà possibile vedere lo spazio disponibile e i dati di Quaderno salvati su Drive.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sistema-documentale-importare-e-firmare-documenti-pdf-o-word-in-quaderno",
+          "title": "Sistema documentale - Importare e firmare documenti PDF o Word in Quaderno",
+          "overview": "1. Accedere all'anagrafica di un paziente.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Documenti' in basso a sinistra.\n3. Premere il pulsante 'Importa/Firma' per importare e firmare un documento esterno.\n4. Inserire eventuale descrizione e categoria, se richiesto, e confermare.\nApparirà una schermata dove sarà possibile scegliere elementi dalla colonna a destra e posizionarli nel documento.\nCosì facendo si potrà aggiungere nomi, spuntine e firme.\n4. Dopo aver aggiunto nomi, spuntine e firme al documento, confermare con 'Prosegui'.\nSi avvierà il processo di firma.\n5. Firmare dunque il documento.\nTale documento verrà salvato automaticamente nella lista documenti del paziente in questione.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-firma-elettronica-tipologie-e-validit-di-firma",
+          "title": "Firma elettronica - Tipologie e validità di firma",
+          "overview": "VALUTARE SE FARE TABELLA COME QUESTA PAGINA DI WIKI QE\nhttps://quadernoelettronico.notion.site/Che-differenza-c-tra-Firma-Elettronica-Semplice-e-Avanzata-3d8ed7380c8b4a829e1b6656f17ae7b3\n\n\n\n\n\nEsistono varie tipologie di firma.\nInnanzitutto è bene precisare cos'è la 'Firma elettronica'... è l'insieme dei dati in formato digitale associati a un documento informatico e usati per identificare il firmatario e confermare il suo consenso.\nEsistono vari step di validità.\n\n• Semplice (FES)\nLivello base, che assicura, come per la classica firma su carta, l'identità del firmatario.\nLa sua validità è a interpretazione dell’eventuale giudice che la controllerà.\nViene utilizzata nei servizi di Firma elettronica semplice e Wi-fi ed è utile per tutti i casi di firma in ambienti non particolarmente invasivi.\n\n• Avanzata (FEA)\nLivello avanzato che crea un legame unico col firmatario e un controllo elevato sull'identità, con dati biometrici.\nÈ considerata più attendibile della semplice firma cartacea ed è pressoché incontestabile.\nViene utilizzata nel servizio Firma elettronica avanzata ed è utile negli studi che hanno interventi invasivi di chirurgia.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-firma-elettronica-firmare-elettronicamente-un-documento",
+          "title": "Firma elettronica - Firmare elettronicamente un documento",
+          "overview": "Per firmare un documento è sufficiente selezionarlo (es. da Pazienti → Stampante) e mandarlo in stampa, tramite l'apposita icona con stampante.\nIl programma comprenderà che il documento deve essere firmato elettronicamente nel caso rilevi una firma all'interno e agirà di conseguenza.\nA seconda del servizio in uso, sarà richiesto di firmare sulla tavoletta o sul tablet.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-firma-elettronica-stampare-fisicamente-documenti-col-servizio-di-firma-elettronica-attivo-copia",
+          "title": "Firma elettronica - Stampare fisicamente documenti col servizio di Firma elettronica attivo - Copia",
+          "overview": "Per stampare fisicamente un documento quando si ha il servizio di Firma elettronica attivo è sufficiente effettuare l'anteprima di stampa e, dal menu con icone 'Print Preview', premere la piccola stampante: in questo modo il documento verrà davvero stampata anziché essere mandato in firma.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-firma-elettronica-wi-fi-configurare-il-tablet-per-la-firma-elettronica-wi-fi",
+          "title": "Firma elettronica Wi-Fi - Configurare il tablet per la firma elettronica Wi-Fi",
+          "overview": "1. Accedere a menu 'Servizi e Novità → Installa Servizio...'.\nApparirà una schermata riassuntiva dei servizi QE.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Premere il pulsante 'Configura' al centro, in basso sulla sinistra, accanto a '12. Firma Elettronica [Wi-Fi Qe].\nApparirà un'altra finestra, con impostazioni riguardanti solo la firma elettronica.\n3. Premere il pulsante 'Accoppia Dispositivo per la Firma Elettronica Wi - Fi' sulla destra.\nApparirà un'altra finestra, contenente la lista dei tablet abilitati alla firma elettronica.\n4. Nel caso si intenda scollegare un tablet presente, premere il pulsante 'Elimina' dopo aver selezionato il tablet da rimuovere.\n5. Nel caso si intenda aggiungere un nuovo tablet, premere il pulsante 'Aggiungi', stabilire un nome e scansionare il QR Code col tablet desiderato.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-conformit-elettronica-conformit-elettronica-winodlab",
+          "title": "Conformità elettronica - Conformità Elettronica Winodlab",
+          "overview": "Tramite l'Add-On in questione, disponibile esclusivamente per Winodlab, è possibile compilare ed inviare digitalmente le conformità via e-mail, archiviando i documenti su computer e permettendo ai medici di contro-firmare, evitando così di stampare e conservare le controparti cartacee.\n\nCome inviare le conformità al cliente?\n\nEffettuare l’invio e-mail delle Conformità in Scheda Lavoro (pulsante Stampante) o al momento della Creazione Fattura (Bomba Lavori). Verrà inviata un’unica e-mail al cliente con 1 PDF per ciascun lavoro.\n\n[IMG?]\n\n⚠️ Attenzione! L’invio e-mail della conformità verrà effettuato solo se il cliente ha attivo l’invio e-mail. Da un lavoro del cliente, premere il pulsante Stampante in basso a destra e verificare che in basso, per ciascuna colonna, sia attivo il suddetto invio e-mail. Se così non fosse, abilitarli tutti e memorizzare le opzioni tramite il pulsante in basso a sinistra.\n\nCosa dovrà fare il cliente (medico) una volta ricevuta l’e-mail con le conformità?\n\nPotrà contro-firmare tutte le conformità inviategli dal laboratorio con smartphone, tablet o da computer, con un’unica firma, cliccando sul link presente nell’e-mail: tramite questo, si aprirà una schermata contenente tutti i documenti da firmare e tramite le spuntine di selezione in alto ed il pulsante grande Firma, potrà firmare tutto in una sola volta.\n\n💡 In allegato all’e-mail sarà presente il PDF della conformità firmata dal laboratorio\n\nCome farà il laboratorio per ri-acquisire i documenti contro-firmati dal cliente (medico)?\n\nIn Quaderno, da menù “Utilità → Scarica Conformità FIRMATE Elettronicamente” sarà possibile acquisire tutti i documenti contro-firmati e salvarli automaticamente nelle schede lavoro dei rispettivi clienti (medici).\n\nÈ consigliato fare questa operazione almeno 1 volta al mese.\n\n💡 Per rivedere le conformità firmate dai clienti (medici) in Quaderno, cliccare sul pulsante Documento di Conformità dentro la Scheda Lavoro, in alto a destra",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-conformit-elettronica-inviare-una-conformit-elettronica-per-e-mail",
+          "title": "Conformità elettronica - Inviare una conformità elettronica per e-mail",
+          "overview": "Per inviare una conformità elettronica ad un cliente è sufficiente creare il lavoro e poi, all'interno di questo, premere l'icona della stampante in basso a destra: qui, stabilire i documenti di conformità che si intende inviare e abilitare le caselline di invio e-mail in basso. Confermare.\nCosì facendo, la conformità verrà inviata per e-mail al cliente.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-conformit-elettronica-acquisire-le-conformit-elettroniche-firmate-dai-clienti",
+          "title": "Conformità elettronica - Acquisire le conformità elettroniche firmate dai clienti",
+          "overview": "Accedere al menu 'Utilità → Scarica Conformità FIRMATE Elettronicamente'.\nLe conformità verranno scaricate su computer e saranno accessibili dai rispettivi lavori, tramite il pulsante 'Conformità/Prescrizione' in alto a destra.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-openceph-configurare-openceph",
+          "title": "OpenCeph - Configurare OpenCeph",
+          "overview": "Configurare OpenCeph dal computer principale",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Accedere a menu 'Servizi e Novità → Installa Servizio...'.\n2. Selezionare solo la voce '16. Openceph'.\n3. Premere il pulsante 'Esegui il Download ed INSTALLA Selezionati' in basso a destra.\nAl termine del download apparirà una finestra con auto-estraente e si avvierà l'installazione.\n4. Confermare le varie finestre dell'installazione.\nVerrà aperta la cartella di OpenCeph.\n5. Fare doppio click sull'eseguibile OpenCeph.exe.\nSi aprirà il software OpenCeph.\n6. Cliccare sul menu in alto 'Strumenti → Percorso archivi'.\nApparirà una finestra di configurazione.\n7. Cliccare sul pulsante 'Sfoglia':  ricercare il file 'Cefalometria.mdb' dentro la cartella OpenCeph dalla quale abbiamo aperto l'eseguibile OpenCeph.\nConfermare. Uscire. Chiudere cartelle aperte.\n\nConfigurare OpenCeph dai computer secondari\n1. Accedere a menu 'Servizi e Novità → Installa Servizio...'.\n2. Selezionare solo la voce '16. Openceph'.\n3. Premere il pulsante 'Esegui il Download ed INSTALLA Selezionati' in basso a destra.\nAl termine del download apparirà una finestra con auto-estraente e si avvierà l'installazione.\n4. Confermare le varie finestre dell'installazione.\nVerrà aperta la cartella di OpenCeph.\n5. Fare doppio click sull'eseguibile OpenCeph.exe.\nSi aprirà il software OpenCeph.\n6. Cliccare sul menu in alto 'Strumenti → Percorso archivi'.\nApparirà una finestra di configurazione.\n7. Cliccare sul pulsante 'Sfoglia': ricercare il file 'Cefalometria.mdb' dentro la cartella OpenCeph del computer principale, situata dentro la cartella Quaderno (es. '\\\\Server\\Pixel\\Windent\\OpenCeph\\').\nConfermare. Uscire. Chiudere cartelle aperte.\n\nImpostare OpenCeph su Quaderno\n1. Aprire Quaderno ed entrare in un Odontogramma qualsiasi.\n2. Premere il pulsante di Ortodonzia sulla destra.\nApparirà una finestra relativa all'ambiente di ortodonzia.\n3. Cliccare sul pulsante con ingranaggio in alto.\nAppariranno le impostazioni.\n4. Nel caso in cui a fianco della scritta 'Imposta come programma di Cefalometria' non fosse presente 'Open Ceph (Gent.le concessione Prof. Oliva)', sceglierlo dal menu e premere 'OK'.\n\nEseguire OpenCeph da Quaderno\n1. Aprire Quaderno ed entrare in un Odontogramma qualsiasi.\n2. Premere il pulsante di Ortodonzia sulla destra.\nApparirà una finestra relativa all'ambiente di ortodonzia.\n3. Premere l'icona del profilo dell'uomo in alto a destra.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-controllo-segreteria-configurare-controllo-segreteria",
+          "title": "Controllo Segreteria - Configurare Controllo Segreteria",
+          "overview": "Configurare il Backup non compresso\nInnanzitutto, occorre andare in Manutenzione e da menu “Configura → Dati Azienda”, impostare una 'Copia su HD' come mostrato di seguito: E:\\OLDWIND.\nPoi, effettuare il backup da menu “Manutenzione → Copia archivi su Hard Disk E” (percorso ipotetico).\n\n\nConfigurare il Controllo Segreteria\nSpostarsi in Quaderno, da menu “Servizi e Novità → Configura Servizio... → 17. Controllo Segreteria”:",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "- Premere il pulsante dell’esecuzione automatica in basso a sinistra e confermare il messaggio per controllare se nell’avvio automatico di Windows è stato inserito il programma ControlloStrisciata.\n- Leggere le note centrali al cliente per assicurarsi il corretto funzionamento del programma.\n- Confermare.\nDa adesso in poi, ad ogni avvio di Windows, verrà creata una copia di Quaderno nella cartella di Backup specificata in precedenza.\n\n\nEffettuare la prima copia di Controllo Segreteria\nAndare su menu “Servizi e Novità → Esegui servizio... → 17. Controllo Segreteria → Esegui Copia”.\nQuesta creerà la copia dei dati nel percorso “E:\\Oldwind\\Striscia” (percorso ipotetico).\n\nEsistono varie tipologie di cartelle qui dentro, con nomi basati sui seguenti fattori:\n- Lettera giorno + numero giorno (es. “G03”, giovedì 03)\n- Giorno settimana (es. “GIOVEDI”)\n- Mese (es. “MARZO”)",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-controllo-segreteria-consultare-controllo-segreteria",
+          "title": "Controllo Segreteria - Consultare Controllo Segreteria",
+          "overview": "Da Quaderno, menu “Servizi e Novità → Esegui Servizio... → 17. Controllo Segreteria → Vedi le differenze fra i giorni”.\nDa qui è possibile scegliere alcune cose, tra cui, la più importante in alto: il periodo di confronto tra i dati attuali e quelli di backup.\nSotto, alcune opzioni ed in basso a destra, la stampa: tramite questa è possibile confrontare dato reali e backup per ottenere una lista di differenze.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-qe-pocket-consultare-qe-pocket-da-smartphone",
+          "title": "QE Pocket - Consultare QE Pocket da smartphone",
+          "overview": "Per consultare QE Pocket da smartphone accedere al seguente link e autenticarsi:\nhttps://pocket.quadernoelettronico.it/\n\nPoi, sarà possibile consultare i dati di Quaderno ed eventualmente interagire l'agenda.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-export-commercialista-esportare-la-contabilit-col-servizio-export-commercialista",
+          "title": "Export Commercialista - Esportare la contabilità col servizio ''Export Commercialista''",
+          "overview": "Premessa: il servizio deve essere precedentemente configurato insieme ai tecnici di Quaderno Elettronico.\n\nAccedere al menu 'Servizi e Novità → Esegui Servizio... → 19. Export per Commercialista'.\nConfermare l'esportazione o l'inivo e-mail.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-statistiche-e-fatturato-online-esportare-una-stampa-in-formato-excel",
+          "title": "Statistiche e Fatturato Online - Esportare una stampa in formato Excel",
+          "overview": "Per poter esportare una stampa in formato Excel è necessario innanzitutto di effettuare l'anteprima di stampa.\nNormalmente, in tutte le sezioni di stampa del programma è resente la voce 'Anteprima di Stampa', in basso, vicino al pulsante con la stampante.\nSelezionare anteprima e poi confermare col pulsante di stampa.\nApparirà così l'anteprima di stampa.\nQui, accedere a menu 'Converti in Excel → AVVIA Conversione'.\nSe tale voce non fosse attiva, significherebbe che il servizio #20 non è attivo e non è quindi possibile effettuare export Excel.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-fidelity-configurare-i-sondaggi-fidelity",
+          "title": "Fidelity - Configurare i sondaggi Fidelity",
+          "overview": "1. Accedere a menu “Servizi e Novità → Configura Servizi... → 21. Fidelity”.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Abilitare, se non attiva, la spunta Avvisi E-Mail Pazienti + Sondaggi.\n3. Premere il pulsante Area Sondaggi.\nApparirà il sito internet dei sondaggi, dove potremo configurare sondaggi che useremo nelle e-mail di Fidelity.\n4. Premere, a sinistra, su 'Sondaggi → Modelli'.\nApparirà la lista dei sondaggi creati.\n5. Premere il pulsante '+Nuovo' in alto a destra per creare un nuovo sondaggio.\n6. Specificare un titolo ed eventuale descrizione.\nPremendo Pagina 1, in alto, sarà possibile visionare la 1° pagina del sondaggio e tramite i pulsanti laterali di sinistra, trascinarci le componenti desiderate.\n7. Una volta terminata la creazione del sondaggio, premere il pulsante Salva in alto.\nAdesso, il sondaggio comparirà sulle impostazioni di Fidelity e sarà possibile associarlo alle e-mail inviate ai pazienti.\n\n\nCome associare un sondaggio all’invio e-mail Fidelity?\n1. Accedere a menu “Servizi e Novità → Configura Servizio... → 21. Fidelity”.\n2. Abilitare, se non attiva, la spunta 'Avvisi E-Mail Pazienti + Sondaggi'.\n3. Premere 'Impostazioni', lì sotto: comparirà la finestra delle e-mail Fidelity.\n4. Abilitare la spuntina dell’opzione che si intende attivare.\n5. Premere 'Modifica layout E-Mail'.\n6. Nell’editor HTML, posizionarsi dove si intende inserire il link del sondaggio.\n7. Premere il pulsante blu </> in alto a destra e, nella finestra che apparirà, premere Sondaggio in alto: verrà inserita una frase all’interno della e-mail.\n8. Salvare con l'icona del floppy e poi chiudere l'editor.\nNella finestra dove ci ritroveremo apparirà un menu a tendina nel riquadro e-mail dove abbiamo inserito il sondaggio.\n9. Stabilire quale sondaggio comparirà una volta cliccato il link presente all’interno dell’e-mail cambiando la voce del suddetto menu a tendina.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-fidelity-personalizzare-le-e-mail-fidelity",
+          "title": "Fidelity - Personalizzare le e-mail Fidelity",
+          "overview": "1. Accedere a menu “Servizi e Novità → Configura Servizio... → 21. Fidelity”.",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "2. Spuntare la casellina 'Avvisi E-Mail Pazienti + Sondaggi' e premere il pulsante 'Impostazioni'.\nApparirà una finestra con e-mail configurabili: le e-mail, se abilitate tramite le spuntine, verranno spedite automaticamente ai pazienti, in determinate situazioni, descritte nelle rispettive diciture.\n3. Abilitare la spunta dell'e-mail che si intende inviare ai pazienti.\n4. Cliccare il pulsante 'Modifica layout E-Mail' poco sotto.\nApparirà un editor di modifica e-mail.\nQui sarà possibile scrivere liberamente ed editare il testo tramite i pulsanti in alto.\n5. Salvare con l'icona del floppy e poi chiudere l'editor.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-tracciabilit-controllare-la-tracciabilit-di-quaderno",
+          "title": "Tracciabilità - Controllare la tracciabilità di Quaderno",
+          "overview": "È possibile controllare la tracciaiblità di un determinato archivio tramite il pulsante dell'orologio fucsia, situato in alcuni ambienti del programma, come l'anagrafica paziente o l'appuntamento, o tramite il menu apposito, disponibile da menu 'Servizi e Novità → Esegui Servizio... → 24. tracciabilità'.\nDa qui, in alto a sinistra è possibile scegliere l'archivio da visionare e stabilire alcuni filtri.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-nfc-lettori-wireless-abilitare-i-lettori-wireless-per-l-accesso-al-programma",
+          "title": "NFC, Lettori Wireless - Abilitare i lettori wireless per l'accesso al programma",
+          "overview": "Configurazione NFC",
+          "faqs": [
+            {
+              "q": "Procedura/Dettagli",
+              "a": "1. Collegare il lettore NFC al computer dove si intende utilizzarlo e attendere qualche secondo.    \n2. Accedere a menu “Servizi e Novità → Configura Servizio... → 25. NFC e lettori wireless → Attiva NFC/Schede Wireless”.\n3. Confermare il messaggio che apparirà.\n4. Accertarsi che sia presente “Programma NFC Schede Wireless“ nella cartella di Esecuzione Automatica che verrà aperta.\n5. Controllare che in Gestione Attività compaia il processo in background “NfcAccessService (32 bit)”: se così non fosse, fare doppio click sul file del precedente punto.\n6. Chiudere tutte le cartelle aperte e poi Quaderno.\n\nConfigurazione gli utilizzatori\n1. Aprire Manutenzione.\n2. Se non presente la richiesta password all’avvio di Quaderno attivarla da menu 'Configura → Dati Azienda”, spuntando l’apposita casellina in alto a destra.\n3. Accedere al menu “Configura → Accessi al Programma”.\n4. Se non è già stato fatto, impostare una password per ciascun utilizzatore.\n5. Sempre da Accessi al Programma, selezionare il 1° utilizzatore e premere il pulsante NFC sulla destra.\n6. Avvicinare il dispositivo NFC che verrà utilizzato per far accedere il 1° utilizzatore a Quaderno al lettore ed attendere la conferma nel messaggio sottostante.\n7. Ripetere l’operazione per tutti gli utilizzatori presenti nella lista di Accessi al Programma, assegnando a ciascun un proprio dispositivo NFC.\n\nUtilizzo\nAprire Quaderno e, alla schermata di richiesta password, avvicinare il dispositivo NFC al lettore e attendere qualche secondo per la validazione.",
+              "extra": false,
+              "img": false
+            }
+          ],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-sqrivo-dettare-a-voce-in-quaderno",
+          "title": "sQrivo - Dettare a voce in Quaderno",
+          "overview": "È possibile dettare con sQrivo nelle parti di Quaderno dove è presente il pulsante col microfono, solitamente vicino agli spazi note.\nAd es. in anagrafica paziente, appuntamento, intervento, diario.\n\nDopo aver premuto il pulsante, parlare con naturalezza: Quaderno trascriverà il testo direttamente nello spazio note collegato.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-centro-prenotazioni-prenotare-un-appuntamento",
+          "title": "Centro prenotazioni - Prenotare un appuntamento",
+          "overview": "Per prenotare un appuntamento con Centro Prenotazioni è necessario accedere al sito internet fornito da Quaderno al momento della configurazione... solitamente è un link simile a questo: https://www.appuntamentionline.it/x.\nUna volta fatto l'accesso, basterà seguire i passaggi per stabilire l'appuntamento per medico o intervento.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        },
+        {
+          "id": "servizi-whatsapp-inviare-un-messaggio-whatsapp",
+          "title": "WhatsApp - Inviare un messaggio WhatsApp",
+          "overview": "Per inviare un messaggio WhatsApp è sufficiente cliccare sull'apposito logo, situato in varie zone di Quaderno, come ad esempio in anagrafica paziente o dentro un appuntamento.\nPremendo il logo verrà richiesto di inserire la frase che si desidera inoltrare su WhatsApp.\nConfermando la finestra, si aprirà WhatsApp Business (o WhatsApp Web, se configurato) e qui sarà possibile inviare il documento.",
+          "faqs": [],
+          "status": "pub",
+          "updated": "30/09/2026"
+        }
+      ],
+      "emoji": "🚀"
     }
   ],
   "journey": {
